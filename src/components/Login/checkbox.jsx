@@ -31,7 +31,7 @@ const CheckBox = ({text}) => {
       >
         {isChecked && <Text style={{ color: 'white', fontSize: 16 }}>✓</Text>}
       </View>
-      <Text className="font-semibold		">{text}</Text>
+      <Text className="font-semibold ml-[4px] mt-[4px]">{text}</Text>
     </TouchableOpacity>
   );
 };

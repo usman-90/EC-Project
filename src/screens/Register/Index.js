@@ -9,7 +9,7 @@ import ContinueWithGoogle from '../../components/Login/ContinueWithGoogle';
 
 const Register = () => {
     const handleButtonPress = () => {
-        
+
         console.log('Button pressed!');
     };
     return (
@@ -41,7 +41,7 @@ const Register = () => {
 
                     <View className="ml-[30px] mr-[30px] mt-[30px]" style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                         <CheckBox text="I agree to Terms and condition" />
-                        
+
 
                     </View>
                     <View className="ml-[30px] mt-[40px]">
@@ -63,8 +63,8 @@ const Register = () => {
                     </View>
                     <View className="mt-[30px]" style={{ flexDirection: 'row', justifyContent: 'center', alignItems: "center" }}>
 
-                            <Text style={{color:'#838383',fontSize:"16px"}}>Already have an account?</Text>
-                            <Text className="ml-[4px]"style={{color:"#FFC70F",fontSize:"16px"}}>Register</Text>
+                        <Text style={{ color: '#838383', fontSize: "16px" }}>Already have an account?</Text>
+                        <Text className="ml-[4px]" style={{ color: "#FFC70F", fontSize: "16px" }}>Register</Text>
                     </View>
 
 
@@ -78,7 +78,7 @@ const styles = StyleSheet.create({
     container: {
         // flex: 1,
         backgroundColor: '#fff',
-      
+
     },
 });
 export default Register
