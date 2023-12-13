@@ -11,9 +11,9 @@ import Profile from './src/screens/Profile';
 export default function App() {
   return (
     <View className="italic" style={styles.container}>
-      {/* <Profile/> */}
+      <Profile/>
       {/* <CreatePassword/> */}
-      <Otp11/>
+      {/* <Otp11/> */}
     
       {/* <Loginpage/> */}
       {/* <Register/> */}
