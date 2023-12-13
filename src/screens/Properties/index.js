@@ -1,4 +1,5 @@
 import {
+  TouchableOpacity,
   Image,
   ScrollView,
   TextInput,
@@ -17,7 +18,7 @@ import PropertyItem from "../../components/PropertyItem";
 import SearchBar from "../../components/SearchBar";
 import FilterButton from "../../components/FilterButton";
 
-const Properties = () => {
+const Properties = ({ navigation }) => {
   const options = [
     "Home",
     "Villa",
@@ -45,7 +46,14 @@ const Properties = () => {
       </View>
 
       <View className="flex-row  mb-3 px-6">
-        <SearchBar />
+        <TouchableOpacity
+          className="flex-row"
+          onPress={() => {
+            navigation.navigate("ModalStack");
+          }}
+        >
+          <SearchBar />
+        </TouchableOpacity>
         <FilterButton />
       </View>
 

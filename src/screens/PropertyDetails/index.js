@@ -14,8 +14,6 @@ import Like from "../../../assets/Properties/Like.png";
 import MainIMG from "../../../assets/Properties/IMG.png";
 import Star from "../../../assets/Properties/star.png";
 
-
-
 const PropertyDetail = () => {
   const [isTextExpanded, setIsTextExpanded] = useState(false);
 
@@ -28,50 +26,53 @@ const PropertyDetail = () => {
         <Text className="text-lg font-bold">Product Detail</Text>
         <Image source={Like} />
       </View>
-    <ScrollView className="mb-20">
-      <View>
-        <Image source={MainIMG} className="rounded-2xl w-full h-[335px] " />
-      </View>
+      <ScrollView className="mb-20">
+        <View>
+          <Image source={MainIMG} className="rounded-2xl w-full h-[335px] " />
+        </View>
 
-      <View>
-        <Text className="text-3xl font-bold mt-3">South Villa</Text>
-      </View>
-      <View className="flex-row items-center">
-        <Image source={Star} />
-        <Text className="text-base font-bold mx-1 ">4.8</Text>
-        <Text className="text-base text-gray-500">(335) | 212 reviews</Text>
-      </View>
-      <View>
-        <Text onPress={() => setIsTextExpanded(!setIsTextExpanded)} className="text-sm text-gray-500 mt-3">
-          {!isTextExpanded ? `${text.slice(0, 110)}` : text}
+        <View>
+          <Text className="text-3xl font-bold mt-3">South Villa</Text>
+        </View>
+        <View className="flex-row items-center">
+          <Image source={Star} />
+          <Text className="text-base font-bold mx-1 ">4.8</Text>
+          <Text className="text-base text-gray-500">(335) | 212 reviews</Text>
+        </View>
+        <View>
           <Text
-            onPress={() => setIsTextExpanded(true)}
-            className="text-black font-bold"
+            onPress={() => setIsTextExpanded(!setIsTextExpanded)}
+            className="text-sm text-gray-500 mt-3"
           >
-            {!isTextExpanded ? `...Read more` : null}
+            {!isTextExpanded ? `${text.slice(0, 110)}` : text}
+            <Text
+              onPress={() => setIsTextExpanded(true)}
+              className="text-black font-bold"
+            >
+              {!isTextExpanded ? `...Read more` : null}
+            </Text>
           </Text>
-        </Text>
-      </View>
-      <View>
-        <Text className="font-bold text-lg mt-2">Gallery</Text>
-      </View>
-      <View className="mt-2 flex-row">
-        <Image
-          source={MainIMG}
-          style={styles.me_2}
-          className="w-28 rounded-xl h-28"
-        />
-        <Image
-          source={MainIMG}
-          style={styles.me_2}
-          className="w-28 rounded-xl h-28"
-        />
-        <Image
-          source={MainIMG}
-          style={styles.me_2}
-          className="w-28 rounded-xl h-28"
-        />
-      </View>
+        </View>
+        <View>
+          <Text className="font-bold text-lg mt-2">Gallery</Text>
+        </View>
+        <View className="mt-2 flex-row">
+          <Image
+            source={MainIMG}
+            style={styles.me_2}
+            className="w-28 rounded-xl h-28"
+          />
+          <Image
+            source={MainIMG}
+            style={styles.me_2}
+            className="w-28 rounded-xl h-28"
+          />
+          <Image
+            source={MainIMG}
+            style={styles.me_2}
+            className="w-28 rounded-xl h-28"
+          />
+        </View>
       </ScrollView>
 
       <View className="flex-row px-6 py-3 bg-gray-50 items-center absolute justify-between  bottom-0 left-0 right-0">
@@ -80,7 +81,9 @@ const PropertyDetail = () => {
           <Text className="text-lg font-bold ">AED 245.99</Text>
         </View>
         <TouchableOpacity>
-          <Text className="bg-primary text-white font-bold text-base py-2 px-4 rounded-xl">Booking Now</Text>
+          <Text className="bg-primary text-white font-bold text-base py-2 px-4 rounded-xl">
+            Booking Now
+          </Text>
         </TouchableOpacity>
       </View>
     </View>

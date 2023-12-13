@@ -1,18 +1,17 @@
 import React from 'react';
-import {Image,SafeAreaView, StyleSheet, Text, View,Platform, StatusBar } from 'react-native';
-import SignIn from './src/screens/SignIn/index'
-import Properties from './src/screens/Properties/index'
-import Search from './src/screens/Search/index'
-import SearchResult from './src/screens/SearchResult/index'
-import PropertyDetail from './src/screens/PropertyDetails/index'
+import {SafeAreaView, StyleSheet,Platform,StatusBar } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import RootStack from './src/navigation/AppNavigator';
 
 
 
 export default function App() {
   return (
+      <NavigationContainer>
 <SafeAreaView style={styles.container}>
-      <PropertyDetail />
+      <RootStack />
 </ SafeAreaView>
+      </NavigationContainer>
   );
 }
 
