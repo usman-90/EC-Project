@@ -7,17 +7,23 @@ import CustomButton from '../../components/Button';
 import ContinueWithGoogle from '../../components/Login/ContinueWithGoogle';
 
 
-const Loginpage = () => {
+const Register = () => {
     const handleButtonPress = () => {
-        // Your button press logic goes here
+        
         console.log('Button pressed!');
     };
     return (
         <>
             <View className="italic" style={styles.container}>
-                <Heading text="Login for Discover" />
+                <Heading text="Create an account" />
                 <View>
-                    
+                    <InputField
+                        placeholder="Name"
+                        name="name"
+                        classNames="bg-white text-black  ml-[25px]  mt-[30px] mr-[30px]"
+                        keyboardType="default"
+                        placeholderSize={16}
+                    />
 
                     <InputField
                         placeholder="Email"
@@ -33,18 +39,18 @@ const Loginpage = () => {
                     />
 
 
-                    <View className="ml-[28px] mr-[30px] mt-[30px]" style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                        <CheckBox text="Remember me" />
-                        <Text style={{ color: '#FFC70F', textDecorationLine: 'none' }}>Forgot Password?</Text>
+                    <View className="ml-[30px] mr-[30px] mt-[30px]" style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                        <CheckBox text="I agree to Terms and condition" />
+                        
 
                     </View>
-                    <View className="ml-[32px] mt-[40px]">
+                    <View className="ml-[30px] mt-[40px]">
                         <CustomButton
 
-                            width={350}
+                            width={360}
                             height={50}
                             backgroundColor="#FFC70F"
-                            text="Login"
+                            text="Signup"
                             textColor="white"
                         />
                     </View>
@@ -72,7 +78,7 @@ const styles = StyleSheet.create({
     container: {
         // flex: 1,
         backgroundColor: '#fff',
-        
+      
     },
 });
-export default Loginpage
+export default Register
