@@ -30,49 +30,59 @@ const Profile = ({navigation}) => {
 
         <View className=" bg-[#f2e1aa] py-2 px-6 rounded-full"><Text>{data.email}</Text></View>
         <View className="items-center justify-center flex flex-col  w-full bg-white rounded-lg mt-8 shadow-2xl  shadow-stone-600">
+      
+        <TouchableOpacity onPress={() => navigation.navigate("EditProfile")} className="w-full">
         <View className="flex flex-row justify-between w-full py-4 px-6 border-b border-gray-200 ">
+       
           <View className="flex flex-row gap-4">
             <Icon name="edit" size={30} style={styles.edit}/>
-            <Text>Edit Profile</Text>
+            <Text className="pt-2">Edit Profile</Text>
             </View>
-	  <TouchableOpacity onPress={() => navigation.navigate("EditProfile")}>
+	 
             <Icon name="arrowright" size={25}/>
-	  </TouchableOpacity>
-          
 
           </View>
+          </TouchableOpacity>
+  
+
+          <TouchableOpacity onPress={() => navigation.navigate("ChangePassword")} className="w-full">
          
           <View className="flex flex-row justify-between w-full py-4 px-6 border-b border-gray-200 ">
           <View className="flex flex-row gap-4">
             <PasswordIcon name="lock" size={30} style={styles.edit}/>
-            <Text>Change Password</Text>
+            <Text className="pt-2">Change Password</Text>
             </View>
-	  <TouchableOpacity onPress={() => navigation.navigate("ChangePassword")}>
+	 
             <Icon name="arrowright" size={25}/>
-            </TouchableOpacity>
+          
           
 
           </View>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => navigation.navigate("Home")} className="w-full">
           <View className="flex flex-row justify-between w-full py-4 px-6 border-b border-gray-200 ">
           <View className="flex flex-row gap-4">
             <SettingIcon name="settings" size={30} style={styles.edit}/>
-            <Text>Settings</Text>
+            <Text className="pt-2">Settings</Text>
             </View>
-	  <TouchableOpacity onPress={() => navigation.navigate("Home")}>
+	 
             <Icon name="arrowright" size={25}/>
-            </TouchableOpacity>
+            
 
           </View>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => navigation.navigate("Login")} className="w-full">
           <View className="flex flex-row justify-between w-full py-4 px-6 border-b border-gray-200 ">
           <View className="flex flex-row gap-4">
             <PasswordIcon name="logout" size={28} style={styles.logout}/>
-            <Text className="text-red-700">Logout</Text>
+            <Text className="text-red-700 pt-2">Logout</Text>
             </View>
-	  <TouchableOpacity onPress={() => navigation.navigate("Login")}>
+	 
             <Icon name="arrowright" size={25} style={styles.logout}/>
-            </TouchableOpacity>
+          
 
           </View>
+          </TouchableOpacity>
         </View>
         
        

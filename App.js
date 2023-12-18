@@ -2,6 +2,7 @@ import React from 'react';
 import {SafeAreaView, StyleSheet,Platform,StatusBar } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import RootStack from './src/navigation/AppNavigator';
+import Profile from './src/screens/Profile';
 
 
 
@@ -12,6 +13,7 @@ export default function App() {
       <RootStack />
 </ SafeAreaView>
       </NavigationContainer>
+
   );
 }
 
