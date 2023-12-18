@@ -48,6 +48,20 @@ const SignIn = ({ navigation }) => {
             textColor="black"
           />
         </View>
+	  <View 
+          className="mt-[20px]"
+          style={{
+            flexDirection: "row",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+	  >
+	  <TouchableOpacity>
+	  <Text className="text-gray-500">
+	  Already have an account? <Text className="text-primary">Register</Text>
+	  </Text>
+	  </TouchableOpacity>
+	  </View>
       </View>
     </View>
   );

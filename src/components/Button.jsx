@@ -18,7 +18,7 @@ const CustomButton = ({ width, height, backgroundColor, text, textColor }) => {
       }}
       onPress={handleButtonPress}
     >
-      <Text style={{ color: textColor }}>{text}</Text>
+      <Text className="text-lg" style={{ color: textColor }}>{text}</Text>
     </TouchableOpacity>
   );
 };

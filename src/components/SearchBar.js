@@ -9,7 +9,7 @@ import {
 } from "react-native";
 import Search from "../../assets/Properties/search.png";
 
-const SearchBar = ({ width }) => {
+const SearchBar = ({ width , navigation ,willNavigate}) => {
   return (
     <View
       className={`flex-row basis- ${
@@ -18,6 +18,7 @@ const SearchBar = ({ width }) => {
     >
       <Image className="mx-3" source={Search} />
       <TextInput
+	  onPress={willNavigate ? () => navigation.navigate("ModalStack") : null }
         className="text-base w-10/12 pe-2"
         style={styles.pe_2}
         placeholder="Search any destination"

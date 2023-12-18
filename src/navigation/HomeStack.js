@@ -3,6 +3,7 @@ import Properties from "../screens/Properties";
 import Search from "../screens/Search";
 import SearchResult from "../screens/SearchResult";
 import PropertyDetail from "../screens/PropertyDetails";
+import Profile from '../screens/Profile/index'
 
 const HomeStack = () => {
   const HomeNavigator = createStackNavigator();
@@ -21,6 +22,11 @@ const HomeStack = () => {
       <HomeNavigator.Screen
         name="Details"
         component={PropertyDetail}
+        options={{ headerShown: false }}
+      />
+      <HomeNavigator.Screen
+        name="Profile"
+        component={Profile}
         options={{ headerShown: false }}
       />
     </HomeNavigator.Navigator>
