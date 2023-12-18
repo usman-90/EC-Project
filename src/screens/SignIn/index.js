@@ -11,7 +11,7 @@ const SignIn = ({ navigation }) => {
         style={[styles.container, styles.rounded_t_xl]}
       >
         <TouchableOpacity
-          onPress={() => navigation.navigate("HomeStack")}
+          onPress={() => navigation.navigate("Login")}
           className="mt-8"
         >
           <Text className="bg-primary text-center py-3 rounded-xl text-white text-base ">
@@ -56,7 +56,7 @@ const SignIn = ({ navigation }) => {
             alignItems: "center",
           }}
 	  >
-	  <TouchableOpacity>
+	  <TouchableOpacity onPress = {() => navigation.navigate("SignUp")}>
 	  <Text className="text-gray-500">
 	  Already have an account? <Text className="text-primary">Register</Text>
 	  </Text>

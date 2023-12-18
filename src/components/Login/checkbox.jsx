@@ -26,12 +26,12 @@ const CheckBox = ({ text }) => {
           marginRight: 5,
           justifyContent: "center",
           alignItems: "center",
-          borderRadius: "5",
+          borderRadius: 5,
         }}
       >
         {isChecked && <Text style={{ color: "white", fontSize: 16 }}>✓</Text>}
       </View>
-      <Text className="font-semibold ml-[4px] mt-[4px]">{text}</Text>
+      <Text className="font-semibold ml-[4px] w-80 mt-[4px]">{text}</Text>
     </TouchableOpacity>
   );
 };

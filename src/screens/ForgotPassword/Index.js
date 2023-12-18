@@ -7,7 +7,7 @@ import CustomButton from '../../components/Button';
 
 
 
-const ForgotPassword = () => {
+const ForgotPassword = ({navigation}) => {
 
     return (
         <>
@@ -34,7 +34,8 @@ const ForgotPassword = () => {
                             backgroundColor="#FFC70F"
                             text="Send Code"
                             textColor="white"
-                        />
+	    			handlePress={() => navigation.navigate("OTP")}
+                        /> 
                     </View>
 
 

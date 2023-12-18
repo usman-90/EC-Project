@@ -75,14 +75,14 @@ const Register = () => {
               alignItems: "center",
             }}
           >
-            <Text style={{ color: "#838383", fontSize: "16px" }}>
+            <Text style={{ color: "#838383"}} className="text-base">
               Already have an account?
             </Text>
             <Text
               className="ml-[4px]"
-              style={{ color: "#FFC70F", fontSize: "16px" }}
+              style={{ color: "#FFC70F",marginLeft:5}} className="text-base"
             >
-              Register
+             Login 
             </Text>
           </View>
         </View>

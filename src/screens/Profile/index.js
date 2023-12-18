@@ -10,7 +10,7 @@ import SettingIcon from 'react-native-vector-icons/Feather';
 
 const data={name:"Hellooo" , email:"hello@gmail.com"};
 
-const Profile = () => {
+const Profile = ({navigation}) => {
   return (
     <>
     <View className="italic p-6 justify-center items-center h-full " style={styles.container}>
@@ -35,9 +35,9 @@ const Profile = () => {
             <Icon name="edit" size={30} style={styles.edit}/>
             <Text>Edit Profile</Text>
             </View>
-            <TouchableOpacity>
+	  <TouchableOpacity onPress={() => navigation.navigate("EditProfile")}>
             <Icon name="arrowright" size={25}/>
-            </TouchableOpacity>
+	  </TouchableOpacity>
           
 
           </View>
@@ -47,7 +47,7 @@ const Profile = () => {
             <PasswordIcon name="lock" size={30} style={styles.edit}/>
             <Text>Change Password</Text>
             </View>
-            <TouchableOpacity>
+	  <TouchableOpacity onPress={() => navigation.navigate("ChangePassword")}>
             <Icon name="arrowright" size={25}/>
             </TouchableOpacity>
           
@@ -58,7 +58,7 @@ const Profile = () => {
             <SettingIcon name="settings" size={30} style={styles.edit}/>
             <Text>Settings</Text>
             </View>
-            <TouchableOpacity>
+	  <TouchableOpacity onPress={() => navigation.navigate("Home")}>
             <Icon name="arrowright" size={25}/>
             </TouchableOpacity>
 
@@ -68,7 +68,7 @@ const Profile = () => {
             <PasswordIcon name="logout" size={28} style={styles.logout}/>
             <Text className="text-red-700">Logout</Text>
             </View>
-            <TouchableOpacity>
+	  <TouchableOpacity onPress={() => navigation.navigate("Login")}>
             <Icon name="arrowright" size={25} style={styles.logout}/>
             </TouchableOpacity>
 

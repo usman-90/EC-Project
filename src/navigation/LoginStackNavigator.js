@@ -4,6 +4,7 @@ import Loginpage from "../screens/Login";
 import Register from "../screens/Register/Index";
 import CreatePassword from '../screens/CreatePassword/index'
 import OTP from '../screens/OTP/index'
+import ForgotPassword from '../screens/ForgotPassword/Index'
 
 const LoginStack = () => {
   const LoginNavigator = createStackNavigator();
@@ -17,6 +18,11 @@ const LoginStack = () => {
       <LoginNavigator.Screen
         name="Login"
         component={Loginpage}
+        options={{ headerShown: false }}
+      />
+      <LoginNavigator.Screen
+        name="ForgotPassword"
+        component={ForgotPassword}
         options={{ headerShown: false }}
       />
       <LoginNavigator.Screen

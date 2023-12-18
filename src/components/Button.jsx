@@ -1,10 +1,7 @@
 import React from "react";
 import { TouchableOpacity, Text } from "react-native";
 
-const CustomButton = ({ width, height, backgroundColor, text, textColor }) => {
-  const handleButtonPress = () => {
-    console.log("Button pressed!");
-  };
+const CustomButton = ({ width, height, backgroundColor, text, textColor ,handlePress}) => {
   return (
     <TouchableOpacity
       style={{
@@ -14,9 +11,8 @@ const CustomButton = ({ width, height, backgroundColor, text, textColor }) => {
         justifyContent: "center",
         alignItems: "center",
         borderRadius: 5,
-        borderRadius: "10px",
       }}
-      onPress={handleButtonPress}
+      onPress={handlePress}
     >
       <Text className="text-lg" style={{ color: textColor }}>{text}</Text>
     </TouchableOpacity>

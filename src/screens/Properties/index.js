@@ -41,7 +41,7 @@ const Properties = ({ navigation }) => {
         </View>
         <View className="flex-row">
           <Image className="mx-1" source={Notification} />
-	  <TouchableOpacity onPress ={() => navigation.navigate("SearchResult")}>
+	  <TouchableOpacity onPress ={() => navigation.navigate("Profile")}>
           <Image className="mx-1" source={Profile} />
 	  </TouchableOpacity>
         </View>

@@ -1,12 +1,12 @@
 import React from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View ,TouchableOpacity} from "react-native";
 import Heading from "../../components/Heading";
 import InputField from "../../components/InputField";
 import CheckBox from "../../components/Login/checkbox";
 import CustomButton from "../../components/Button";
 import ContinueWithGoogle from "../../components/Login/ContinueWithGoogle";
 
-const Loginpage = () => {
+const Loginpage = ({navigation}) => {
   const handleButtonPress = () => {
     // Your button press logic goes here
     console.log("Button pressed!");
@@ -33,10 +33,14 @@ const Loginpage = () => {
             className="ml-[28px] mr-[30px] mt-[30px]"
             style={{ flexDirection: "row", justifyContent: "space-between" }}
           >
+	  <View className="w-20">
             <CheckBox text="Remember me" />
+	  </View>
+	  <TouchableOpacity onPress={() => navigation.navigate("ForgotPassword")}>
             <Text style={{ color: "#FFC70F", textDecorationLine: "none" }}>
               Forgot Password?
             </Text>
+	  </TouchableOpacity>
           </View>
           <View className="ml-[32px] mt-[40px]">
             <CustomButton
@@ -45,6 +49,7 @@ const Loginpage = () => {
               backgroundColor="#FFC70F"
               text="Login"
               textColor="white"
+	  handlePress={() => navigation.navigate("HomeStack")}
             />
           </View>
           <View
@@ -61,6 +66,7 @@ const Loginpage = () => {
               text="Continue With Google"
               textColor="black"
               onPress={handleButtonPress}
+
             />
           </View>
           <View
@@ -71,12 +77,12 @@ const Loginpage = () => {
               alignItems: "center",
             }}
           >
-            <Text style={{ color: "#838383", fontSize: "16px" }}>
-              Already have an account?
+            <Text style={{ color: "#838383"}} className="text-base">
+	  Don't have an account?
             </Text>
             <Text
-              className="ml-[4px]"
-              style={{ color: "#FFC70F", fontSize: "16px" }}
+              className="ml-[4px] text-base"
+              style={{ color: "#FFC70F", }} 
             >
               Register
             </Text>

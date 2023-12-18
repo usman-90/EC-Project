@@ -5,7 +5,7 @@ import CustomButton from '../../components/Button';
 import OTP from 'react-native-otp-form';
 import CountDown from 'react-native-countdown-component';
 
-const Otp11 = () => {
+const Otp11 = ({navigation}) => {
   const [timer, setTimer] = useState(180); // 3 minutes in seconds
 
   useEffect(() => {
@@ -57,7 +57,7 @@ const Otp11 = () => {
       </View>
 
       <View className="w-[100%] h-[100%] my-10">
-        <CustomButton width={'100%'} text={'Continue'} backgroundColor={'#FFC70F'} textColor={'white'} height={'3%'} />
+        <CustomButton handlePress={() => navigation.navigate("HomeStack")} width={'100%'} text={'Continue'} backgroundColor={'#FFC70F'} textColor={'white'} height={'3%'} />
       </View>
     </View>
   );
