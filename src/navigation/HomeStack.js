@@ -3,9 +3,9 @@ import Properties from "../screens/Properties";
 import Search from "../screens/Search";
 import SearchResult from "../screens/SearchResult";
 import PropertyDetail from "../screens/PropertyDetails";
-import Profile from '../screens/Profile/index'
-import EditProfile from '../screens/editprofile/index'
-import ChangePassword from '../screens/ChangePassword/index'
+import Profile from "../screens/Profile/index";
+import EditProfile from "../screens/editprofile/index";
+import ChangePassword from "../screens/ChangePassword/index";
 
 const HomeStack = () => {
   const HomeNavigator = createStackNavigator();

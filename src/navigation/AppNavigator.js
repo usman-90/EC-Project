@@ -30,7 +30,7 @@ export default RootStack;
 const ModalStack = () => {
   const ModalNavigator = createStackNavigator();
   return (
-    <ModalNavigator.Navigator mode="modal">
+    <ModalNavigator.Navigator presentation="modal">
       <ModalNavigator.Screen
         name="Search"
         component={Search}

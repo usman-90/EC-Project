@@ -1,9 +1,7 @@
 import React, { useState } from "react";
 import { View, Text, TouchableOpacity } from "react-native";
 
-const CheckBox = ({ text }) => {
-  const [isChecked, setIsChecked] = useState(false);
-
+const CheckBox = ({ text, isChecked, setIsChecked }) => {
   const handlePress = () => {
     setIsChecked(!isChecked);
   };

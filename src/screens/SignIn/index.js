@@ -15,7 +15,7 @@ const SignIn = ({ navigation }) => {
           className="mt-8"
         >
           <Text className="bg-primary text-center py-3 rounded-xl text-white text-base ">
-            Countinue with Mobile Number
+            Login with Email And Password
           </Text>
         </TouchableOpacity>
         <View
@@ -46,22 +46,24 @@ const SignIn = ({ navigation }) => {
             imageHeight={25}
             text="Continue With Facebook"
             textColor="black"
+            onPress={() => navigation.navigate("HomeStack")}
           />
         </View>
-	  <View 
+        <View
           className="mt-[20px]"
           style={{
             flexDirection: "row",
             justifyContent: "center",
             alignItems: "center",
           }}
-	  >
-	  <TouchableOpacity onPress = {() => navigation.navigate("SignUp")}>
-	  <Text className="text-gray-500">
-	  Already have an account? <Text className="text-primary">Register</Text>
-	  </Text>
-	  </TouchableOpacity>
-	  </View>
+        >
+          <TouchableOpacity onPress={() => navigation.navigate("SignUp")}>
+            <Text className="text-gray-500">
+              Already have an account?{" "}
+              <Text className="text-primary">Register</Text>
+            </Text>
+          </TouchableOpacity>
+        </View>
       </View>
     </View>
   );

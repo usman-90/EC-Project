@@ -17,21 +17,27 @@ import Banner from "../../../assets/Properties/Banner.png";
 import PropertyItem from "../../components/PropertyItem";
 import SearchBar from "../../components/SearchBar";
 import FilterButton from "../../components/FilterButton";
+import DragableMenu from "../../components/DragableMenu";
 
 const Properties = ({ navigation }) => {
   const options = [
-    "Home",
-    "Villa",
-    "Apartment",
-    "Homestay",
-    "Homestay",
-    "Homestay",
-    "Homestay",
+    {
+      name: "Buy",
+      keyword: "forSale",
+    },
+    {
+      name: "Rent",
+      keyword: "rent",
+    },
+    {
+      name: "Off-Plan",
+      keyword: "offPlan",
+    },
   ];
 
   return (
     <View className="basis-full ">
-      <View className="basis-15 px-6 mt-8 py-2 justify-between flex-row">
+      <View className="basis-15 px-6 mt- py-2 justify-between flex-row">
         <View>
           <Text className="text-gray-500 text-base">Location</Text>
           <View className="flex-row align items-center">
@@ -41,9 +47,9 @@ const Properties = ({ navigation }) => {
         </View>
         <View className="flex-row">
           <Image className="mx-1" source={Notification} />
-	  <TouchableOpacity onPress ={() => navigation.navigate("Profile")}>
-          <Image className="mx-1" source={Profile} />
-	  </TouchableOpacity>
+          <TouchableOpacity onPress={() => navigation.navigate("Profile")}>
+            <Image className="mx-1" source={Profile} />
+          </TouchableOpacity>
         </View>
       </View>
 
@@ -54,19 +60,19 @@ const Properties = ({ navigation }) => {
             navigation.navigate("ModalStack");
           }}
         >
-    <View
-      className={`flex-row basis- basis-10/12 bg-gray-50 py-2 rounded-full items-center`}
-    >
-      <Image className="mx-3" source={Search} />
-      <Text
-        className="text-base text-gray-500 w-10/12 pe-2"
-        style={styles.pe_2}
-      >
-	  Search any destination
-	  </Text>
-    </View>
+          <View
+            className={`flex-row basis- basis-10/12 bg-gray-50 py-2 rounded-full items-center`}
+          >
+            <Image className="mx-3" source={Search} />
+            <Text
+              className="text-base text-gray-500 w-10/12 pe-2"
+              style={styles.pe_2}
+            >
+              Search any destination
+            </Text>
+          </View>
         </TouchableOpacity>
-        <FilterButton />
+        <DragableMenu />
       </View>
 
       <ScrollView className="px-6">
@@ -86,19 +92,28 @@ const Properties = ({ navigation }) => {
           data={options}
           renderItem={({ item }) => {
             return (
-              <View style={styles.me_2} className="me-3">
-                <Text className="h-8  py-2 rounded-md px-3 bg-primary">
-                  {item}
-                </Text>
-              </View>
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.navigate("SearchResult", {
+                    name: item.name,
+                    purpose: item.keyword,
+                  });
+                }}
+              >
+                <View style={styles.me_2} className="me-3">
+                  <Text className="h-8  py-2 rounded-md px-3 bg-primary">
+                    {item?.name}
+                  </Text>
+                </View>
+              </TouchableOpacity>
             );
           }}
           horizontal={true}
           keyExtractor={(item) => item.id}
         />
-	<TouchableOpacity onPress={() => navigation.navigate("Details")}>
-        <PropertyItem />
-	  </TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate("Details")}>
+          <PropertyItem />
+        </TouchableOpacity>
         <PropertyItem />
         <PropertyItem />
       </ScrollView>
