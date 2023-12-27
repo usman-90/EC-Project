@@ -10,6 +10,18 @@ export function fetchSubCategories({ queryKey }) {
   );
 }
 
+export function fetchAllProperties(){
+  return axios.get(
+    `https://realestatebackend-m68pxvdwf-asadullahkhan19.vercel.app/property/get-property`,
+    {
+      params: {
+          category: "all"
+      },
+    },
+  );
+
+}
+
 export function fetchProperties({ queryKey }) {
   const data = queryKey[1];
 

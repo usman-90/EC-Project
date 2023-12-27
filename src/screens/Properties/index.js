@@ -10,6 +10,7 @@ import {
   View,
 } from "react-native";
 import React, { useContext } from "react";
+import { useQuery } from "@tanstack/react-query";
 import FilterContext from "../../context/FilterContext";
 import Search from "../../../assets/Properties/search.png";
 import Pin from "../../../assets/Properties/pin.png";
@@ -17,9 +18,17 @@ import Notification from "../../../assets/Properties/Notification.png";
 import Profile from "../../../assets/Properties/Profile.png";
 import Banner from "../../../assets/Properties/Banner.png";
 import PropertyItem from "../../components/PropertyItem";
+import { fetchAllProperties } from "../../apiFunctions/properties";
 
 const Properties = ({ navigation }) => {
+    const propertiesData = useQuery({
+        queryKey:"allProperties",
+        queryFn: fetchAllProperties
+    })
   const [filters, setFilters] = useContext(FilterContext);
+  const properties = propertiesData?.data?.data?.data ?? [];
+
+  console.log(properties, "Alllllllllllllllllpropppppppppp");
   const handleFilterChange = (name, val) => {
     setFilters({
       ...filters,
@@ -107,7 +116,7 @@ const Properties = ({ navigation }) => {
                 }}
               >
                 <View style={styles.me_2} className="me-3">
-                  <Text className="h-8  py-2 rounded-md px-3 bg-primary">
+                  <Text className="h-8  py-2 text-white rounded-md px-3 bg-primary">
                     {item?.name}
                   </Text>
                 </View>
@@ -117,11 +126,38 @@ const Properties = ({ navigation }) => {
           horizontal={true}
           keyExtractor={(item) => item.id}
         />
-        <TouchableOpacity onPress={() => navigation.navigate("Details")}>
-          <PropertyItem />
-        </TouchableOpacity>
-        <PropertyItem />
-        <PropertyItem />
+
+
+        <FlatList
+          className="grow-0"
+          data={properties}
+          renderItem={({ item }) => {
+            return (
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.navigate("Details", {
+                    item: item,
+                  });
+                }}
+              >
+          <PropertyItem
+      title={item?.propertyDetails?.title}
+      image={item?.upload?.images}
+      price={item?.propertyDetails?.InclusivePrice}
+      location={item?.locationAndAddress?.location}
+      bedrooms={
+          item?.amenities?.filter(
+              (item) => item.name == "bedRooms"
+          )[0].value
+      }
+
+                />
+              </TouchableOpacity>
+            );
+          }}
+          keyExtractor={(item) => item.id}
+        />
+
       </ScrollView>
     </View>
   );

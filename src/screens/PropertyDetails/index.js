@@ -7,22 +7,22 @@ const PropertyDetailWrapper = ({ route }) => {
   return (
     <PropertyDetails
       title={item?.propertyDetails?.title}
-      text={item?.propertyDetails?.description ?? ""}
-      price={item?.propertyDetails?.InclusivePrice}
       images={item?.upload?.images}
+      price={item?.propertyDetails?.InclusivePrice}
+      location={item?.locationAndAddress}
+      bedrooms={
+          item?.amenities?.filter(
+              (item) => item.name == "bedRooms"
+          )[0].value
+      }
+      text={item?.propertyDetails?.description ?? ""}
       features={item?.amenities}
            listingOwner={item?.contactDetails?.ListingOwner}
         contactPerson={item?.contactDetails?.contactPerson}
         email={item?.contactDetails?.email}
         phone={item?.contactDetails?.phone}
-        location={item?.locationAndAddress}
         status={item?.typesAndPurpose?.purpose}
       //  parkingSpace={property1?.number_of_garage}
-        bedrooms={
-          item?.amenities?.filter(
-            (item) => item.name == "bedRooms"
-          )[0].value
-        }
         bathrooms={
           item?.amenities?.filter(
             (item) => item.name == "bathRooms"

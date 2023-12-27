@@ -34,7 +34,7 @@ const SearchResult = ({ route, navigation }) => {
     refetchProperties();
   }, [filters]);
   const properties = propertiesResult?.data?.data?.data ?? [];
-  console.log(properties, "propppppppppp");
+  console.log(propertiesResult, "propppppppppp");
 
   return (
     <View className="px-6">
@@ -66,7 +66,6 @@ const SearchResult = ({ route, navigation }) => {
                   area={item?.propertyDetails?.areaSquare}
                   image={item?.upload?.images[0]}
                   amount={item?.propertyDetails?.InclusivePrice}
-                  item={item}
                 />
               </TouchableOpacity>
             );
