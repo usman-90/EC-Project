@@ -10,37 +10,34 @@ export function fetchSubCategories({ queryKey }) {
   );
 }
 
-
-
 export function fetchProperties({ queryKey }) {
   const data = queryKey[1];
 
-	let params = {
-		purpose:data?.purpose,
-		category:data?.category,
-		area:`${data?.areaMin}|${data?.areaMax}`,
-		bedRooms:data?.bedrooms,
-		price:`${data?.priceMin}|${data?.priceMax}`,
-		subCategory:data?.subCategory,
-		category:data?.category,
-		bathrooms:data?.bathrooms
-	}
+  let params = {
+    purpose: data?.purpose,
+    category: data?.category,
+    area: `${data?.areaMin}|${data?.areaMax}`,
+    bedRooms: data?.bedrooms,
+    price: `${data?.priceMin}|${data?.priceMax}`,
+    subCategory: data?.subCategory,
+    category: data?.category,
+    bathrooms: data?.bathrooms,
+  };
 
+  let rs = {};
 
-	let rs = {}
+  for (let p in params) {
+    if (params[p] !== "" && params[p] !== "|") {
+      rs[p] = params[p];
+    }
+  }
 
-	for (let p in params){
-		if (params[p] !== "" && params[p] !== "|"){
-			rs[p] = params[p]
-		}
-
-	}
-
-	console.log(rs,"dataaaa")
+  console.log(rs, "dataaaa");
 
   return axios.get(
-    `https://realestatebackend-m68pxvdwf-asadullahkhan19.vercel.app/property/get-property`,{
-	    params:rs
-    }
+    `https://realestatebackend-m68pxvdwf-asadullahkhan19.vercel.app/property/get-property`,
+    {
+      params: rs,
+    },
   );
 }

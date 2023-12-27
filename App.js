@@ -15,7 +15,7 @@ import FilterContext from './src/context/FilterContext'
 export default function App() {
 const filters = useState({
 	 category:"all",
-	subCategory:"all",
+	subCategory:"",
 	priceMin:"",
 	priceMax:"",
 	areaMin:"",

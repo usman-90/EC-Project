@@ -3,6 +3,8 @@ import Icon from "react-native-vector-icons/AntDesign";
 import Graph from "react-native-vector-icons/Foundation";
 import MultiSlider from "@ptomasroos/react-native-multi-slider";
 import {
+  TouchableHighlight,
+  TouchableWithoutFeedback,
   ScrollView,
   FlatList,
   SafeAreaView,
@@ -26,7 +28,10 @@ const DragableMenu = () => {
     queryFn: fetchSubCategories,
   });
 
-  const subCategories = [{value:"All",key:""},...subCategoriesResult?.data?.data?.data ?? []];
+  const subCategories = [
+    { value: "All", key: "" },
+    ...(subCategoriesResult?.data?.data?.data ?? []),
+  ];
   const [values, setValues] = useState([0, 50]);
   console.log(filters);
 
@@ -39,16 +44,16 @@ const DragableMenu = () => {
   const handleMultipleChanges = (data) => {
     setFilters({
       ...filters,
-	...data
+      ...data,
     });
   };
   const handleValuesChange = (newValues) => {
-	  console.log(newValues)
-	  const [min , max] = newValues
-	  handleMultipleChanges({
-		  "priceMin":min,
-		  "priceMax":max
-	  })
+    console.log(newValues);
+    const [min, max] = newValues;
+    handleMultipleChanges({
+      priceMin: min,
+      priceMax: max,
+    });
   };
 
   const categories = [
@@ -124,7 +129,6 @@ const DragableMenu = () => {
       return elem.keyword === filters?.bedrooms;
     });
     const currIdx = bedroomsNo.indexOf(curr[0]);
-    console.log(curr);
 
     return currIdx;
   };
@@ -133,10 +137,8 @@ const DragableMenu = () => {
       return elem.keyword === filters?.bathrooms;
     });
     const currIdx = bathroomNo.indexOf(curr[0]);
-    console.log(curr);
     return currIdx;
   };
-
   const incrementBedroom = () => {
     let idx = getBedroomsIdx();
     if (idx === 5) {
@@ -168,7 +170,7 @@ const DragableMenu = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <BottomSheet hasDraggableIcon ref={bottomSheet} height={600}>
+      <BottomSheet hasDraggableIcon ref={bottomSheet} height={800}>
         <ScrollView className="mb-2">
           <Text className="px-6 text-lg my-1 font-bold">Category</Text>
 
@@ -184,7 +186,13 @@ const DragableMenu = () => {
                     }}
                   >
                     <View style={styles.me_2} className="me-3">
-                      <Text className="h-8  py-2 rounded-md px-3 bg-primary">
+                      <Text
+                        className={`h-8  py-2 rounded-md px-3 bg-primary ${
+                          item?.keyword === filters?.category
+                            ? "bg-white text-primary border border-primary"
+                            : "bg-primary text-white"
+                        }`}
+                      >
                         {item?.name}
                       </Text>
                     </View>
@@ -195,7 +203,7 @@ const DragableMenu = () => {
               keyExtractor={(item) => item.id}
             />
           </View>
-          <Text className="px-6 text-lg my-1 font-bold">Sub Category</Text>
+          <Text className={`px-6 text-lg my-1 font-bold $ `}>Sub Category</Text>
 
           <View className="px-6 flex-row flex-wrap">
             {subCategories?.map((cat) => {
@@ -204,10 +212,17 @@ const DragableMenu = () => {
                   className="my-1"
                   onPress={() => {
                     handleFilterChange("subCategory", cat?.key);
+                    console.log(cat?.key);
                   }}
                 >
                   <View style={styles.me_2} className="me-3">
-                    <Text className="h-8  py-2 rounded-md px-3 bg-primary">
+                    <Text
+                      className={`h-8  py-2 rounded-md px-3 bg-primary  ${
+                        cat?.key === filters?.subCategory
+                          ? "bg-white text-primary border border-primary"
+                          : "bg-primary text-white"
+                      }`}
+                    >
                       {cat?.value}
                     </Text>
                   </View>
@@ -290,7 +305,6 @@ const DragableMenu = () => {
             </View>
           </View>
 
-
           <Text className="px-6 text-lg my-1 font-bold">Category</Text>
           <View className="px-6">
             <View className="items-center">
@@ -298,13 +312,12 @@ const DragableMenu = () => {
                 values={[filters?.areaMin, filters?.areaMax]}
                 sliderLength={350}
                 onValuesChange={(newValues) => {
-	  const [min , max] = newValues
-	  handleMultipleChanges({
-		  "areaMin":min,
-		  "areaMax":max
-	  })
-  }
-}
+                  const [min, max] = newValues;
+                  handleMultipleChanges({
+                    areaMin: min,
+                    areaMax: max,
+                  });
+                }}
                 min={0}
                 max={5000}
                 step={1}

@@ -1,9 +1,9 @@
 import {
   Image,
+  TouchableOpacity,
   ScrollView,
   TextInput,
   StyleSheet,
-  ImageBackground,
   Text,
   FlatList,
   View,
@@ -13,29 +13,28 @@ import Menu from "../../../assets/Search/Menu.png";
 import Back from "../../../assets/Search/Notification.png";
 import FilterButton from "../../components/FilterButton";
 import RecentPropertyItem from "../../components/RecentPropertyItem";
-import { useMutation , useQuery} from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import DragableMenu from "../../components/DragableMenu";
-import FilterContext from '../../context/FilterContext'
-import {useContext , useEffect} from 'react'
-import {fetchProperties} from '../../apiFunctions/properties'
+import FilterContext from "../../context/FilterContext";
+import { useContext, useEffect } from "react";
+import { fetchProperties } from "../../apiFunctions/properties";
 
-const SearchResult = ({ route }) => {
-	const [filters] = useContext(FilterContext)
+const SearchResult = ({ route, navigation }) => {
+  const [filters] = useContext(FilterContext);
   const { purpose, name } = route.params;
 
-const propertiesResult = useQuery({
-	queryKey:["FetchProperties",filters],
-	queryFn: fetchProperties
-})
-const refetchProperties = propertiesResult?.refetch
+  const propertiesResult = useQuery({
+    queryKey: ["FetchProperties", filters],
+    queryFn: fetchProperties,
+  });
+  const refetchProperties = propertiesResult?.refetch;
 
-useEffect(()=> {
-	refetchProperties()
-} ,[filters])
-	const properties = propertiesResult?.data?.data?.data ?? []
-	console.log(properties,"propppppppppp")
+  useEffect(() => {
+    refetchProperties();
+  }, [filters]);
+  const properties = propertiesResult?.data?.data?.data ?? [];
+  console.log(properties, "propppppppppp");
 
-  const arr = new Array(10);
   return (
     <View className="px-6">
       <View className="mb-3 flex flex-row justify-between items-center">
@@ -50,8 +49,27 @@ useEffect(()=> {
       <View>
         <FlatList
           className="grow-0"
-          data={arr}
-          renderItem={({ item }) => <RecentPropertyItem />}
+          data={properties}
+          renderItem={({ item }) => {
+            return (
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.navigate("Details", {
+                    item: item,
+                  });
+                }}
+              >
+                <RecentPropertyItem
+                  title={item?.propertyDetails?.title}
+                  loc={item?.locationAndAddress?.address}
+                  area={item?.propertyDetails?.areaSquare}
+                  image={item?.upload?.images[0]}
+                  amount={item?.propertyDetails?.InclusivePrice}
+                  item={item}
+                />
+              </TouchableOpacity>
+            );
+          }}
           keyExtractor={(item) => item}
         />
       </View>
