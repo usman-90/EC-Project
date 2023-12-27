@@ -13,32 +13,28 @@ import Menu from "../../../assets/Search/Menu.png";
 import Back from "../../../assets/Search/Notification.png";
 import FilterButton from "../../components/FilterButton";
 import RecentPropertyItem from "../../components/RecentPropertyItem";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation , useQuery} from "@tanstack/react-query";
+import DragableMenu from "../../components/DragableMenu";
+import FilterContext from '../../context/FilterContext'
+import {useContext , useEffect} from 'react'
+import {fetchProperties} from '../../apiFunctions/properties'
 
 const SearchResult = ({ route }) => {
+	const [filters] = useContext(FilterContext)
   const { purpose, name } = route.params;
-  const loginMutation = useMutation({
-    mutationFn: null,
-    onSuccess: (data) => {
-      Toast.show({
-        type: "success",
-        text1: "Success!",
-        text2: "Logged In successfully! 👋",
-      });
-      console.log(data);
-      navigation.navigate("HomeStack");
-    },
-    onError: (error) => {
-      Toast.show({
-        type: "error",
-        text1: "Error !",
-        text2: error?.response?.data?.message,
-      });
-    },
-    onSettled: (data, error) => {
-      console.log(data, error);
-    },
-  });
+
+const propertiesResult = useQuery({
+	queryKey:["FetchProperties",filters],
+	queryFn: fetchProperties
+})
+const refetchProperties = propertiesResult?.refetch
+
+useEffect(()=> {
+	refetchProperties()
+} ,[filters])
+	const properties = propertiesResult?.data?.data?.data ?? []
+	console.log(properties,"propppppppppp")
+
   const arr = new Array(10);
   return (
     <View className="px-6">
@@ -49,7 +45,7 @@ const SearchResult = ({ route }) => {
       </View>
       <View className="flex flex-row">
         <SearchBar />
-        <FilterButton />
+        <DragableMenu />
       </View>
       <View>
         <FlatList

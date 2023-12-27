@@ -17,7 +17,7 @@ import { fetchSubCategories } from "../apiFunctions/properties";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import FilterContext from "../context/FilterContext";
 
-const Example = () => {
+const DragableMenu = () => {
   // Needed in order to use .show()
   const bottomSheet = useRef();
   const [filters, setFilters] = useContext(FilterContext);
@@ -26,7 +26,7 @@ const Example = () => {
     queryFn: fetchSubCategories,
   });
 
-  const subCategories = subCategoriesResult?.data?.data?.data ?? [];
+  const subCategories = [{value:"All",key:""},...subCategoriesResult?.data?.data?.data ?? []];
   const [values, setValues] = useState([0, 50]);
   console.log(filters);
 
@@ -36,8 +36,19 @@ const Example = () => {
       [name]: val,
     });
   };
+  const handleMultipleChanges = (data) => {
+    setFilters({
+      ...filters,
+	...data
+    });
+  };
   const handleValuesChange = (newValues) => {
-    setValues(newValues);
+	  console.log(newValues)
+	  const [min , max] = newValues
+	  handleMultipleChanges({
+		  "priceMin":min,
+		  "priceMax":max
+	  })
   };
 
   const categories = [
@@ -192,7 +203,7 @@ const Example = () => {
                 <TouchableOpacity
                   className="my-1"
                   onPress={() => {
-                    handleFilterChange("subCategory", item?.key);
+                    handleFilterChange("subCategory", cat?.key);
                   }}
                 >
                   <View style={styles.me_2} className="me-3">
@@ -263,7 +274,7 @@ const Example = () => {
           <View className="px-6">
             <View className="items-center">
               <MultiSlider
-                values={values}
+                values={[filters?.priceMin, filters?.priceMax]}
                 sliderLength={350}
                 onValuesChange={handleValuesChange}
                 min={0}
@@ -274,8 +285,36 @@ const Example = () => {
               />
             </View>
             <View className="flex-row justify-between">
-              <Text className="text-lg font-bold">${values[0]}</Text>
-              <Text className="text-lg font-bold">${values[1]}</Text>
+              <Text className="text-lg font-bold">${filters?.priceMin}</Text>
+              <Text className="text-lg font-bold">${filters?.priceMax}</Text>
+            </View>
+          </View>
+
+
+          <Text className="px-6 text-lg my-1 font-bold">Category</Text>
+          <View className="px-6">
+            <View className="items-center">
+              <MultiSlider
+                values={[filters?.areaMin, filters?.areaMax]}
+                sliderLength={350}
+                onValuesChange={(newValues) => {
+	  const [min , max] = newValues
+	  handleMultipleChanges({
+		  "areaMin":min,
+		  "areaMax":max
+	  })
+  }
+}
+                min={0}
+                max={5000}
+                step={1}
+                allowOverlap={false}
+                snapped
+              />
+            </View>
+            <View className="flex-row justify-between">
+              <Text className="text-lg font-bold">{filters?.areaMin} SqFt</Text>
+              <Text className="text-lg font-bold">{filters?.areaMax} SqFt</Text>
             </View>
           </View>
         </ScrollView>
@@ -335,4 +374,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Example;
+export default DragableMenu;

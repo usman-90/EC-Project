@@ -16,12 +16,13 @@ export default function App() {
 const filters = useState({
 	 category:"all",
 	subCategory:"all",
-	priceMin:null,
-	priceMax:null,
-	areaMin:null,
-	areaMax:null,
+	priceMin:"",
+	priceMax:"",
+	areaMin:"",
+	areaMax:"",
 	bathrooms:"",
-	bedrooms:""
+	bedrooms:"",
+	purpose:"forSale"
 })
 const queryClient = new QueryClient({
   defaultOptions: {

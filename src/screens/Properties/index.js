@@ -17,7 +17,6 @@ import Banner from "../../../assets/Properties/Banner.png";
 import PropertyItem from "../../components/PropertyItem";
 import SearchBar from "../../components/SearchBar";
 import FilterButton from "../../components/FilterButton";
-import DragableMenu from "../../components/DragableMenu";
 
 const Properties = ({ navigation }) => {
   const options = [
@@ -61,18 +60,17 @@ const Properties = ({ navigation }) => {
           }}
         >
           <View
-            className={`flex-row basis- basis-10/12 bg-gray-50 py-2 rounded-full items-center`}
+            className={`flex-row basis- basis-full  bg-gray-50 py-2 rounded-full items-center`}
           >
             <Image className="mx-3" source={Search} />
             <Text
-              className="text-base text-gray-500 w-10/12 pe-2"
+              className="text-base text-gray-500 w-full pe-2"
               style={styles.pe_2}
             >
               Search any destination
             </Text>
           </View>
         </TouchableOpacity>
-        <DragableMenu />
       </View>
 
       <ScrollView className="px-6">
