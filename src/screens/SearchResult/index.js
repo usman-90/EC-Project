@@ -27,6 +27,7 @@ const SearchResult = ({ route, navigation }) => {
     queryKey: ["FetchProperties", filters],
     queryFn: fetchProperties,
   });
+
   const refetchProperties = propertiesResult?.refetch;
 
   useEffect(() => {

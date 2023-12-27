@@ -1,4 +1,5 @@
 import React, { useState, useRef, useContext } from "react";
+import FilterContext from "../context/FilterContext";
 import Icon from "react-native-vector-icons/AntDesign";
 import Graph from "react-native-vector-icons/Foundation";
 import MultiSlider from "@ptomasroos/react-native-multi-slider";
@@ -17,7 +18,6 @@ import BottomSheet from "react-native-gesture-bottom-sheet";
 import FilterButton from "./FilterButton";
 import { fetchSubCategories } from "../apiFunctions/properties";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import FilterContext from "../context/FilterContext";
 
 const DragableMenu = () => {
   // Needed in order to use .show()

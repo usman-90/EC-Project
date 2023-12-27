@@ -7,20 +7,49 @@ import {
   View,
   TouchableOpacity,
 } from "react-native";
+import {Marker} from 'react-native-maps';
+import MapView from 'react-native-maps';
 import AntDesingIcon from "react-native-vector-icons/AntDesign";
 import FontAwesomeIcon from "react-native-vector-icons/FontAwesome5";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import CommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
-
+import Pin from "../../assets/Properties/location-pin.png";
 import { useState } from "react";
 import Back from "../../assets/Search/Notification.png";
 import Like from "../../assets/Properties/Like.png";
 import MainIMG from "../../assets/Properties/IMG.png";
 import Star from "../../assets/Properties/star.png";
 
+const detailsNames = [
+  "Price",
+  "Property Size",
+  "Bedrooms",
+  "Parking Size",
+  "Bathrooms",
+  "Garage",
+  "Property Type",
+  "Property Status",
+];
 const featureIcons = {
-  Garden: <FontAwesomeIcon name="swimming-pool" />,
-  Jacuzzi: <AntDesingIcon name="wifi" />,
+  Garden: (
+    <FontAwesomeIcon
+      style={{
+        color: "#FFC70F",
+        fontSize: 20,
+      }}
+      name="swimming-pool"
+    />
+  ),
+  Jacuzzi: (
+    <AntDesingIcon
+      style={{
+        color: "#FFC70F",
+        fontSize: 20,
+      }}
+      name="wifi"
+    />
+  ),
+
   "Laundry Facility": (
     <MaterialIcons
       style={{
@@ -267,10 +296,22 @@ const featureIcons = {
   ),
 };
 
-const PropertyDetails = ({ title, text, images, price, features }) => {
-  console.log(price, title);
+const PropertyDetails = ({location , title, text, images, price, features ,area, bedrooms, parkingSpace, bathrooms, garage, category, status}) => {
+    const loc  = location?.location?.split("-")
+    const detailsVals = [
+        price,
+        area,
+        bedrooms,
+        parkingSpace,
+        bathrooms,
+        garage,
+        category,
+       status 
+    ]
   const [isTextExpanded, setIsTextExpanded] = useState(false);
   const [currImage, setCurrImage] = useState(null);
+
+    console.log(location)
   return (
     <View className=" px-6 basis-full">
       <View className="mb-3 flex flex-row justify-between items-center">
@@ -338,6 +379,26 @@ const PropertyDetails = ({ title, text, images, price, features }) => {
         </View>
 
         <View>
+          <Text className="font-bold text-lg mt-2">Property Details</Text>
+        </View>
+
+        <View className="rounded-lg bg-gray-200 py-1 pb-3 px-3 mt-2">
+          <FlatList
+            className="grow-0"
+            data={detailsNames}
+            renderItem={({ item,index }) => {
+              return (
+                <View className="mt-1 pb-1 flex-row border-b border-gray-400 justify-between">
+                  <Text className="text-base">{item}</Text>
+                  <Text className="text-base">{detailsVals[index]}</Text>
+                </View>
+              );
+            }}
+            keyExtractor={(item) => item?.id}
+          />
+        </View>
+
+        <View>
           <Text className="font-bold text-lg mt-2">Features</Text>
         </View>
 
@@ -359,6 +420,45 @@ const PropertyDetails = ({ title, text, images, price, features }) => {
             }
           })}
         </View>
+
+
+        <View>
+          <Text className="font-bold text-lg mt-2">Address</Text>
+        </View>
+
+        <View className="rounded-lg bg-gray-200 py-1 pb-3 px-3 mt-2">
+                <View className="mt-1 pb-1 flex-row border-b border-gray-400 justify-between">
+                  <Text className="text-base">Country</Text>
+                  <Text className="text-base">{loc ? loc[2] : "---"}</Text>
+                </View>
+                <View className="mt-1 pb-1 flex-row border-b border-gray-400 justify-between">
+                  <Text className="text-base">City</Text>
+                  <Text className="text-base">{loc ? loc[1] : "---"}</Text>
+                </View>
+                <View className="mt-1 pb-1 flex-row border-b border-gray-400 justify-between">
+                  <Text className="text-base">Street</Text>
+                  <Text className="text-base">{loc ? loc[0] : "---"}</Text>
+                </View>
+      </View>
+<View className="h-60 my-3 rounded-lg">
+      <MapView style={styles.map} className="rounded-lg"
+initialRegion={{
+    latitude: parseFloat(location?.latitude),
+    longitude: parseFloat(location?.longitude),
+    latitudeDelta: 0.0922,
+    longitudeDelta: 0.0421,
+  }}
+      >
+      <Marker coordinate={{
+    latitude: parseFloat(location?.latitude),
+    longitude: parseFloat(location?.longitude)
+      }} 
+    image={Pin}
+      />
+      </MapView>
+    </View>
+
+
       </ScrollView>
 
       <View className="flex-row px-6 py-3 bg-gray-50 items-center absolute justify-between  bottom-0 left-0 right-0">
@@ -382,6 +482,10 @@ const styles = StyleSheet.create({
   },
   featureIcons: {
     backgroundColor: "red",
+  },
+      map: {
+    width: '100%',
+    height: '100%',
   },
 });
 

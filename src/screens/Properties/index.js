@@ -9,16 +9,23 @@ import {
   FlatList,
   View,
 } from "react-native";
+import React, { useContext } from "react";
+import FilterContext from "../../context/FilterContext";
 import Search from "../../../assets/Properties/search.png";
 import Pin from "../../../assets/Properties/pin.png";
 import Notification from "../../../assets/Properties/Notification.png";
 import Profile from "../../../assets/Properties/Profile.png";
 import Banner from "../../../assets/Properties/Banner.png";
 import PropertyItem from "../../components/PropertyItem";
-import SearchBar from "../../components/SearchBar";
-import FilterButton from "../../components/FilterButton";
 
 const Properties = ({ navigation }) => {
+  const [filters, setFilters] = useContext(FilterContext);
+  const handleFilterChange = (name, val) => {
+    setFilters({
+      ...filters,
+      [name]: val,
+    });
+  };
   const options = [
     {
       name: "Buy",
@@ -92,6 +99,7 @@ const Properties = ({ navigation }) => {
             return (
               <TouchableOpacity
                 onPress={() => {
+                    handleFilterChange("purpose",item.keyword)
                   navigation.navigate("SearchResult", {
                     name: item.name,
                     purpose: item.keyword,
