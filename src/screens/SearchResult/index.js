@@ -18,21 +18,25 @@ import DragableMenu from "../../components/DragableMenu";
 import FilterContext from "../../context/FilterContext";
 import { useContext, useEffect } from "react";
 import { fetchProperties } from "../../apiFunctions/properties";
+import Loader from "../../components/Loader";
 
 const SearchResult = ({ route, navigation }) => {
   const [filters] = useContext(FilterContext);
-  const { purpose, name } = route.params;
-
   const propertiesResult = useQuery({
     queryKey: ["FetchProperties", filters],
     queryFn: fetchProperties,
   });
-
   const refetchProperties = propertiesResult?.refetch;
-
   useEffect(() => {
     refetchProperties();
   }, [filters]);
+
+  if (propertiesResult?.isLoading) {
+    return <Loader />;
+  }
+
+  const { purpose, name } = route.params;
+
   const properties = propertiesResult?.data?.data?.data ?? [];
   console.log(propertiesResult, "propppppppppp");
 

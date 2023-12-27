@@ -8,6 +8,7 @@ import {
   Text,
   FlatList,
   View,
+  ActivityIndicator,
 } from "react-native";
 import React, { useContext } from "react";
 import { useQuery } from "@tanstack/react-query";
@@ -19,16 +20,21 @@ import Profile from "../../../assets/Properties/Profile.png";
 import Banner from "../../../assets/Properties/Banner.png";
 import PropertyItem from "../../components/PropertyItem";
 import { fetchAllProperties } from "../../apiFunctions/properties";
+import Loader from "../../components/Loader";
 
 const Properties = ({ navigation }) => {
-    const propertiesData = useQuery({
-        queryKey:"allProperties",
-        queryFn: fetchAllProperties
-    })
+  const propertiesData = useQuery({
+    queryKey: ["allProperties"],
+    queryFn: fetchAllProperties,
+  });
   const [filters, setFilters] = useContext(FilterContext);
+
+  if (propertiesData?.isLoading) {
+    return <Loader />;
+  }
+
   const properties = propertiesData?.data?.data?.data ?? [];
 
-  console.log(properties, "Alllllllllllllllllpropppppppppp");
   const handleFilterChange = (name, val) => {
     setFilters({
       ...filters,
@@ -108,7 +114,7 @@ const Properties = ({ navigation }) => {
             return (
               <TouchableOpacity
                 onPress={() => {
-                    handleFilterChange("purpose",item.keyword)
+                  handleFilterChange("purpose", item.keyword);
                   navigation.navigate("SearchResult", {
                     name: item.name,
                     purpose: item.keyword,
@@ -127,7 +133,6 @@ const Properties = ({ navigation }) => {
           keyExtractor={(item) => item.id}
         />
 
-
         <FlatList
           className="grow-0"
           data={properties}
@@ -140,24 +145,22 @@ const Properties = ({ navigation }) => {
                   });
                 }}
               >
-          <PropertyItem
-      title={item?.propertyDetails?.title}
-      image={item?.upload?.images}
-      price={item?.propertyDetails?.InclusivePrice}
-      location={item?.locationAndAddress?.location}
-      bedrooms={
-          item?.amenities?.filter(
-              (item) => item.name == "bedRooms"
-          )[0].value
-      }
-
+                <PropertyItem
+                  title={item?.propertyDetails?.title}
+                  image={item?.upload?.images}
+                  price={item?.propertyDetails?.InclusivePrice}
+                  location={item?.locationAndAddress?.location}
+                  bedrooms={
+                    item?.amenities?.filter(
+                      (item) => item.name == "bedRooms",
+                    )[0].value
+                  }
                 />
               </TouchableOpacity>
             );
           }}
           keyExtractor={(item) => item.id}
         />
-
       </ScrollView>
     </View>
   );
@@ -170,5 +173,17 @@ const styles = StyleSheet.create({
   },
   me_2: {
     marginEnd: 10,
+  },
+  loader: {
+    position: "absolute",
+    zIndex: 19,
+    top: 0,
+    left: 0,
+    backgroundColor: "rgba(255, 255, 255, 0.5)",
+    width: "100%",
+    height: "100%",
+    justifyContent: "center",
+    alignItems: "center",
+    overflow: "hidden",
   },
 });
