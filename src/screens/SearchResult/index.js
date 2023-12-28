@@ -38,7 +38,7 @@ const SearchResult = ({ route, navigation }) => {
   const { purpose, name } = route.params;
 
   const properties = propertiesResult?.data?.data?.data ?? [];
-  console.log(propertiesResult, "propppppppppp");
+  console.log(propertiesResult, "proppppppp");
 
   return (
     <View className="px-6">
