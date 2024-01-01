@@ -8,6 +8,7 @@ import {
   FlatList,
   View,
 } from "react-native";
+import AntDesignIcon from "react-native-vector-icons/AntDesign";
 import SearchBar from "../../components/SearchBar";
 import Menu from "../../../assets/Search/Menu.png";
 import Back from "../../../assets/Search/Notification.png";
@@ -41,11 +42,16 @@ const SearchResult = ({ route, navigation }) => {
   console.log(propertiesResult, "proppppppp");
 
   return (
-    <View className="px-6">
-      <View className="mb-3 flex flex-row justify-between items-center">
-        <Image source={Back} />
+    <View className="px-4">
+      <View className="mb-3 flex flex-row pt-2 justify-between items-center">
+	  <TouchableOpacity onPress={() => navigation.goBack()}>
+	  <View className="rounded-full border p-3 border-gray-300">
+	  <AntDesignIcon name="left" />
+	  </View>
+	  </TouchableOpacity>
         <Text className="text-lg font-bold">{name}</Text>
-        <Image source={Menu} />
+	  <View className="invisible w-10">
+	  </View>
       </View>
       <View className="flex flex-row">
         <SearchBar />

@@ -61,3 +61,9 @@ export function fetchProperties({ queryKey }) {
     },
   );
 }
+
+export function searchProperties(query){
+	return  axios.post('https://realestatebackend-woad.vercel.app/property/serach-property-by-searchbar',{
+		value: query 
+	})
+}

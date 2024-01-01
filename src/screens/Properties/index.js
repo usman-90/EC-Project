@@ -10,6 +10,7 @@ import {
   View,
   ActivityIndicator,
 } from "react-native";
+import AntDesignIcon from "react-native-vector-icons/AntDesign";
 import React, { useContext } from "react";
 import { useQuery } from "@tanstack/react-query";
 import FilterContext from "../../context/FilterContext";
@@ -84,7 +85,9 @@ const Properties = ({ navigation }) => {
           <View
             className={`flex-row basis- basis-full  bg-gray-50 py-2 rounded-full items-center`}
           >
-            <Image className="mx-3" source={Search} />
+	  <View className="px-3">
+	  <AntDesignIcon name="search1" style={{fontSize:20}} />
+	  </View>
             <Text
               className="text-base text-gray-500 w-full pe-2"
               style={styles.pe_2}
@@ -97,14 +100,13 @@ const Properties = ({ navigation }) => {
 
       <ScrollView className="px-6">
         <ImageBackground
-          className="h-40 bg-white"
+          className="rounded-lg h-40 bg-white"
           source={Banner}
           resizeMode="cover"
         ></ImageBackground>
 
         <View className="flex-row justify-between items-center my-3">
           <Text className="text-lg font-bold">Popular</Text>
-          <Text className="text-primary">See all</Text>
         </View>
 
         <FlatList

@@ -1,6 +1,6 @@
 import PropertyDetails from "../../components/PropertyDetails";
 
-const PropertyDetailWrapper = ({ route }) => {
+const PropertyDetailWrapper = ({ route, navigation }) => {
   const { item } = route?.params;
 
   console.log(item?.propertyDetails?.InclusivePrice);
@@ -28,6 +28,7 @@ const PropertyDetailWrapper = ({ route }) => {
       area={item?.propertyDetails?.areaSquare}
       category={item?.typesAndPurpose?.category}
       aracbiDescription={item?.propertyDetails?.descriptionArabic}
+	  navigateBack={navigation.goBack}
     />
   );
 };

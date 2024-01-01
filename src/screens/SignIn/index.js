@@ -1,4 +1,5 @@
 import { Image, TouchableOpacity, StyleSheet, Text, View } from "react-native";
+import AntDesignIcon from "react-native-vector-icons/AntDesign";
 import LoginBg from "../../../assets/LoginImages/LoginBg.png";
 import ContinueWithGoogle from "../../components/Login/ContinueWithGoogle";
 
@@ -19,7 +20,7 @@ const SignIn = ({ navigation }) => {
           </Text>
         </TouchableOpacity>
         <View
-          className="mt-[30px]"
+          className="mt-[20px]"
           style={{
             flexDirection: "row",
             justifyContent: "center",
@@ -31,26 +32,27 @@ const SignIn = ({ navigation }) => {
             imageHeight={25}
             text="Continue With Google"
             textColor="black"
+            onPress={() => navigation.navigate("HomeStack")}
           />
         </View>
         <View
-          className="mt-[30px]"
+          className="mt-[10px]"
           style={{
             flexDirection: "row",
             justifyContent: "center",
             alignItems: "center",
           }}
         >
-          <ContinueWithGoogle
-            imageWidth={25}
-            imageHeight={25}
-            text="Continue With Facebook"
-            textColor="black"
-            onPress={() => navigation.navigate("HomeStack")}
-          />
+
+	  <TouchableOpacity
+	  className="flex-row items-center bg-gray-100 py-2 w-full justify-center rounded-lg"
+	  >
+	  <AntDesignIcon name="facebook-square" style={{marginHorizontal:10, fontSize:22, color:"#316FF6"}} />
+	  <Text className="text-black">Continue with facebook</Text>
+	  </TouchableOpacity>
         </View>
         <View
-          className="mt-[20px]"
+          className="mt-[20px] "
           style={{
             flexDirection: "row",
             justifyContent: "center",

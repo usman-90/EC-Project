@@ -170,8 +170,11 @@ const DragableMenu = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <BottomSheet hasDraggableIcon ref={bottomSheet} height={800}>
+      <BottomSheet hasDraggableIcon ref={bottomSheet} height={600}>
+
         <ScrollView className="mb-2">
+	  <TouchableWithoutFeedback>
+	  <View>
           <Text className="px-6 text-lg my-1 font-bold">Category</Text>
 
           <View className="px-6">
@@ -290,7 +293,7 @@ const DragableMenu = () => {
             <View className="items-center">
               <MultiSlider
                 values={[filters?.priceMin, filters?.priceMax]}
-                sliderLength={350}
+                sliderLength={300}
                 onValuesChange={handleValuesChange}
                 min={0}
                 max={5000}
@@ -310,7 +313,7 @@ const DragableMenu = () => {
             <View className="items-center">
               <MultiSlider
                 values={[filters?.areaMin, filters?.areaMax]}
-                sliderLength={350}
+                sliderLength={300}
                 onValuesChange={(newValues) => {
                   const [min, max] = newValues;
                   handleMultipleChanges({
@@ -330,6 +333,8 @@ const DragableMenu = () => {
               <Text className="text-lg font-bold">{filters?.areaMax} SqFt</Text>
             </View>
           </View>
+	  </View>
+	  </TouchableWithoutFeedback>
         </ScrollView>
       </BottomSheet>
       <TouchableOpacity onPress={() => bottomSheet.current.show()}>

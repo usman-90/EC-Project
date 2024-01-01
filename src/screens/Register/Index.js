@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import Heading from "../../components/Heading";
 import InputField from "../../components/InputField";
 import CheckBox from "../../components/Login/checkbox";
@@ -97,21 +97,20 @@ const Register = ({ navigation }) => {
               setIsChecked={setIsAgreed}
             />
           </View>
-          <View className="ml-[30px] mt-[40px]">
-            <CustomButton
-              width={360}
-              height={50}
-              backgroundColor="#FFC70F"
-              text="Signup"
-              textColor="white"
-              disabled={!isAgreed}
-              handlePress={() => {
-                registerMutation.mutate(data);
-              }}
-            />
-          </View>
+	  <TouchableOpacity 
+	  onPress={() => {
+		  registerMutation.mutate(data);
+	  }}
+	  disabled={!isAgreed}
+	  >
+	  <View className={`${!isAgreed ? "bg-gray-400" : "bg-primary"}  my-2 mt-3  mx-6 rounded-lg py-3 items-center`}>
+	  	<Text className="text-white text-lg">
+	  		Signup	
+	  	</Text>
+	  </View>
+	  </TouchableOpacity>
           <View
-            className="mt-[30px]"
+            className="mt-[30px] px-6"
             style={{
               flexDirection: "row",
               justifyContent: "center",

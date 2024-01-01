@@ -8,6 +8,8 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { Marker } from "react-native-maps";
+import AntDesignIcon from "react-native-vector-icons/AntDesign";
+	  import { Linking } from 'react-native';
 import MapView from "react-native-maps";
 import AntDesingIcon from "react-native-vector-icons/AntDesign";
 import FontAwesomeIcon from "react-native-vector-icons/FontAwesome5";
@@ -310,6 +312,8 @@ const PropertyDetails = ({
   garage,
   category,
   status,
+	navigateBack,
+	phone
 }) => {
   const loc = location?.location?.split("-");
   const detailsVals = [
@@ -325,13 +329,36 @@ const PropertyDetails = ({
   const [isTextExpanded, setIsTextExpanded] = useState(false);
   const [currImage, setCurrImage] = useState(null);
 
-  console.log(location);
+
+const openWhatsApp = () => {
+  const phoneNumber = phone;
+  
+  const whatsappURI = `whatsapp://send?phone=${phoneNumber}`;
+  
+  Linking.canOpenURL(whatsappURI)
+    .then(supported => {
+      if (supported) {
+        return Linking.openURL(whatsappURI);
+      } else {
+        console.log("WhatsApp is not installed on the device");
+      }
+    })
+    .catch(error => console.error("An error occurred while opening WhatsApp", error));
+};
+
+
+
+
   return (
     <View className=" px-6 basis-full">
-      <View className="mb-3 flex flex-row justify-between items-center">
-        <Image source={Back} />
+      <View className="mb-3 flex py-2 flex-row justify-between items-center">
+	  <TouchableOpacity onPress={() => navigateBack()}>
+	  <View className="rounded-full border p-2 border-gray-300">
+	  <AntDesingIcon name="left" />
+	  </View>
+	  </TouchableOpacity>
         <Text className="text-lg font-bold">Property Detail</Text>
-        <Image source={Like} />
+        <Image source={null} className="w-10" />
       </View>
       <ScrollView className="mb-20">
         <View>
@@ -480,7 +507,7 @@ const PropertyDetails = ({
           <Text className="text-sm text-gray-500 ">Total Price</Text>
           <Text className="text-lg font-bold ">AED {price}</Text>
         </View>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={openWhatsApp} >
           <Text className="bg-primary text-white font-bold text-base py-2 px-4 rounded-xl">
             Booking Now
           </Text>
