@@ -79,7 +79,7 @@ const SearchResult = ({ route, navigation }) => {
               </TouchableOpacity>
             );
           }}
-          keyExtractor={(item) => item}
+          keyExtractor={(item,idx) => idx}
         />
       </View>
     </View>

@@ -1,4 +1,6 @@
 import React, {useState} from 'react';
+import 'expo-dev-client';
+import 'react-native-gesture-handler';
 import Toast from 'react-native-toast-message';
 import {SafeAreaView, StyleSheet,Platform,StatusBar } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';

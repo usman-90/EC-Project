@@ -109,38 +109,36 @@ const Properties = ({ navigation }) => {
           <Text className="text-lg font-bold">Popular</Text>
         </View>
 
-        <FlatList
-          className="grow-0"
-          data={options}
-          renderItem={({ item }) => {
-            return (
+	<View className="flex-row">
+	{
+		options?.map((item,idx) => {
+			return (
+				<TouchableOpacity
+				key={idx}
+				onPress={() => {
+					handleFilterChange("purpose", item.keyword);
+					navigation.navigate("SearchResult", {
+						name: item.name,
+						purpose: item.keyword,
+					});
+				}}
+				>
+				<View style={styles.me_2} className="me-3">
+				<Text className="h-8  py-2 text-white rounded-md px-3 bg-primary">
+				{item?.name}
+				</Text>
+				</View>
+				</TouchableOpacity>
+			)
+		})
+	}
+	</View>
+	
+	{
+		properties?.map((item,idx) => {
+			return (
               <TouchableOpacity
-                onPress={() => {
-                  handleFilterChange("purpose", item.keyword);
-                  navigation.navigate("SearchResult", {
-                    name: item.name,
-                    purpose: item.keyword,
-                  });
-                }}
-              >
-                <View style={styles.me_2} className="me-3">
-                  <Text className="h-8  py-2 text-white rounded-md px-3 bg-primary">
-                    {item?.name}
-                  </Text>
-                </View>
-              </TouchableOpacity>
-            );
-          }}
-          horizontal={true}
-          keyExtractor={(item) => item.id}
-        />
-
-        <FlatList
-          className="grow-0"
-          data={properties}
-          renderItem={({ item }) => {
-            return (
-              <TouchableOpacity
+			key={idx}
                 onPress={() => {
                   navigation.navigate("Details", {
                     item: item,
@@ -159,10 +157,10 @@ const Properties = ({ navigation }) => {
                   }
                 />
               </TouchableOpacity>
-            );
-          }}
-          keyExtractor={(item) => item.id}
-        />
+			)
+		})
+	}
+	  
       </ScrollView>
     </View>
   );

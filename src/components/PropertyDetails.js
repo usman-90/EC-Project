@@ -161,12 +161,12 @@ const featureIcons = {
     />
   ),
   otherRooms: (
-    <MaterialIcons
+    <FontAwesomeIcon
       style={{
         color: "#FFC70F",
         fontSize: 20,
       }}
-      name="bedroom-parent"
+      name="bed"
     />
   ),
   facilities: (
@@ -356,7 +356,7 @@ const PropertyDetails = ({
           </View>
         </TouchableOpacity>
         <Text className="text-lg font-bold">Property Detail</Text>
-        <Image source={null} className="w-10" />
+        <Image source={0} className="w-10" />
       </View>
       <ScrollView className="mb-20">
         <View>
@@ -393,16 +393,17 @@ const PropertyDetails = ({
         <View>
           <Text className="font-bold text-lg mt-2">Gallery</Text>
         </View>
+
+	  <ScrollView horizontal={true}>
         <View className="mt-2 flex-row">
-          <FlatList
-            className="grow-0"
-            data={images}
-            renderItem={({ item }) => {
+	  {
+		  images?.map((item,key) => {
               return (
                 <TouchableOpacity
                   onPress={() => {
                     setCurrImage(item);
                   }}
+		      key={key}
                 >
                   <Image
                     source={{ uri: item }}
@@ -411,30 +412,26 @@ const PropertyDetails = ({
                   />
                 </TouchableOpacity>
               );
-            }}
-            horizontal={true}
-            keyExtractor={(item) => item?.id}
-          />
+		  })
+	  }
         </View>
+	  </ScrollView>
 
         <View>
           <Text className="font-bold text-lg mt-2">Property Details</Text>
         </View>
 
         <View className="rounded-lg bg-gray-200 py-1 pb-3 px-3 mt-2">
-          <FlatList
-            className="grow-0"
-            data={detailsNames}
-            renderItem={({ item, index }) => {
+	  {
+		  detailsNames?.map((item,index) => {
               return (
-                <View className="mt-1 pb-1 flex-row border-b border-gray-400 justify-between">
+                <View key={index} className="mt-1 pb-1 flex-row border-b border-gray-400 justify-between">
                   <Text className="text-base">{item}</Text>
                   <Text className="text-base">{detailsVals[index]}</Text>
                 </View>
               );
-            }}
-            keyExtractor={(item) => item?.id}
-          />
+		  })
+	  }
         </View>
 
         <View>
@@ -442,7 +439,7 @@ const PropertyDetails = ({
         </View>
 
         <View className="mt-2 flex-row flex-wrap ">
-          {features?.map((elem) => {
+          {features?.map((elem , idx) => {
             if (elem.name !== "bathRooms" && elem.name !== "bedRooms") {
               const Icon = featureIcons[elem.name];
               const displayText =
@@ -450,7 +447,7 @@ const PropertyDetails = ({
                   ? `${elem.name} : ${elem.value}`
                   : elem.name;
               return (
-                <View className="my-1" style={styles.me_2}>
+                <View key={idx} className="my-1" style={styles.me_2}>
                   <Text>
                     {Icon} {displayText}
                   </Text>
