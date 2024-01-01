@@ -28,7 +28,7 @@ const PropertyDetailWrapper = ({ route, navigation }) => {
       area={item?.propertyDetails?.areaSquare}
       category={item?.typesAndPurpose?.category}
       aracbiDescription={item?.propertyDetails?.descriptionArabic}
-	  navigateBack={navigation.goBack}
+      navigateBack={navigation.goBack}
     />
   );
 };

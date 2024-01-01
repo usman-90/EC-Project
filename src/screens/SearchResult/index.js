@@ -44,14 +44,13 @@ const SearchResult = ({ route, navigation }) => {
   return (
     <View className="px-4">
       <View className="mb-3 flex flex-row pt-2 justify-between items-center">
-	  <TouchableOpacity onPress={() => navigation.goBack()}>
-	  <View className="rounded-full border p-3 border-gray-300">
-	  <AntDesignIcon name="left" />
-	  </View>
-	  </TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <View className="rounded-full border p-3 border-gray-300">
+            <AntDesignIcon name="left" />
+          </View>
+        </TouchableOpacity>
         <Text className="text-lg font-bold">{name}</Text>
-	  <View className="invisible w-10">
-	  </View>
+        <View className="invisible w-10"></View>
       </View>
       <View className="flex flex-row">
         <SearchBar />

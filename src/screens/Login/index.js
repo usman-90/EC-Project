@@ -94,21 +94,19 @@ const Loginpage = ({ navigation }) => {
               </Text>
             </TouchableOpacity>
           </View>
-	  <TouchableOpacity
-	  onPress={() => {
-		  if (data.email === "" || data.password === "") {
-			  console.log("noo");
-			  return;
-		  }
-		  loginMutation.mutate(data);
-	  }}
-	  >
-	  <View className="my-2 bg-primary mx-6 rounded-lg py-3 items-center">
-	  	<Text className="text-white text-lg">
-	  		Login
-	  	</Text>
-	  </View>
-	  </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
+              if (data.email === "" || data.password === "") {
+                console.log("noo");
+                return;
+              }
+              loginMutation.mutate(data);
+            }}
+          >
+            <View className="my-2 bg-primary mx-6 rounded-lg py-3 items-center">
+              <Text className="text-white text-lg">Login</Text>
+            </View>
+          </TouchableOpacity>
           <View
             className="mt-[30px] px-6"
             style={{

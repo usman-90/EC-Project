@@ -97,18 +97,20 @@ const Register = ({ navigation }) => {
               setIsChecked={setIsAgreed}
             />
           </View>
-	  <TouchableOpacity 
-	  onPress={() => {
-		  registerMutation.mutate(data);
-	  }}
-	  disabled={!isAgreed}
-	  >
-	  <View className={`${!isAgreed ? "bg-gray-400" : "bg-primary"}  my-2 mt-3  mx-6 rounded-lg py-3 items-center`}>
-	  	<Text className="text-white text-lg">
-	  		Signup	
-	  	</Text>
-	  </View>
-	  </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
+              registerMutation.mutate(data);
+            }}
+            disabled={!isAgreed}
+          >
+            <View
+              className={`${
+                !isAgreed ? "bg-gray-400" : "bg-primary"
+              }  my-2 mt-3  mx-6 rounded-lg py-3 items-center`}
+            >
+              <Text className="text-white text-lg">Signup</Text>
+            </View>
+          </TouchableOpacity>
           <View
             className="mt-[30px] px-6"
             style={{

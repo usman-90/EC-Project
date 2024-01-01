@@ -171,170 +171,179 @@ const DragableMenu = () => {
   return (
     <SafeAreaView style={styles.container}>
       <BottomSheet hasDraggableIcon ref={bottomSheet} height={600}>
-
         <ScrollView className="mb-2">
-	  <TouchableWithoutFeedback>
-	  <View>
-          <Text className="px-6 text-lg my-1 font-bold">Category</Text>
+          <TouchableWithoutFeedback>
+            <View>
+              <Text className="px-6 text-lg my-1 font-bold">Category</Text>
 
-          <View className="px-6">
-            <FlatList
-              className="grow-0"
-              data={categories}
-              renderItem={({ item }) => {
-                return (
+              <View className="px-6">
+                <FlatList
+                  className="grow-0"
+                  data={categories}
+                  renderItem={({ item }) => {
+                    return (
+                      <TouchableOpacity
+                        onPress={() => {
+                          handleFilterChange("category", item?.keyword);
+                        }}
+                      >
+                        <View style={styles.me_2} className="me-3">
+                          <Text
+                            className={`h-8  py-2 rounded-md px-3 bg-primary ${
+                              item?.keyword === filters?.category
+                                ? "bg-white text-primary border border-primary"
+                                : "bg-primary text-white"
+                            }`}
+                          >
+                            {item?.name}
+                          </Text>
+                        </View>
+                      </TouchableOpacity>
+                    );
+                  }}
+                  horizontal={true}
+                  keyExtractor={(item) => item.id}
+                />
+              </View>
+              <Text className={`px-6 text-lg my-1 font-bold $ `}>
+                Sub Category
+              </Text>
+
+              <View className="px-6 flex-row flex-wrap">
+                {subCategories?.map((cat) => {
+                  return (
+                    <TouchableOpacity
+                      className="my-1"
+                      onPress={() => {
+                        handleFilterChange("subCategory", cat?.key);
+                        console.log(cat?.key);
+                      }}
+                    >
+                      <View style={styles.me_2} className="me-3">
+                        <Text
+                          className={`h-8  py-2 rounded-md px-3 bg-primary  ${
+                            cat?.key === filters?.subCategory
+                              ? "bg-white text-primary border border-primary"
+                              : "bg-primary text-white"
+                          }`}
+                        >
+                          {cat?.value}
+                        </Text>
+                      </View>
+                    </TouchableOpacity>
+                  );
+                })}
+              </View>
+
+              <Text className="px-6 text-lg my-1 font-bold">Completeness</Text>
+
+              <View className="px-6 flex-row justify-between my-1 items-center">
+                <Text className="text-base text-gray-500">Bedrooms</Text>
+                <View className="flex-row">
                   <TouchableOpacity
                     onPress={() => {
-                      handleFilterChange("category", item?.keyword);
+                      decrementBedrooms();
                     }}
                   >
-                    <View style={styles.me_2} className="me-3">
-                      <Text
-                        className={`h-8  py-2 rounded-md px-3 bg-primary ${
-                          item?.keyword === filters?.category
-                            ? "bg-white text-primary border border-primary"
-                            : "bg-primary text-white"
-                        }`}
-                      >
-                        {item?.name}
-                      </Text>
-                    </View>
+                    <Icon name="minuscircle" style={styles.iconStyleGray} />
                   </TouchableOpacity>
-                );
-              }}
-              horizontal={true}
-              keyExtractor={(item) => item.id}
-            />
-          </View>
-          <Text className={`px-6 text-lg my-1 font-bold $ `}>Sub Category</Text>
+                  <Text className="mx-2 text-base">
+                    {bedroomsNo[getBedroomsIdx()]?.name}
+                  </Text>
+                  <TouchableOpacity
+                    onPress={() => {
+                      incrementBedroom();
+                    }}
+                  >
+                    <Icon style={styles.iconStyleYellow} name="pluscircle" />
+                  </TouchableOpacity>
+                </View>
+              </View>
 
-          <View className="px-6 flex-row flex-wrap">
-            {subCategories?.map((cat) => {
-              return (
-                <TouchableOpacity
-                  className="my-1"
-                  onPress={() => {
-                    handleFilterChange("subCategory", cat?.key);
-                    console.log(cat?.key);
-                  }}
-                >
-                  <View style={styles.me_2} className="me-3">
-                    <Text
-                      className={`h-8  py-2 rounded-md px-3 bg-primary  ${
-                        cat?.key === filters?.subCategory
-                          ? "bg-white text-primary border border-primary"
-                          : "bg-primary text-white"
-                      }`}
-                    >
-                      {cat?.value}
-                    </Text>
-                  </View>
-                </TouchableOpacity>
-              );
-            })}
-          </View>
+              <View className="px-6 flex-row justify-between my-1 items-center">
+                <Text className="text-base text-gray-500">Bathrooms</Text>
+                <View className="flex-row">
+                  <TouchableOpacity
+                    onPress={() => {
+                      decrementBathrooms();
+                    }}
+                  >
+                    <Icon name="minuscircle" style={styles.iconStyleGray} />
+                  </TouchableOpacity>
+                  <Text className="mx-2 text-base">
+                    {bathroomNo[getBathroomIdx()]?.name}
+                  </Text>
+                  <TouchableOpacity
+                    onPress={() => {
+                      incrementBathrooms();
+                    }}
+                  >
+                    <Icon style={styles.iconStyleYellow} name="pluscircle" />
+                  </TouchableOpacity>
+                </View>
+              </View>
 
-          <Text className="px-6 text-lg my-1 font-bold">Completeness</Text>
+              <Text className="px-6 text-lg my-1 font-bold">Price Range</Text>
 
-          <View className="px-6 flex-row justify-between my-1 items-center">
-            <Text className="text-base text-gray-500">Bedrooms</Text>
-            <View className="flex-row">
-              <TouchableOpacity
-                onPress={() => {
-                  decrementBedrooms();
-                }}
-              >
-                <Icon name="minuscircle" style={styles.iconStyleGray} />
-              </TouchableOpacity>
-              <Text className="mx-2 text-base">
-                {bedroomsNo[getBedroomsIdx()]?.name}
-              </Text>
-              <TouchableOpacity
-                onPress={() => {
-                  incrementBedroom();
-                }}
-              >
-                <Icon style={styles.iconStyleYellow} name="pluscircle" />
-              </TouchableOpacity>
+              <View className="px-6 mt-2 flex-row justify-center">
+                <Graph style={styles.graph} name="graph-bar" />
+                <Graph style={styles.graph} name="graph-bar" />
+              </View>
+
+              <View className="px-6">
+                <View className="items-center">
+                  <MultiSlider
+                    values={[filters?.priceMin, filters?.priceMax]}
+                    sliderLength={300}
+                    onValuesChange={handleValuesChange}
+                    min={0}
+                    max={5000}
+                    step={1}
+                    allowOverlap={false}
+                    snapped
+                  />
+                </View>
+                <View className="flex-row justify-between">
+                  <Text className="text-lg font-bold">
+                    ${filters?.priceMin}
+                  </Text>
+                  <Text className="text-lg font-bold">
+                    ${filters?.priceMax}
+                  </Text>
+                </View>
+              </View>
+
+              <Text className="px-6 text-lg my-1 font-bold">Category</Text>
+              <View className="px-6">
+                <View className="items-center">
+                  <MultiSlider
+                    values={[filters?.areaMin, filters?.areaMax]}
+                    sliderLength={300}
+                    onValuesChange={(newValues) => {
+                      const [min, max] = newValues;
+                      handleMultipleChanges({
+                        areaMin: min,
+                        areaMax: max,
+                      });
+                    }}
+                    min={0}
+                    max={5000}
+                    step={1}
+                    allowOverlap={false}
+                    snapped
+                  />
+                </View>
+                <View className="flex-row justify-between">
+                  <Text className="text-lg font-bold">
+                    {filters?.areaMin} SqFt
+                  </Text>
+                  <Text className="text-lg font-bold">
+                    {filters?.areaMax} SqFt
+                  </Text>
+                </View>
+              </View>
             </View>
-          </View>
-
-          <View className="px-6 flex-row justify-between my-1 items-center">
-            <Text className="text-base text-gray-500">Bathrooms</Text>
-            <View className="flex-row">
-              <TouchableOpacity
-                onPress={() => {
-                  decrementBathrooms();
-                }}
-              >
-                <Icon name="minuscircle" style={styles.iconStyleGray} />
-              </TouchableOpacity>
-              <Text className="mx-2 text-base">
-                {bathroomNo[getBathroomIdx()]?.name}
-              </Text>
-              <TouchableOpacity
-                onPress={() => {
-                  incrementBathrooms();
-                }}
-              >
-                <Icon style={styles.iconStyleYellow} name="pluscircle" />
-              </TouchableOpacity>
-            </View>
-          </View>
-
-          <Text className="px-6 text-lg my-1 font-bold">Price Range</Text>
-
-          <View className="px-6 mt-2 flex-row justify-center">
-            <Graph style={styles.graph} name="graph-bar" />
-            <Graph style={styles.graph} name="graph-bar" />
-          </View>
-
-          <View className="px-6">
-            <View className="items-center">
-              <MultiSlider
-                values={[filters?.priceMin, filters?.priceMax]}
-                sliderLength={300}
-                onValuesChange={handleValuesChange}
-                min={0}
-                max={5000}
-                step={1}
-                allowOverlap={false}
-                snapped
-              />
-            </View>
-            <View className="flex-row justify-between">
-              <Text className="text-lg font-bold">${filters?.priceMin}</Text>
-              <Text className="text-lg font-bold">${filters?.priceMax}</Text>
-            </View>
-          </View>
-
-          <Text className="px-6 text-lg my-1 font-bold">Category</Text>
-          <View className="px-6">
-            <View className="items-center">
-              <MultiSlider
-                values={[filters?.areaMin, filters?.areaMax]}
-                sliderLength={300}
-                onValuesChange={(newValues) => {
-                  const [min, max] = newValues;
-                  handleMultipleChanges({
-                    areaMin: min,
-                    areaMax: max,
-                  });
-                }}
-                min={0}
-                max={5000}
-                step={1}
-                allowOverlap={false}
-                snapped
-              />
-            </View>
-            <View className="flex-row justify-between">
-              <Text className="text-lg font-bold">{filters?.areaMin} SqFt</Text>
-              <Text className="text-lg font-bold">{filters?.areaMax} SqFt</Text>
-            </View>
-          </View>
-	  </View>
-	  </TouchableWithoutFeedback>
+          </TouchableWithoutFeedback>
         </ScrollView>
       </BottomSheet>
       <TouchableOpacity onPress={() => bottomSheet.current.show()}>

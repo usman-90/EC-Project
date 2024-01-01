@@ -43,13 +43,13 @@ const SignIn = ({ navigation }) => {
             alignItems: "center",
           }}
         >
-
-	  <TouchableOpacity
-	  className="flex-row items-center bg-gray-100 py-2 w-full justify-center rounded-lg"
-	  >
-	  <AntDesignIcon name="facebook-square" style={{marginHorizontal:10, fontSize:22, color:"#316FF6"}} />
-	  <Text className="text-black">Continue with facebook</Text>
-	  </TouchableOpacity>
+          <TouchableOpacity className="flex-row items-center bg-gray-100 py-2 w-full justify-center rounded-lg">
+            <AntDesignIcon
+              name="facebook-square"
+              style={{ marginHorizontal: 10, fontSize: 22, color: "#316FF6" }}
+            />
+            <Text className="text-black">Continue with facebook</Text>
+          </TouchableOpacity>
         </View>
         <View
           className="mt-[20px] "

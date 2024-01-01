@@ -85,9 +85,9 @@ const Properties = ({ navigation }) => {
           <View
             className={`flex-row basis- basis-full  bg-gray-50 py-2 rounded-full items-center`}
           >
-	  <View className="px-3">
-	  <AntDesignIcon name="search1" style={{fontSize:20}} />
-	  </View>
+            <View className="px-3">
+              <AntDesignIcon name="search1" style={{ fontSize: 20 }} />
+            </View>
             <Text
               className="text-base text-gray-500 w-full pe-2"
               style={styles.pe_2}
