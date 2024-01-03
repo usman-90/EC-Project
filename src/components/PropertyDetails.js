@@ -7,9 +7,10 @@ import {
   View,
   TouchableOpacity,
 } from "react-native";
-import { Marker } from "react-native-maps";
+
 import AntDesignIcon from "react-native-vector-icons/AntDesign";
 import { Linking } from "react-native";
+import { Marker } from "react-native-maps";
 import MapView from "react-native-maps";
 import AntDesingIcon from "react-native-vector-icons/AntDesign";
 import FontAwesomeIcon from "react-native-vector-icons/FontAwesome5";
@@ -314,6 +315,7 @@ const PropertyDetails = ({
   status,
   navigateBack,
   phone,
+navigation
 }) => {
   const loc = location?.location?.split("-");
   const detailsVals = [
@@ -394,16 +396,15 @@ const PropertyDetails = ({
           <Text className="font-bold text-lg mt-2">Gallery</Text>
         </View>
 
-	  <ScrollView horizontal={true}>
-        <View className="mt-2 flex-row">
-	  {
-		  images?.map((item,key) => {
+        <ScrollView horizontal={true}>
+          <View className="mt-2 flex-row">
+            {images?.map((item, key) => {
               return (
                 <TouchableOpacity
                   onPress={() => {
                     setCurrImage(item);
                   }}
-		      key={key}
+                  key={key}
                 >
                   <Image
                     source={{ uri: item }}
@@ -412,34 +413,34 @@ const PropertyDetails = ({
                   />
                 </TouchableOpacity>
               );
-		  })
-	  }
-        </View>
-	  </ScrollView>
+            })}
+          </View>
+        </ScrollView>
 
         <View>
           <Text className="font-bold text-lg mt-2">Property Details</Text>
         </View>
 
         <View className="rounded-lg bg-gray-200 py-1 pb-3 px-3 mt-2">
-	  {
-		  detailsNames?.map((item,index) => {
-              return (
-                <View key={index} className="mt-1 pb-1 flex-row border-b border-gray-400 justify-between">
-                  <Text className="text-base">{item}</Text>
-                  <Text className="text-base">{detailsVals[index]}</Text>
-                </View>
-              );
-		  })
-	  }
+          {detailsNames?.map((item, index) => {
+            return (
+              <View
+                key={index}
+                className="mt-1 pb-1 flex-row border-b border-gray-400 justify-between"
+              >
+                <Text className="text-base">{item}</Text>
+                <Text className="text-base">{detailsVals[index]}</Text>
+              </View>
+            );
+          })}
         </View>
 
         <View>
           <Text className="font-bold text-lg mt-2">Features</Text>
         </View>
 
-        <View className="mt-2 flex-row flex-wrap ">
-          {features?.map((elem , idx) => {
+        <View className="mt-2 flex-row justify-betwee flex-wrap ">
+          {features?.map((elem, idx) => {
             if (elem.name !== "bathRooms" && elem.name !== "bedRooms") {
               const Icon = featureIcons[elem.name];
               const displayText =
@@ -447,7 +448,7 @@ const PropertyDetails = ({
                   ? `${elem.name} : ${elem.value}`
                   : elem.name;
               return (
-                <View key={idx} className="my-1" style={styles.me_2}>
+                <View key={idx} className="my-1 w-[45%]" style={styles.me_2}>
                   <Text>
                     {Icon} {displayText}
                   </Text>
@@ -475,26 +476,30 @@ const PropertyDetails = ({
             <Text className="text-base">{loc ? loc[0] : "---"}</Text>
           </View>
         </View>
-        <View className="h-60 my-3 rounded-lg">
-          <MapView
-            style={styles.map}
-            className="rounded-lg"
-            initialRegion={{
+        <TouchableOpacity 
+	  onPress={() => {
+			navigation.navigate("Map",{
+				coords:{
               latitude: parseFloat(location?.latitude),
               longitude: parseFloat(location?.longitude),
-              latitudeDelta: 0.0922,
-              longitudeDelta: 0.0421,
-            }}
-          >
-            <Marker
-              coordinate={{
-                latitude: parseFloat(location?.latitude),
-                longitude: parseFloat(location?.longitude),
-              }}
-              image={Pin}
-            />
-          </MapView>
-        </View>
+
+				},
+				navigateBack :navigation.goBack
+			})
+		}}
+	  className=" flex-row items-center justify-between bg-gray-200 py-4 px-1 my-3 rounded-lg">
+	  	<FontAwesomeIcon name="location-arrow" style={{
+			color:"#FFC70F",
+				fontSize:30,
+				borderRadius:50,
+		}} />
+	  	<View >
+	  		<Text className="text-lg fw-bold">
+				View Property Location
+	  		</Text>
+	  	</View>
+	  <AntDesingIcon name="arrowright" style={{fontSize:22}} />
+        </TouchableOpacity>
       </ScrollView>
 
       <View className="flex-row px-6 py-3 bg-gray-50 items-center absolute justify-between  bottom-0 left-0 right-0">

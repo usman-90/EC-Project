@@ -19,7 +19,7 @@ import FilterButton from "./FilterButton";
 import { fetchSubCategories } from "../apiFunctions/properties";
 import { useMutation, useQuery } from "@tanstack/react-query";
 
-const DragableMenu = () => {
+const DragableMenu = ({ refetchProperties }) => {
   // Needed in order to use .show()
   const bottomSheet = useRef();
   const [filters, setFilters] = useContext(FilterContext);
@@ -171,7 +171,7 @@ const DragableMenu = () => {
   return (
     <SafeAreaView style={styles.container}>
       <BottomSheet hasDraggableIcon ref={bottomSheet} height={600}>
-        <ScrollView className="mb-2">
+        <ScrollView className="basis-full mb-">
           <TouchableWithoutFeedback>
             <View>
               <Text className="px-6 text-lg my-1 font-bold">Category</Text>
@@ -341,6 +341,37 @@ const DragableMenu = () => {
                     {filters?.areaMax} SqFt
                   </Text>
                 </View>
+              </View>
+              <View className="mt-2 flex-row w-full px-6 py-3  bottom-0 left-0 right-0 bg-gray-200">
+                <TouchableOpacity
+                  onPress={() =>
+                    handleMultipleChanges({
+                      category: "all",
+                      subCategory: "",
+                      priceMin: "",
+                      priceMax: "",
+                      areaMin: "",
+                      areaMax: "",
+                      bathrooms: "",
+                      bedrooms: "",
+                    })
+                  }
+                  className="bg-red-500 text-white px-4 py-2 w-3/12 text-base rounded-lg"
+                >
+                  <View className="">
+                    <Text className="text-white text-center">Reset</Text>
+                  </View>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  className="bg-primary text-white mx-2 px-4 py-2 w-9/12 text-base rounded-lg"
+                  onPress={() => refetchProperties()}
+                >
+                  <View className="">
+                    <Text className="text-white w-full text-center">
+                      Search
+                    </Text>
+                  </View>
+                </TouchableOpacity>
               </View>
             </View>
           </TouchableWithoutFeedback>

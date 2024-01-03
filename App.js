@@ -36,26 +36,25 @@ const queryClient = new QueryClient({
 });
 
   return (
+	  <QueryClientProvider client={queryClient}>
 	  <FilterContext.Provider value ={filters} >
 	    <Provider store={store}>
 	   <PersistGate loading={null} persistor={persistor}>
-	  <QueryClientProvider client={queryClient}>
 	  	<SafeAreaView style={styles.container}>
       			<NavigationContainer>
       				<RootStack />
       			</NavigationContainer>
 	   		<Toast />
 	  	</ SafeAreaView>
-	  </QueryClientProvider>
 	  </PersistGate >
 	  </Provider>
 	  </FilterContext.Provider >
+	  </QueryClientProvider>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-	   paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0
   },
 });

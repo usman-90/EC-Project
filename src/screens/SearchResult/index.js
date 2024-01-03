@@ -20,18 +20,20 @@ import FilterContext from "../../context/FilterContext";
 import { useContext, useEffect } from "react";
 import { fetchProperties } from "../../apiFunctions/properties";
 import Loader from "../../components/Loader";
+import PropertyItem from "../../components/PropertyItem";
 
 const SearchResult = ({ route, navigation }) => {
   const [filters] = useContext(FilterContext);
   const propertiesResult = useQuery({
     queryKey: ["FetchProperties", filters],
     queryFn: fetchProperties,
+    enabled: false,
   });
   const refetchProperties = propertiesResult?.refetch;
-  useEffect(() => {
-    refetchProperties();
-  }, [filters]);
-
+	useEffect(()=> {
+		refetchProperties()
+	},[])
+  console.log(refetchProperties);
   if (propertiesResult?.isLoading) {
     return <Loader />;
   }
@@ -54,11 +56,11 @@ const SearchResult = ({ route, navigation }) => {
       </View>
       <View className="flex flex-row">
         <SearchBar />
-        <DragableMenu />
+        <DragableMenu refetchProperties={refetchProperties} />
       </View>
       <View>
         <FlatList
-          className="grow-0"
+          className="grow-0 mb-52"
           data={properties}
           renderItem={({ item }) => {
             return (
@@ -69,17 +71,24 @@ const SearchResult = ({ route, navigation }) => {
                   });
                 }}
               >
-                <RecentPropertyItem
-                  title={item?.propertyDetails?.title}
-                  loc={item?.locationAndAddress?.address}
-                  area={item?.propertyDetails?.areaSquare}
-                  image={item?.upload?.images[0]}
-                  amount={item?.propertyDetails?.InclusivePrice}
-                />
+              <PropertyItem
+                title={item?.propertyDetails?.title}
+                image={item?.upload?.images}
+                price={item?.propertyDetails?.InclusivePrice}
+                location={item?.locationAndAddress?.location}
+                bedrooms={
+                  item?.amenities?.filter((item) => item.name == "bedRooms")[0]
+                    .value
+                }
+		  area={item?.propertyDetails?.areaSquare}
+		  beds={item?.propertyDetails?.bedRooms}
+		  bathrooms={item?.propertyDetails?.bathRooms}
+
+              />
               </TouchableOpacity>
             );
           }}
-          keyExtractor={(item,idx) => idx}
+          keyExtractor={(item, idx) => idx}
         />
       </View>
     </View>

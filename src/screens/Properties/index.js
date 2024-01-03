@@ -35,7 +35,7 @@ const Properties = ({ navigation }) => {
   }
 
   const properties = propertiesData?.data?.data?.data ?? [];
-
+console.log(properties,"preppppp")
   const handleFilterChange = (name, val) => {
     setFilters({
       ...filters,
@@ -109,58 +109,57 @@ const Properties = ({ navigation }) => {
           <Text className="text-lg font-bold">Popular</Text>
         </View>
 
-	<View className="flex-row">
-	{
-		options?.map((item,idx) => {
-			return (
-				<TouchableOpacity
-				key={idx}
-				onPress={() => {
-					handleFilterChange("purpose", item.keyword);
-					navigation.navigate("SearchResult", {
-						name: item.name,
-						purpose: item.keyword,
-					});
-				}}
-				>
-				<View style={styles.me_2} className="me-3">
-				<Text className="h-8  py-2 text-white rounded-md px-3 bg-primary">
-				{item?.name}
-				</Text>
-				</View>
-				</TouchableOpacity>
-			)
-		})
-	}
-	</View>
-	
-	{
-		properties?.map((item,idx) => {
-			return (
+        <View className="flex-row justify-cente">
+          {options?.map((item, idx) => {
+            return (
               <TouchableOpacity
-			key={idx}
+                key={idx}
+                className="w-20"
                 onPress={() => {
-                  navigation.navigate("Details", {
-                    item: item,
+                  handleFilterChange("purpose", item.keyword);
+                  navigation.navigate("SearchResult", {
+                    name: item.name,
+                    purpose: item.keyword,
                   });
                 }}
               >
-                <PropertyItem
-                  title={item?.propertyDetails?.title}
-                  image={item?.upload?.images}
-                  price={item?.propertyDetails?.InclusivePrice}
-                  location={item?.locationAndAddress?.location}
-                  bedrooms={
-                    item?.amenities?.filter(
-                      (item) => item.name == "bedRooms",
-                    )[0].value
-                  }
-                />
+                <View style={styles.me_2} className="me-3">
+                  <Text className="text-center h-8  py-2 text-white rounded-md px-3 bg-primary">
+                    {item?.name}
+                  </Text>
+                </View>
               </TouchableOpacity>
-			)
-		})
-	}
-	  
+            );
+          })}
+        </View>
+
+        {properties?.map((item, idx) => {
+          return (
+            <TouchableOpacity
+              key={idx}
+              onPress={() => {
+                navigation.navigate("Details", {
+                  item: item,
+                });
+              }}
+            >
+              <PropertyItem
+                title={item?.propertyDetails?.title}
+                image={item?.upload?.images}
+                price={item?.propertyDetails?.InclusivePrice}
+                location={item?.locationAndAddress?.location}
+                bedrooms={
+                  item?.amenities?.filter((item) => item.name == "bedRooms")[0]
+                    .value
+                }
+		  area={item?.propertyDetails?.areaSquare}
+		  beds={item?.propertyDetails?.bedRooms}
+		  bathrooms={item?.propertyDetails?.bathRooms}
+
+              />
+            </TouchableOpacity>
+          );
+        })}
       </ScrollView>
     </View>
   );

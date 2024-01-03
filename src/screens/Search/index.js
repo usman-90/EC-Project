@@ -25,6 +25,7 @@ const Search = ({ navigation }) => {
     mutationFn: searchProperties,
     onSuccess: (data) => {
       setData(data?.data?.data);
+	    console.log(data)
     },
     onError: (error) => {},
   });

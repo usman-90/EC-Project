@@ -6,6 +6,7 @@ import PropertyDetail from "../screens/PropertyDetails";
 import Profile from "../screens/Profile/index";
 import EditProfile from "../screens/editprofile/index";
 import ChangePassword from "../screens/ChangePassword/index";
+import Map from '../screens/Map/index'
 
 const HomeStack = () => {
   const HomeNavigator = createStackNavigator();
@@ -24,6 +25,11 @@ const HomeStack = () => {
       <HomeNavigator.Screen
         name="Details"
         component={PropertyDetail}
+        options={{ headerShown: false }}
+      />
+      <HomeNavigator.Screen
+        name="Map"
+        component={Map}
         options={{ headerShown: false }}
       />
       <HomeNavigator.Screen
