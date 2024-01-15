@@ -1,6 +1,5 @@
 import axios from "axios";
 
-function getProperties(data) {}
 
 export function fetchSubCategories({ queryKey }) {
   const category = queryKey[1];
