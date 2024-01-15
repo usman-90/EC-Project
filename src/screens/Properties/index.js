@@ -35,7 +35,7 @@ const Properties = ({ navigation }) => {
   }
 
   const properties = propertiesData?.data?.data?.data ?? [];
-console.log(properties,"preppppp")
+  console.log(properties, "preppppp");
   const handleFilterChange = (name, val) => {
     setFilters({
       ...filters,
@@ -152,10 +152,9 @@ console.log(properties,"preppppp")
                   item?.amenities?.filter((item) => item.name == "bedRooms")[0]
                     .value
                 }
-		  area={item?.propertyDetails?.areaSquare}
-		  beds={item?.propertyDetails?.bedRooms}
-		  bathrooms={item?.propertyDetails?.bathRooms}
-
+                area={item?.propertyDetails?.areaSquare}
+                beds={item?.propertyDetails?.bedRooms}
+                bathrooms={item?.propertyDetails?.bathRooms}
               />
             </TouchableOpacity>
           );

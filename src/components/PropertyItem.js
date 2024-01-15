@@ -1,11 +1,18 @@
-import {TouchableOpacity,  ImageBackground, Image, StyleSheet, Text, View } from "react-native";
+import {
+  TouchableOpacity,
+  ImageBackground,
+  Image,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 import FontAwesomeIcon from "react-native-vector-icons/FontAwesome5";
 import AntDesignIcon from "react-native-vector-icons/AntDesign";
 import PropBanner from "../../assets/Properties/PropBanner.png";
 import Like from "../../assets/Properties/Like.png";
 import Pin from "../../assets/Properties/pin.png";
 import Notification from "../../assets/Properties/Notification.png";
-import {useState} from 'react'
+import { useState } from "react";
 
 const PropertyItem = ({
   image,
@@ -17,54 +24,77 @@ const PropertyItem = ({
   beds,
   bathrooms,
 }) => {
-	const [currImage, setCurrImage] = useState(0)
-	console.log(image)
+  const [currImage, setCurrImage] = useState(0);
+  console.log(image);
   return (
     <View className="bg-gray-100 my-3 flex justify-center rounded-lg h-100">
       <View className="flex justify-center rounded">
-        <ImageBackground resizeMode="cover" style={{flex:1}} source={{ uri: image[currImage] }} className="h-52 items-center flex-row justify-between w-full rounded-lg" imageStyle={{borderRadius:10}} >
-	  <TouchableOpacity disabled={
-		  currImage === 0
-	  } onPress={()=> {
-		  setCurrImage(currImage-1)
-	  }}>
-	  <AntDesignIcon name="left" style={currImage === 0 ? {
-		  backgroundColor:"white",
-		borderRadius:50,
-			  fontSize:20,
-			  color:"lightgray",
-			  marginHorizontal:10,
-		  padding:4
-	  } : {
-		  backgroundColor:"white",
-		borderRadius:50,
-			  fontSize:20,
-			  color:"gray",
-			  marginHorizontal:10,
-		  padding:4
-	  }} />
-	  </TouchableOpacity>
-	  <TouchableOpacity disabled={currImage === (image?.length -1)} onPress={()=> {
-		  setCurrImage(currImage+1)
-	  }}>
-	  <AntDesignIcon name="right" style={ currImage === (image?.length - 1) ? {
-		  backgroundColor:"white",
-		borderRadius:50,
-			  fontSize:20,
-			  color:"lightgray",
-			  marginHorizontal:10,
-		  padding:4
-	  } : {
-		  backgroundColor:"white",
-		borderRadius:50,
-			  fontSize:20,
-			  color:"gray",
-			  marginHorizontal:10,
-		  padding:4
-	  }}
-	  />
-	  </TouchableOpacity>
-	  </ImageBackground>
+        <ImageBackground
+          resizeMode="cover"
+          style={{ flex: 1 }}
+          source={{ uri: image[currImage] }}
+          className="h-52 items-center flex-row justify-between w-full rounded-lg"
+          imageStyle={{ borderRadius: 10 }}
+        >
+          <TouchableOpacity
+            disabled={currImage === 0}
+            onPress={() => {
+              setCurrImage(currImage - 1);
+            }}
+          >
+            <AntDesignIcon
+              name="left"
+              style={
+                currImage === 0
+                  ? {
+                      backgroundColor: "white",
+                      borderRadius: 50,
+                      fontSize: 20,
+                      color: "lightgray",
+                      marginHorizontal: 10,
+                      padding: 4,
+                    }
+                  : {
+                      backgroundColor: "white",
+                      borderRadius: 50,
+                      fontSize: 20,
+                      color: "gray",
+                      marginHorizontal: 10,
+                      padding: 4,
+                    }
+              }
+            />
+          </TouchableOpacity>
+          <TouchableOpacity
+            disabled={currImage === image?.length - 1}
+            onPress={() => {
+              setCurrImage(currImage + 1);
+            }}
+          >
+            <AntDesignIcon
+              name="right"
+              style={
+                currImage === image?.length - 1
+                  ? {
+                      backgroundColor: "white",
+                      borderRadius: 50,
+                      fontSize: 20,
+                      color: "lightgray",
+                      marginHorizontal: 10,
+                      padding: 4,
+                    }
+                  : {
+                      backgroundColor: "white",
+                      borderRadius: 50,
+                      fontSize: 20,
+                      color: "gray",
+                      marginHorizontal: 10,
+                      padding: 4,
+                    }
+              }
+            />
+          </TouchableOpacity>
+        </ImageBackground>
       </View>
 
       <View className="my-3 px-3">

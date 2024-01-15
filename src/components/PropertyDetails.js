@@ -315,7 +315,7 @@ const PropertyDetails = ({
   status,
   navigateBack,
   phone,
-navigation
+  navigation,
 }) => {
   const loc = location?.location?.split("-");
   const detailsVals = [
@@ -350,8 +350,8 @@ navigation
   };
 
   return (
-    <View className=" px-6 basis-full">
-      <View className="mb-3 flex py-2 flex-row justify-between items-center">
+    <View className="  basis-full">
+      <View className=" px-6 mb-3 flex py-2 flex-row justify-between items-center">
         <TouchableOpacity onPress={() => navigateBack()}>
           <View className="rounded-full border p-2 border-gray-300">
             <AntDesingIcon name="left" />
@@ -360,7 +360,7 @@ navigation
         <Text className="text-lg font-bold">Property Detail</Text>
         <Image source={0} className="w-10" />
       </View>
-      <ScrollView className="mb-20">
+      <ScrollView className="px-6 mb-20">
         <View>
           <Image
             source={{ uri: currImage ?? images[0] }}
@@ -476,29 +476,30 @@ navigation
             <Text className="text-base">{loc ? loc[0] : "---"}</Text>
           </View>
         </View>
-        <TouchableOpacity 
-	  onPress={() => {
-			navigation.navigate("Map",{
-				coords:{
-              latitude: parseFloat(location?.latitude),
-              longitude: parseFloat(location?.longitude),
-
-				},
-				navigateBack :navigation.goBack
-			})
-		}}
-	  className=" flex-row items-center justify-between bg-gray-200 py-4 px-1 my-3 rounded-lg">
-	  	<FontAwesomeIcon name="location-arrow" style={{
-			color:"#FFC70F",
-				fontSize:30,
-				borderRadius:50,
-		}} />
-	  	<View >
-	  		<Text className="text-lg fw-bold">
-				View Property Location
-	  		</Text>
-	  	</View>
-	  <AntDesingIcon name="arrowright" style={{fontSize:22}} />
+        <TouchableOpacity
+          onPress={() => {
+            navigation.navigate("Map", {
+              coords: {
+                latitude: parseFloat(location?.latitude),
+                longitude: parseFloat(location?.longitude),
+              },
+              navigateBack: navigation.goBack,
+            });
+          }}
+          className=" flex-row items-center justify-between bg-gray-200 py-4 px-1 my-3 rounded-lg"
+        >
+          <FontAwesomeIcon
+            name="location-arrow"
+            style={{
+              color: "#FFC70F",
+              fontSize: 30,
+              borderRadius: 50,
+            }}
+          />
+          <View>
+            <Text className="text-lg fw-bold">View Property Location</Text>
+          </View>
+          <AntDesingIcon name="arrowright" style={{ fontSize: 22 }} />
         </TouchableOpacity>
       </ScrollView>
 

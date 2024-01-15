@@ -9,6 +9,7 @@ import { login } from "../../apiFunctions/register";
 import Toast from "react-native-toast-message";
 import { useMutation } from "@tanstack/react-query";
 import { useSelector, useDispatch } from "react-redux";
+import { onGoogleButtonPress } from "../../apiFunctions/signInWithGoogle";
 
 const Loginpage = ({ navigation }) => {
   const userData = useSelector((state) => state?.data);
@@ -120,7 +121,7 @@ const Loginpage = ({ navigation }) => {
               imageHeight={25}
               text="Continue With Google"
               textColor="black"
-              onPress={() => {}}
+      onPress={() => onGoogleButtonPress(navigation).then(() => console.log('Signed in with Google!'))}
             />
           </View>
           <View
@@ -134,9 +135,11 @@ const Loginpage = ({ navigation }) => {
             <Text style={{ color: "#838383" }} className="text-base">
               Don't have an account?
             </Text>
+      <TouchableOpacity onPress={() => navigation.navigate("SignUp")}>
             <Text className="ml-[4px] text-base" style={{ color: "#FFC70F" }}>
               Register
             </Text>
+      </TouchableOpacity>
           </View>
         </View>
       </View>

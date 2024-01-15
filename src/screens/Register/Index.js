@@ -10,6 +10,7 @@ import { register } from "../../apiFunctions/register";
 import Toast from "react-native-toast-message";
 import { useSelector, useDispatch } from "react-redux";
 import { setUserData } from "../../features/user/userSlice";
+import { onGoogleButtonPress } from "../../apiFunctions/signInWithGoogle";
 
 const Register = ({ navigation }) => {
   const dispatch = useDispatch();
@@ -124,7 +125,7 @@ const Register = ({ navigation }) => {
               imageHeight={25}
               text="Continue With Google"
               textColor="black"
-              onPress={() => {}}
+      onPress={() => onGoogleButtonPress(navigation).then(() => console.log('Signed in with Google!'))}
             />
           </View>
           <View
@@ -138,13 +139,14 @@ const Register = ({ navigation }) => {
             <Text style={{ color: "#838383" }} className="text-base">
               Already have an account?
             </Text>
+      <TouchableOpacity onPress={() => navigation.navigate("Login")}>
             <Text
-              className="ml-[4px]"
+              className="ml-[4px] text-base"
               style={{ color: "#FFC70F", marginLeft: 5 }}
-              className="text-base"
             >
               Login
             </Text>
+      </TouchableOpacity>
           </View>
         </View>
       </View>

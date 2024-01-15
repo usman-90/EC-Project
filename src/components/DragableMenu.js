@@ -19,7 +19,7 @@ import FilterButton from "./FilterButton";
 import { fetchSubCategories } from "../apiFunctions/properties";
 import { useMutation, useQuery } from "@tanstack/react-query";
 
-const DragableMenu = ({ refetchProperties }) => {
+const DragableMenu = ({query, refetchProperties }) => {
   // Needed in order to use .show()
   const bottomSheet = useRef();
   const [filters, setFilters] = useContext(FilterContext);
@@ -364,7 +364,7 @@ const DragableMenu = ({ refetchProperties }) => {
                 </TouchableOpacity>
                 <TouchableOpacity
                   className="bg-primary text-white mx-2 px-4 py-2 w-9/12 text-base rounded-lg"
-                  onPress={() => refetchProperties()}
+                  onPress={() => query ? refetchProperties(query) : refetchProperties()}
                 >
                   <View className="">
                     <Text className="text-white w-full text-center">

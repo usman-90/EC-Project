@@ -10,9 +10,7 @@ const PropertyDetailWrapper = ({ route, navigation }) => {
       images={item?.upload?.images}
       price={item?.propertyDetails?.InclusivePrice}
       location={item?.locationAndAddress}
-      bedrooms={
-	      item?.propertyDetails?.bedRooms
-      }
+      bedrooms={item?.propertyDetails?.bedRooms}
       text={item?.propertyDetails?.description ?? ""}
       features={item?.amenities}
       listingOwner={item?.contactDetails?.ListingOwner}
@@ -21,15 +19,13 @@ const PropertyDetailWrapper = ({ route, navigation }) => {
       phone={item?.contactDetails?.phone}
       status={item?.typesAndPurpose?.purpose}
       //  parkingSpace={property1?.number_of_garage}
-      bathrooms={
-	      item?.propertyDetails?.bathRooms
-      }
+      bathrooms={item?.propertyDetails?.bathRooms}
       // garage={property1?.number_of_garage}
       area={item?.propertyDetails?.areaSquare}
       category={item?.typesAndPurpose?.category}
       aracbiDescription={item?.propertyDetails?.descriptionArabic}
       navigateBack={navigation.goBack}
-	  navigation={navigation}
+      navigation={navigation}
     />
   );
 };

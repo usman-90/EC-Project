@@ -2,6 +2,7 @@ import { Image, TouchableOpacity, StyleSheet, Text, View } from "react-native";
 import AntDesignIcon from "react-native-vector-icons/AntDesign";
 import LoginBg from "../../../assets/LoginImages/LoginBg.png";
 import ContinueWithGoogle from "../../components/Login/ContinueWithGoogle";
+import { onGoogleButtonPress } from "../../apiFunctions/signInWithGoogle";
 
 const SignIn = ({ navigation }) => {
   return (
@@ -32,7 +33,7 @@ const SignIn = ({ navigation }) => {
             imageHeight={25}
             text="Continue With Google"
             textColor="black"
-            onPress={() => navigation.navigate("HomeStack")}
+      onPress={() => onGoogleButtonPress(navigation).then(() => console.log('Signed in with Google!'))}
           />
         </View>
         <View
@@ -43,7 +44,7 @@ const SignIn = ({ navigation }) => {
             alignItems: "center",
           }}
         >
-          <TouchableOpacity className="flex-row items-center bg-gray-100 py-2 w-full justify-center rounded-lg">
+          <TouchableOpacity onPress={() => navigation.navigate("HomeStack")} className="flex-row items-center bg-gray-100 py-2 w-full justify-center rounded-lg">
             <AntDesignIcon
               name="facebook-square"
               style={{ marginHorizontal: 10, fontSize: 22, color: "#316FF6" }}
@@ -61,7 +62,7 @@ const SignIn = ({ navigation }) => {
         >
           <TouchableOpacity onPress={() => navigation.navigate("SignUp")}>
             <Text className="text-gray-500">
-              Already have an account?{" "}
+              Don't have an account?{" "}
               <Text className="text-primary">Register</Text>
             </Text>
           </TouchableOpacity>

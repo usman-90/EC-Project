@@ -1,19 +1,40 @@
 import React, { useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet,TouchableOpacity, Text, View } from "react-native";
 import Heading2 from "../../components/heading2";
 import EditPageInputField from "../../components/EditPageInputField";
 import CheckBox from "../../components/Login/checkbox";
+import { useMutation } from "@tanstack/react-query";
+import { editProfile } from "../../apiFunctions/profileSettings";
+import { useSelector } from "react-redux";
 
 const EditProfile = () => {
+  const userData = useSelector((state) => state?.data);
+    const editProfileMutation = useMutation({
+        mutationFn: editProfile,
+        onSuccess: (data) => {
+          console.log(data);
+        },
+        onError: (error) => {
+            console.log(error);
+        }
+    })
   const [data, setData] = useState({ firstName: "", lastName: "", email: "" });
 
   const handleDataChange = (name, value) => {
     setData({ ...data, [name]: value });
   };
+    const handleEditProfile = () => {
+        const obj = {
+            name: data?.firstName + " " + data?.lastName,
+            email: data?.email,
+            id: userData?.userId
+        }
+        editProfileMutation.mutate(obj)
+    }
 
   return (
     <>
-      <View className="basis-full" style={styles.container}>
+      <View className=" bg-white basis-full" style={styles.container}>
         <Heading2 text="Edit Profile" />
         <Text style={{ color: "gray" }} className=" ml-[30px] mt-[30px]">
           First Name
@@ -70,8 +91,12 @@ const EditProfile = () => {
           className="ml-[30px] mr-[30px] mt-[30px]"
           style={{ flexDirection: "row", justifyContent: "space-between" }}
         >
-          <CheckBox text="All information notifications, promos, data transmission, data downloads, payment recaps and user activities will be sent via this email" />
         </View>
+      <TouchableOpacity className="bg-primary items-center py-2 mt-10 rounded-lg mx-6" onPress={() => handleEditProfile()}>
+        <Text className="text-white text-lg">
+      Save
+        </Text>
+      </TouchableOpacity>
       </View>
     </>
   );

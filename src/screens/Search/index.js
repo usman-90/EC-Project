@@ -13,9 +13,8 @@ import { useEffect, useState } from "react";
 import { searchProperties } from "../../apiFunctions/properties";
 import { useMutation } from "@tanstack/react-query";
 import SearchBar from "../../components/SearchBar";
-import Clock from "../../../assets/Search/Clock.png";
-import Close from "../../../assets/Search/Close.png";
-import RecentPropertyItem from "../../components/RecentPropertyItem";
+import DragableMenu from "../../components/DragableMenu";
+import PropertyItem from "../../components/PropertyItem";
 import Loader from "../../components/Loader";
 
 const Search = ({ navigation }) => {
@@ -25,9 +24,9 @@ const Search = ({ navigation }) => {
     mutationFn: searchProperties,
     onSuccess: (data) => {
       setData(data?.data?.data);
-	    console.log(data)
+      console.log(data);
     },
-    onError: (error) => {},
+    onError: (error) => { console.log(error)},
   });
   useEffect(() => {
     searchPropertiesMutation.mutate(query);
@@ -38,14 +37,18 @@ const Search = ({ navigation }) => {
   }
   return (
     <View className="basis-full">
-      <View className="px-6 my-3 flex-row">
-        <SearchBar value={query} setValue={setQuery} width={100} />
+      <View className="px-6 my-3 flex flex-row">
+        <SearchBar value={query} setValue={setQuery} />
+      <DragableMenu query={query} refetchProperties={
+          searchPropertiesMutation.mutate
+      } />
       </View>
 
-      <View className="px-6 py-2">
+      <View className="grow-0 py-2">
         {query ? (
           <FlatList
             data={data}
+            className="px-6"
             renderItem={({ item }) => (
               <TouchableOpacity
                 onPress={() => {
@@ -54,16 +57,19 @@ const Search = ({ navigation }) => {
                   });
                 }}
               >
-                <RecentPropertyItem
-                  image={item?.upload?.images ? item?.upload?.images[0] : null}
+                <PropertyItem
                   title={item?.propertyDetails?.title}
-                  area={item?.propertyDetails?.areaSquare}
-                  amount={item?.PropertyDetails?.InclusivePrice}
-                  loc={
-                    item?.locationAndAddress?.location
-                      ? item?.locationAndAddress?.address
-                      : null
+                  image={item?.upload?.images}
+                  price={item?.propertyDetails?.InclusivePrice}
+                  location={item?.locationAndAddress?.location}
+                  bedrooms={
+                    item?.amenities?.filter(
+                      (item) => item.name == "bedRooms",
+                    )[0].value
                   }
+                  area={item?.propertyDetails?.areaSquare}
+                  beds={item?.propertyDetails?.bedRooms}
+                  bathrooms={item?.propertyDetails?.bathRooms}
                 />
               </TouchableOpacity>
             )}

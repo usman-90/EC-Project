@@ -1,7 +1,7 @@
 import { createStackNavigator } from "@react-navigation/stack";
 import Search from "../screens/Search/index";
 import LoginStack from "./LoginStackNavigator";
-import HomeStack from "./HomeStack";
+import BottomNavigator from "./BottomNavigator";
 
 const RootStack = () => {
   const RootNavigator = createStackNavigator();
@@ -14,7 +14,7 @@ const RootStack = () => {
       />
       <RootNavigator.Screen
         name="HomeStack"
-        component={HomeStack}
+        component={BottomNavigator}
         options={{ headerShown: false }}
       />
       <RootNavigator.Screen

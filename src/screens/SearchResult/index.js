@@ -30,9 +30,9 @@ const SearchResult = ({ route, navigation }) => {
     enabled: false,
   });
   const refetchProperties = propertiesResult?.refetch;
-	useEffect(()=> {
-		refetchProperties()
-	},[])
+  useEffect(() => {
+    refetchProperties();
+  }, []);
   console.log(refetchProperties);
   if (propertiesResult?.isLoading) {
     return <Loader />;
@@ -71,20 +71,20 @@ const SearchResult = ({ route, navigation }) => {
                   });
                 }}
               >
-              <PropertyItem
-                title={item?.propertyDetails?.title}
-                image={item?.upload?.images}
-                price={item?.propertyDetails?.InclusivePrice}
-                location={item?.locationAndAddress?.location}
-                bedrooms={
-                  item?.amenities?.filter((item) => item.name == "bedRooms")[0]
-                    .value
-                }
-		  area={item?.propertyDetails?.areaSquare}
-		  beds={item?.propertyDetails?.bedRooms}
-		  bathrooms={item?.propertyDetails?.bathRooms}
-
-              />
+                <PropertyItem
+                  title={item?.propertyDetails?.title}
+                  image={item?.upload?.images}
+                  price={item?.propertyDetails?.InclusivePrice}
+                  location={item?.locationAndAddress?.location}
+                  bedrooms={
+                    item?.amenities?.filter(
+                      (item) => item.name == "bedRooms",
+                    )[0].value
+                  }
+                  area={item?.propertyDetails?.areaSquare}
+                  beds={item?.propertyDetails?.bedRooms}
+                  bathrooms={item?.propertyDetails?.bathRooms}
+                />
               </TouchableOpacity>
             );
           }}
