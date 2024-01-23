@@ -1,5 +1,5 @@
 import React from 'react';
-import {SafeAreaView, StyleSheet,Platform,StatusBar } from 'react-native';
+import {SafeAreaView, StyleSheet,Platform,StatusBar, View, Text } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import RootStack from './src/navigation/AppNavigator';
 import Profile from './src/screens/Profile';
@@ -7,6 +7,7 @@ import Profile from './src/screens/Profile';
 
 
 export default function App() {
+
   return (
       <NavigationContainer>
 <SafeAreaView style={styles.container}>
@@ -23,3 +24,4 @@ const styles = StyleSheet.create({
 	   paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0
   },
 });
+
