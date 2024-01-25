@@ -43,7 +43,6 @@ const Search = ({ navigation }) => {
           searchPropertiesMutation.mutate
       } />
       </View>
-
       <View className="grow-0 py-2">
         {query ? (
           <FlatList

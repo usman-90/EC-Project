@@ -22,7 +22,7 @@ const Loginpage = ({ navigation }) => {
         text1: "Success!",
         text2: "Logged In successfully! 👋",
       });
-      console.log(data);
+      console.log("Login user data", data?.data.data);
       navigation.navigate("HomeStack");
     },
     onError: (error) => {

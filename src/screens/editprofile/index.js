@@ -24,6 +24,7 @@ const EditProfile = () => {
     setData({ ...data, [name]: value });
   };
     const handleEditProfile = () => {
+      console.log("User data", userData);
         const obj = {
             name: data?.firstName + " " + data?.lastName,
             email: data?.email,
@@ -36,6 +37,7 @@ const EditProfile = () => {
     <>
       <View className=" bg-white basis-full" style={styles.container}>
         <Heading2 text="Edit Profile" />
+        
         <Text style={{ color: "gray" }} className=" ml-[30px] mt-[30px]">
           First Name
         </Text>
