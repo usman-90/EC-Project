@@ -1,17 +1,19 @@
 import axios from "axios";
 
+const API_URL_OLD = 'https://realestatebackend-m68pxvdwf-asadullahkhan19.vercel.app'
+const API_URL_NEW = 'https://realestatebackend-woad.vercel.app'
 
 export function fetchSubCategories({ queryKey }) {
   const category = queryKey[1];
 
   return axios.get(
-    `https://realestatebackend-m68pxvdwf-asadullahkhan19.vercel.app/lov/sub-category/${category}`,
+    `${API_URL_NEW}/lov/sub-category/${category}`,
   );
 }
 
 export function fetchAllProperties() {
   return axios.get(
-    `https://realestatebackend-m68pxvdwf-asadullahkhan19.vercel.app/property/get-property`,
+    `${API_URL_NEW}/property/get-property`,
     {
       params: {
         category: "all",

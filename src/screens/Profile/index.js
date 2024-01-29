@@ -12,10 +12,24 @@ import EditIcon from "../../../Asset/Images/Profile/edit-line.png";
 import Icon from "react-native-vector-icons/AntDesign";
 import PasswordIcon from "react-native-vector-icons/SimpleLineIcons";
 import SettingIcon from "react-native-vector-icons/Feather";
+import { useSelector } from "react-redux";
+import store from "../../app/store";
+import { setUserData } from "../../features/user/userSlice";
 
-const data = { name: "Hellooo", email: "hello@gmail.com" };
+// const data = { name: "Hellooo", email: "hello@gmail.com" };
 
 const Profile = ({ navigation }) => {
+  const { userData } = useSelector((state) => state?.data);
+
+  const onLogoutPress = () => {
+    console.log("Logout Pressed.");
+    store.dispatch(setUserData({
+      token: "",
+      userData: {}
+    }));
+    navigation.navigate("LoginStack");
+  }
+
   return (
     <>
       <View
@@ -35,11 +49,11 @@ const Profile = ({ navigation }) => {
         </ImageBackground>
 
         <View className=" my-4">
-          <Text className="font-bold text-2xl">{data.name}</Text>
+          <Text className="font-bold text-2xl">{userData.name}</Text>
         </View>
 
         <View className=" bg-[#f2e1aa] py-2 px-6 rounded-full">
-          <Text>{data.email}</Text>
+          <Text>{userData.email}</Text>
         </View>
         <View className="items-center justify-center flex flex-col  w-full bg-white rounded-lg mt-8 shadow-2xl  shadow-stone-600">
           <TouchableOpacity onPress={() => navigation.navigate("EditProfile")} className="flex flex-row justify-between w-full py-4 px-6 border-b border-gray-200 ">
@@ -74,12 +88,12 @@ const Profile = ({ navigation }) => {
               <Icon name="arrowright" size={25} />
             </TouchableOpacity>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => navigation.navigate("Login")} className="flex flex-row justify-between w-full py-4 px-6 border-b border-gray-200 ">
+          <TouchableOpacity onPress={onLogoutPress} className="flex flex-row justify-between w-full py-4 px-6 border-b border-gray-200 ">
             <View className="flex flex-row gap-4">
               <PasswordIcon name="logout" size={28} style={styles.logout} />
               <Text className="text-red-700 text-base pt-1">Logout</Text>
             </View>
-            <TouchableOpacity onPress={() => navigation.navigate("Login")}>
+            <TouchableOpacity onPress={onLogoutPress}>
               <Icon name="arrowright" size={25} style={styles.logout} />
             </TouchableOpacity>
           </TouchableOpacity>

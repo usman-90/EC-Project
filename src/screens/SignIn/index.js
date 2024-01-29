@@ -5,6 +5,7 @@ import ContinueWithGoogle from "../../components/Login/ContinueWithGoogle";
 import { onGoogleButtonPress } from "../../apiFunctions/signInWithGoogle";
 
 const SignIn = ({ navigation }) => {
+
   return (
     <View className="bg-black" style={styles.container}>
       <Image source={LoginBg} style={{ flex: 1.8 }} />
@@ -33,7 +34,7 @@ const SignIn = ({ navigation }) => {
             imageHeight={25}
             text="Continue With Google"
             textColor="black"
-      onPress={() => onGoogleButtonPress(navigation).then(() => console.log('Signed in with Google!'))}
+            onPress={() => onGoogleButtonPress(navigation).then(() => console.log('Signed in with Google!'))}
           />
         </View>
         <View

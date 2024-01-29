@@ -10,6 +10,8 @@ import Toast from "react-native-toast-message";
 import { useMutation } from "@tanstack/react-query";
 import { useSelector, useDispatch } from "react-redux";
 import { onGoogleButtonPress } from "../../apiFunctions/signInWithGoogle";
+import store from "../../app/store";
+import { setUserData } from "../../features/user/userSlice";
 
 const Loginpage = ({ navigation }) => {
   const userData = useSelector((state) => state?.data);
@@ -22,8 +24,9 @@ const Loginpage = ({ navigation }) => {
         text1: "Success!",
         text2: "Logged In successfully! 👋",
       });
+      store.dispatch(setUserData(data?.data.data));
       console.log("Login user data", data?.data.data);
-      navigation.navigate("HomeStack");
+      navigation.navigate("BottomTabStack");
     },
     onError: (error) => {
       Toast.show({
@@ -121,7 +124,7 @@ const Loginpage = ({ navigation }) => {
               imageHeight={25}
               text="Continue With Google"
               textColor="black"
-      onPress={() => onGoogleButtonPress(navigation).then(() => console.log('Signed in with Google!'))}
+              onPress={() => onGoogleButtonPress(navigation).then(() => console.log('Signed in with Google!'))}
             />
           </View>
           <View
@@ -135,11 +138,11 @@ const Loginpage = ({ navigation }) => {
             <Text style={{ color: "#838383" }} className="text-base">
               Don't have an account?
             </Text>
-      <TouchableOpacity onPress={() => navigation.navigate("SignUp")}>
-            <Text className="ml-[4px] text-base" style={{ color: "#FFC70F" }}>
-              Register
-            </Text>
-      </TouchableOpacity>
+            <TouchableOpacity onPress={() => navigation.navigate("SignUp")}>
+              <Text className="ml-[4px] text-base" style={{ color: "#FFC70F" }}>
+                Register
+              </Text>
+            </TouchableOpacity>
           </View>
         </View>
       </View>

@@ -53,11 +53,11 @@ function MyTabBar({ state, descriptors, navigation }) {
           >
             <AntDesignIcon
               name={`${
-                label === "Home"
+                label === "HomeStack"
                   ? "home"
-                  : label === "Search"
+                  : label === "SearchStack"
                     ? "search1"
-                    : label === "Save"
+                    : label === "SaveStack"
                       ? "tago"
                       : "profile"
               }`}
@@ -77,21 +77,21 @@ export default function BottomNavigator() {
     <BottomNavigation.Navigator tabBar={(props) => <MyTabBar {...props} />}>
       <BottomNavigation.Screen
         options={{ headerShown: false }}
-        name="Home"
+        name="HomeStack"
         component={HomeStack}
       />
       <BottomNavigation.Screen
-        name="Search"
+        name="SearchStack"
         component={SearchStack}
         options={{ headerShown: false }}
       />
       <BottomNavigation.Screen
-        name="Save"
+        name="SaveStack"
         component={SaveStack}
         options={{ headerShown: false }}
       />
       <BottomNavigation.Screen
-        name="Profile"
+        name="ProfileStack"
         component={ProfileStack}
         options={{ headerShown: false }}
       />

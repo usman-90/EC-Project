@@ -24,7 +24,7 @@ export default function App() {
 		bathrooms: "",
 		bedrooms: "",
 		purpose: "forSale"
-	})
+	});
 	const queryClient = new QueryClient({
 		defaultOptions: {
 			queries: {

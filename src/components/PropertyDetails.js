@@ -332,7 +332,7 @@ const PropertyDetails = ({
   const [currImage, setCurrImage] = useState(null);
 
   const openWhatsApp = () => {
-    const phoneNumber = phone;
+    const phoneNumber = +9290078601;
 
     const whatsappURI = `whatsapp://send?phone=${phoneNumber}`;
 
