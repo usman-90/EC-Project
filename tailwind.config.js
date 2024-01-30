@@ -9,10 +9,10 @@ module.exports = {
         'primary': '#FFC70F',
       },
       screens: {
-        'sm': '640px',  // Small screens
-        'md': '768px',  // Medium screens
-        'lg': '1024px', // Large screens
-        'xl': '1280px', // Extra large screens
+        'sm': '360px',  // Small screens
+        'md': '392px',  // Medium screens
+        'lg': '400px', // Large screens
+        'xl': '450px', // Extra large screens
       }
     },
   },
