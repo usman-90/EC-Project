@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react'
-import { Button, Dimensions, Image, ScrollView, StatusBar, Text, TouchableOpacity, View } from 'react-native'
+import React from 'react'
+import { Image, StatusBar, Text, TouchableOpacity, View } from 'react-native'
 import topWave from '../../../assets/Home/topWave.png'
 import logo from '../../../assets/Home/logo.png'
 import buildingIcon from '../../../assets/Home/buildingIcon.png'
@@ -10,18 +10,10 @@ import { styled } from 'nativewind';
 import Animated, {
     useAnimatedRef,
     useAnimatedScrollHandler,
-    useScrollViewOffset,
     useSharedValue,
-    withDelay,
-    withTiming,
 } from 'react-native-reanimated';
 import ItemsList from '../../components/Home/ItemsList'
 import { useNavigation } from '@react-navigation/native'
-
-const DURATION = 1000;
-const DELAY = 500;
-
-const text = ['React', 'Native', 'Reanimated'];
 
 const featuredItems = [
     {
@@ -48,8 +40,7 @@ export default function Home() {
     const AnimatedImage = Animated.createAnimatedComponent(Image);
     
     const scrollHandler = useAnimatedScrollHandler((event) => {       
-        const opaVal = 1.5 - 1 * 0.01 * event.contentOffset.y; 
-        // setOpacity(event.contentOffset.y);
+        const opaVal = 1.5 - 1 * 0.01 * event.contentOffset.y;
         opacity1.value = opaVal;
     });
 
