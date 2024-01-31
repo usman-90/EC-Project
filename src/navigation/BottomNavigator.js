@@ -42,6 +42,7 @@ function MyTabBar({ state, descriptors, navigation }) {
         console.log(label);
         return (
           <TouchableOpacity
+            key={index}
             accessibilityRole="button"
             accessibilityState={isFocused ? { selected: true } : {}}
             accessibilityLabel={options.tabBarAccessibilityLabel}
@@ -79,21 +80,25 @@ export default function BottomNavigator() {
         options={{ headerShown: false }}
         name="HomeStack"
         component={HomeStack}
+        key={1111}
       />
       <BottomNavigation.Screen
         name="SearchStack"
         component={SearchStack}
         options={{ headerShown: false }}
+        key={2222}
       />
       <BottomNavigation.Screen
         name="SaveStack"
         component={SaveStack}
         options={{ headerShown: false }}
+        key={3333}
       />
       <BottomNavigation.Screen
         name="ProfileStack"
         component={ProfileStack}
         options={{ headerShown: false }}
+        key={4444}
       />
     </BottomNavigation.Navigator>
   );

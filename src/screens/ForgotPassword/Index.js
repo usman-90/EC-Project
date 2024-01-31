@@ -6,8 +6,14 @@ import CustomButton from "../../components/Button";
 
 const ForgotPassword = ({ navigation }) => {
   const [email, setEmail] = useState("");
+  const [reqSent, setReqSent] = useState(false);
+
   const onEmailChannelChanged = (e, value) => {
     setEmail(value);
+  };
+
+  const onResetPasswordButtonPress = () => {
+    setReqSent(true);
   }
   return (
     <>
@@ -25,11 +31,12 @@ const ForgotPassword = ({ navigation }) => {
             keyboardType="email-address"
             onChange={onEmailChannelChanged}
           />
-          <TouchableOpacity className="bg-primary mt-10 mx-6 rounded-lg py-2">
+          <TouchableOpacity className="bg-primary mt-10 mx-6 rounded-lg py-2" onPress={onResetPasswordButtonPress}>
             <Text className="text-white text-lg text-center">
               Send OTP
             </Text>
           </TouchableOpacity>
+          {reqSent && <Text className="m-8 text-red-600">An email has been sent to this address if there is an existing account registered with this email</Text>}
         </View>
       </View>
     </>
