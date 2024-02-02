@@ -39,7 +39,7 @@ const RootStack = () => {
           options={{ headerShown: false }}
         />
         <RootNavigator.Screen
-          name="HomeStack"
+          name="BottomTabStack"
           component={BottomNavigator}
           options={{ headerShown: false }}
         />

@@ -83,7 +83,7 @@ const Loginpage = ({ navigation }) => {
                   });
                   return;
                 }
-                navigation.navigate("OTP");
+                navigation.navigate("OTP", { comingFrom: "NewUser" });
               }}
             >
               <Text style={{ color: "#FFC70F", textDecorationLine: "none" }}>

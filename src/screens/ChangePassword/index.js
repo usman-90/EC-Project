@@ -15,10 +15,10 @@ const ChangePassword = () => {
   const changePasswordMutation = useMutation({
     mutationFn: updatePassword,
     onSuccess: (data) => {
-      const {status} = data;
+      const { status } = data;
       if (status === 200) {
-        console.log("password update success",data);
-        
+        console.log("password update success", data);
+
         navigation.navigate('Profile');
       }
     },

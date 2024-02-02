@@ -9,13 +9,16 @@ import { useSelector, useDispatch } from "react-redux";
 import Toast from "react-native-toast-message";
 import { sendOTP } from "../../apiFunctions/register";
 
-const Otp11 = ({ navigation }) => {
+const Otp11 = ({ navigation, route }) => {
+  const { params } = route;
   const otpMutation = useMutation({
     mutationFn: sendOTP,
     onSuccess: (data) => {
+      console.log("OTP submit response", data);
       if (
         data?.data?.message === "Invalid Otp" ||
-        data?.data?.message === "Must be only digits"
+        data?.data?.message === "Must be only digits" ||
+        data?.data?.message === "Otp is required."
       ) {
         Toast.show({
           type: "error",
@@ -24,13 +27,34 @@ const Otp11 = ({ navigation }) => {
         });
         return;
       }
-      Toast.show({
-        type: "success",
-        text1: "Success!",
-        text2: "Logged In successfully! 👋",
-      });
+      if (data?.data?.message === "User Id is required.") {
+        Toast.show({
+          type: "error",
+          text1: "Error !",
+          text2: "Invalid UserId",
+        });
+        return;
+      }
+
       console.log(data);
-      navigation.navigate("HomeStack");
+      if (params) {
+        if (params.comingFrom === "NewUser") {
+          navigation.navigate("BottomTabStack");
+          Toast.show({
+            type: "success",
+            text1: "Success!",
+            text2: "Logged In successfully! 👋",
+          });
+        }
+        else {
+          navigation.navigate("CreateNewPassword");
+          Toast.show({
+            type: "success",
+            text1: "Success!",
+            text2: "OTP Verified! 👋",
+          });
+        }
+      }
     },
     onError: (error) => {
       console.log(error);
@@ -44,17 +68,26 @@ const Otp11 = ({ navigation }) => {
       console.log(data, error);
     },
   });
-  const userData = useSelector((state) => state?.data);
+  const { userData } = useSelector((state) => state?.data);
   const [otp, setOtp] = useState();
   const submit = () => {
-    console.log(otp);
-    otpMutation.mutate({
-      otp,
-      userId: userData?.userId,
-    });
+    // console.log(otp);
+    console.log("OTP val", otp, userData);
+    if (otp) {
+      otpMutation.mutate({
+        otp,
+        userId: userData?._id,
+      });
+    } else {
+      Toast.show({
+        type: "error",
+        text1: "Error !",
+        text2: "No OTP was entered",
+      });
+    }
   };
 
-  console.log(otp);
+  console.log("OTP recieved", otp);
   return (
     <View className="italic p-6 " style={styles.container}>
       <Text className="text-5xl mt-10 ont-bold">Verify OTP</Text>
@@ -85,7 +118,7 @@ const Otp11 = ({ navigation }) => {
           text={"Continue"}
           backgroundColor={"#FFC70F"}
           textColor={"white"}
-          height={"3%"}
+          height={40}
         />
       </View>
     </View>

@@ -12,8 +12,8 @@ import Animated, {
     useAnimatedScrollHandler,
     useSharedValue,
 } from 'react-native-reanimated';
-import ItemsList from '../../components/Home/ItemsList'
-import { useNavigation } from '@react-navigation/native'
+import ItemsList from '../../components/Home/ItemsList';
+import { useNavigation } from '@react-navigation/native';
 
 const featuredItems = [
     {
@@ -45,7 +45,7 @@ export default function Home() {
     });
 
     const openListing = () => {
-        navigation.navigate("HouseShowcase")
+        navigation.navigate("HouseShowcase");
     }
 
     return (
