@@ -12,6 +12,7 @@ import EditIcon from "../../../Asset/Images/Profile/edit-line.png";
 import Icon from "react-native-vector-icons/AntDesign";
 import PasswordIcon from "react-native-vector-icons/SimpleLineIcons";
 import SettingIcon from "react-native-vector-icons/Feather";
+import HeadPhones from "react-native-vector-icons/Feather";
 import { useSelector } from "react-redux";
 import store from "../../app/store";
 import { setUserData } from "../../features/user/userSlice";
@@ -81,8 +82,8 @@ const Profile = ({ navigation }) => {
           </TouchableOpacity>
           <TouchableOpacity onPress={() => navigation.navigate("Home")} className="flex flex-row justify-between w-full py-4 px-6 border-b border-gray-200 ">
             <View className="flex flex-row gap-4">
-              <SettingIcon name="settings" size={30} style={styles.edit} />
-              <Text className="text-base pt-1">Settings</Text>
+              <HeadPhones name="headphones" size={30} style={styles.edit} />
+              <Text className="text-base pt-1">Contact Us</Text>
             </View>
             <TouchableOpacity onPress={() => navigation.navigate("Home")}>
               <Icon name="arrowright" size={25} />
