@@ -1,9 +1,7 @@
 import React, { useState } from "react";
 import { View, Text, TouchableOpacity } from "react-native";
 
-const CheckBox = ({ text }) => {
-  const [isChecked, setIsChecked] = useState(false);
-
+const CheckBox = ({ text, isChecked, setIsChecked }) => {
   const handlePress = () => {
     setIsChecked(!isChecked);
   };
@@ -31,7 +29,7 @@ const CheckBox = ({ text }) => {
       >
         {isChecked && <Text style={{ color: "white", fontSize: 16 }}>✓</Text>}
       </View>
-      <Text className="font-semibold ml-[4px] w-80 mt-[4px]">{text}</Text>
+      <Text className="font-semibold ml-[4px] w-60   mt-[4px]">{text}</Text>
     </TouchableOpacity>
   );
 };

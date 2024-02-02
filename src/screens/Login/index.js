@@ -1,16 +1,54 @@
-import React from "react";
-import { StyleSheet, Text, View ,TouchableOpacity} from "react-native";
+import React, { useState } from "react";
+import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import Heading from "../../components/Heading";
 import InputField from "../../components/InputField";
 import CheckBox from "../../components/Login/checkbox";
 import CustomButton from "../../components/Button";
 import ContinueWithGoogle from "../../components/Login/ContinueWithGoogle";
+import { login } from "../../apiFunctions/register";
+import Toast from "react-native-toast-message";
+import { useMutation } from "@tanstack/react-query";
+import { useSelector, useDispatch } from "react-redux";
+import { onGoogleButtonPress } from "../../apiFunctions/signInWithGoogle";
+import store from "../../app/store";
+import { setUserData } from "../../features/user/userSlice";
 
-const Loginpage = ({navigation}) => {
-  const handleButtonPress = () => {
-    // Your button press logic goes here
-    console.log("Button pressed!");
+const Loginpage = ({ navigation }) => {
+  const userData = useSelector((state) => state?.data);
+
+  const loginMutation = useMutation({
+    mutationFn: login,
+    onSuccess: (data) => {
+      Toast.show({
+        type: "success",
+        text1: "Success!",
+        text2: "Logged In successfully! 👋",
+      });
+      store.dispatch(setUserData(data?.data.data));
+      console.log("Login user data", data?.data.data);
+      navigation.navigate("BottomTabStack");
+    },
+    onError: (error) => {
+      Toast.show({
+        type: "error",
+        text1: "Error !",
+        text2: error?.response?.data?.message,
+      });
+    },
+    onSettled: (data, error) => {
+      console.log(data, error);
+    },
+  });
+
+  const [data, setData] = useState({
+    email: "",
+    password: "",
+  });
+
+  const handleDataChange = (name, val) => {
+    setData({ ...data, [name]: val });
   };
+
   return (
     <>
       <View className="italic" style={styles.container}>
@@ -21,39 +59,60 @@ const Loginpage = ({navigation}) => {
             name="email"
             classNames="bg-white-200 text-black ml-[25px] mt-[30px]  mr-[30px]"
             keyboardType="email-address"
+            onChange={handleDataChange}
           />
           <InputField
             placeholder="Password"
             name="password"
             classNames="bg-white-200 text-black ml-[25px] mt-[30px]  mr-[30px]"
             secureTextEntry
+            onChange={handleDataChange}
           />
 
           <View
             className="ml-[28px] mr-[30px] mt-[30px]"
             style={{ flexDirection: "row", justifyContent: "space-between" }}
           >
-	  <View className="w-20">
-            <CheckBox text="Remember me" />
-	  </View>
-	  <TouchableOpacity onPress={() => navigation.navigate("ForgotPassword")}>
-            <Text style={{ color: "#FFC70F", textDecorationLine: "none" }}>
-              Forgot Password?
-            </Text>
-	  </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => {
+                if (!userData?.userId) {
+                  Toast.show({
+                    type: "error",
+                    text1: "Request Failed!",
+                    text2: "Kindly register with an email first.",
+                  });
+                  return;
+                }
+                navigation.navigate("OTP", { comingFrom: "NewUser" });
+              }}
+            >
+              <Text style={{ color: "#FFC70F", textDecorationLine: "none" }}>
+                Verify OTP
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => navigation.navigate("ForgotPassword")}
+            >
+              <Text style={{ color: "#FFC70F", textDecorationLine: "none" }}>
+                Forgot Password?
+              </Text>
+            </TouchableOpacity>
           </View>
-          <View className="ml-[32px] mt-[40px]">
-            <CustomButton
-              width={350}
-              height={50}
-              backgroundColor="#FFC70F"
-              text="Login"
-              textColor="white"
-	  handlePress={() => navigation.navigate("HomeStack")}
-            />
-          </View>
+          <TouchableOpacity
+            onPress={() => {
+              if (data.email === "" || data.password === "") {
+                console.log("noo");
+                return;
+              }
+              loginMutation.mutate(data);
+            }}
+          >
+            <View className="my-2 bg-primary mx-6 rounded-lg py-3 items-center">
+              <Text className="text-white text-lg">Login</Text>
+            </View>
+          </TouchableOpacity>
           <View
-            className="mt-[30px]"
+            className="mt-[30px] px-6"
             style={{
               flexDirection: "row",
               justifyContent: "center",
@@ -65,8 +124,11 @@ const Loginpage = ({navigation}) => {
               imageHeight={25}
               text="Continue With Google"
               textColor="black"
-              onPress={handleButtonPress}
-
+              onPress={() =>
+                onGoogleButtonPress(navigation).then(() =>
+                  console.log("Signed in with Google!"),
+                )
+              }
             />
           </View>
           <View
@@ -77,15 +139,14 @@ const Loginpage = ({navigation}) => {
               alignItems: "center",
             }}
           >
-            <Text style={{ color: "#838383"}} className="text-base">
-	  Don't have an account?
+            <Text style={{ color: "#838383" }} className="text-base">
+              Don't have an account?
             </Text>
-            <Text
-              className="ml-[4px] text-base"
-              style={{ color: "#FFC70F", }} 
-            >
-              Register
-            </Text>
+            <TouchableOpacity onPress={() => navigation.navigate("SignUp")}>
+              <Text className="ml-[4px] text-base" style={{ color: "#FFC70F" }}>
+                Register
+              </Text>
+            </TouchableOpacity>
           </View>
         </View>
       </View>
@@ -95,7 +156,7 @@ const Loginpage = ({navigation}) => {
 
 const styles = StyleSheet.create({
   container: {
-    // flex: 1,
+    flex: 1,
     backgroundColor: "#fff",
   },
 });

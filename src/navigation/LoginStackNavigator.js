@@ -2,9 +2,9 @@ import { createStackNavigator } from "@react-navigation/stack";
 import SignIn from "../screens/SignIn";
 import Loginpage from "../screens/Login";
 import Register from "../screens/Register/Index";
-import CreatePassword from '../screens/CreatePassword/index'
-import OTP from '../screens/OTP/index'
-import ForgotPassword from '../screens/ForgotPassword/Index'
+import CreatePassword from "../screens/CreatePassword/index";
+import OTP from "../screens/OTP/index";
+import ForgotPassword from "../screens/ForgotPassword/Index";
 
 const LoginStack = () => {
   const LoginNavigator = createStackNavigator();
@@ -36,7 +36,7 @@ const LoginStack = () => {
         options={{ headerShown: false }}
       />
       <LoginNavigator.Screen
-        name="CreatePassword"
+        name="CreateNewPassword"
         component={CreatePassword}
         options={{ headerShown: false }}
       />

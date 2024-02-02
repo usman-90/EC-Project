@@ -8,6 +8,12 @@ module.exports = {
       colors: {
         'primary': '#FFC70F',
       },
+      screens: {
+        'sm': '360px',  // Small screens
+        'md': '392px',  // Medium screens
+        'lg': '400px', // Large screens
+        'xl': '450px', // Extra large screens
+      }
     },
   },
   plugins: [],
