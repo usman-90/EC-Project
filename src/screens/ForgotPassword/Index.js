@@ -81,7 +81,10 @@ const ForgotPassword = ({ navigation }) => {
                     });
                     return;
                   }
-                  navigation.navigate("OTP", { comingFrom: "ForgotPassword" });
+                  navigation.navigate("OTP", {
+                    comingFrom: "ForgotPassword",
+                    email: email,
+                  });
                 }}
               >
                 Click here
