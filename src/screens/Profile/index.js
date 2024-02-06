@@ -58,6 +58,7 @@ const Profile = ({ navigation }) => {
         <View className=" bg-[#f2e1aa] py-2 px-6 rounded-full">
           <Text>{userData?.email}</Text>
         </View>
+        
         <View className="items-center justify-center flex flex-col  w-full bg-white rounded-lg mt-8 shadow-2xl  shadow-stone-600">
           <TouchableOpacity
             onPress={() => navigation.navigate("EditProfile")}

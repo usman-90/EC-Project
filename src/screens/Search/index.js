@@ -1,10 +1,4 @@
 import {
-  Image,
-  ScrollView,
-  TextInput,
-  StyleSheet,
-  ImageBackground,
-  Text,
   FlatList,
   View,
   TouchableOpacity,
@@ -40,7 +34,7 @@ const Search = ({ navigation }) => {
   return (
     <View className="basis-full">
       <View className="px-6 my-3 flex flex-row">
-        <SearchBar value={query} setValue={setQuery} />
+        <SearchBar value={query} setValue={setQuery}  />
         <DragableMenu
           query={query}
           refetchProperties={searchPropertiesMutation.mutate}
@@ -51,30 +45,7 @@ const Search = ({ navigation }) => {
           <FlatList
             data={data}
             className="px-6"
-            renderItem={({ item }) => (
-              <TouchableOpacity
-                onPress={() => {
-                  navigation.navigate("Details", {
-                    item: item,
-                  });
-                }}
-              >
-                <PropertyItem
-                  title={item?.propertyDetails?.title}
-                  image={item?.upload?.images}
-                  price={item?.propertyDetails?.InclusivePrice}
-                  location={item?.locationAndAddress?.location}
-                  bedrooms={
-                    item?.amenities?.filter(
-                      (item) => item.name == "bedRooms",
-                    )[0].value
-                  }
-                  area={item?.propertyDetails?.areaSquare}
-                  beds={item?.propertyDetails?.bedRooms}
-                  bathrooms={item?.propertyDetails?.bathRooms}
-                />
-              </TouchableOpacity>
-            )}
+            renderItem={({ item }) => <SearchedItem navigation={navigation} item={item} />}
             keyExtractor={(item) => item}
           />
         ) : null}
@@ -83,3 +54,33 @@ const Search = ({ navigation }) => {
   );
 };
 export default Search;
+
+
+const SearchedItem = ({navigation, item}) => {
+
+
+  return (
+    <TouchableOpacity
+      onPress={() => {
+        navigation.navigate("Details", {
+          item: item,
+        });
+      }}
+    >
+      <PropertyItem
+        title={item?.propertyDetails?.title}
+        image={item?.upload?.images}
+        price={item?.propertyDetails?.InclusivePrice}
+        location={item?.locationAndAddress?.location}
+        bedrooms={
+          item?.amenities?.filter(
+            (item) => item.name == "bedRooms",
+          )[0].value
+        }
+        area={item?.propertyDetails?.areaSquare}
+        beds={item?.propertyDetails?.bedRooms}
+        bathrooms={item?.propertyDetails?.bathRooms}
+      />
+    </TouchableOpacity>
+  )
+}

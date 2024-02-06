@@ -1,4 +1,4 @@
-import { configureStore } from "@reduxjs/toolkit";
+import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import userSlicer from "../features/user/userSlice";
 import {
   persistStore,
@@ -11,13 +11,20 @@ import {
   REGISTER,
 } from "redux-persist";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import searchSlicer from "../features/app/searchSlice";
 
 const persistConfig = {
   key: "root",
   storage: AsyncStorage,
 };
 
-const persistedReducer = persistReducer(persistConfig, userSlicer);
+const rootReducer = combineReducers({
+  user: userSlicer,
+  search: searchSlicer, // Add your search slicer here
+  // Other reducers (if any)
+});
+
+const persistedReducer = persistReducer(persistConfig, rootReducer);
 
 export default store = configureStore({
   reducer: persistedReducer,
