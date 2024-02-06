@@ -7,50 +7,77 @@ import {
   Text,
   FlatList,
   View,
+  TouchableOpacity,
 } from "react-native";
+import { useEffect, useState } from "react";
+import { searchProperties } from "../../apiFunctions/properties";
+import { useMutation } from "@tanstack/react-query";
 import SearchBar from "../../components/SearchBar";
-import Clock from "../../../assets/Search/Clock.png";
-import Close from "../../../assets/Search/Close.png";
-import RecentPropertyItem from "../../components/RecentPropertyItem";
+import DragableMenu from "../../components/DragableMenu";
+import PropertyItem from "../../components/PropertyItem";
+import Loader from "../../components/Loader";
 
-const Search = () => {
-  let options = new Array(10);
+const Search = ({ navigation }) => {
+  const [query, setQuery] = useState("");
+  const [data, setData] = useState();
+  const searchPropertiesMutation = useMutation({
+    mutationFn: searchProperties,
+    onSuccess: (data) => {
+      setData(data?.data?.data);
+      console.log(data);
+    },
+    onError: (error) => {
+      console.log(error);
+    },
+  });
+  useEffect(() => {
+    searchPropertiesMutation.mutate(query);
+  }, [query]);
+
+  if (searchPropertiesMutation?.isLoading) {
+    return <Loader />;
+  }
   return (
     <View className="basis-full">
-      <View className="px-6 my-3 flex-row">
-        <SearchBar width={100} />
-      </View>
-      <View className="px-6 flex-row justify-between items-center my-">
-        <Text className="text-lg font-bold">Recent Searched</Text>
-        <Text className="text-red-500 text-base font-bold">Clear all</Text>
-      </View>
-
-      <View className="flex-row px-6 justify-between items-center my-3">
-        <View className="flex-row items-center w-5/6">
-          <Image source={Clock} />
-          <Text className="mx-3 w-full">Residential</Text>
-        </View>
-        <Image source={Close} />
-      </View>
-      <View className="flex-row px-6 justify-between items-center my-3">
-        <View className="flex-row items-center">
-          <Image source={Clock} />
-          <Text className="mx-3">Studio</Text>
-        </View>
-        <Image source={Close} />
-      </View>
-
-      <View className="px-6 flex-row justify-between items-center my-">
-        <Text className="text-lg font-bold">Recent View</Text>
-      </View>
-
-      <View className="px-6 py-2">
-        <FlatList
-          className="grow-0"
-          data={options}
-          renderItem={({ item }) => <RecentPropertyItem />}
-          keyExtractor={(item) => item}
+      <View className="px-6 my-3 flex flex-row">
+        <SearchBar value={query} setValue={setQuery} />
+        <DragableMenu
+          query={query}
+          refetchProperties={searchPropertiesMutation.mutate}
         />
+      </View>
+      <View className="grow-0 py-2">
+        {query ? (
+          <FlatList
+            data={data}
+            className="px-6"
+            renderItem={({ item }) => (
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.navigate("Details", {
+                    item: item,
+                  });
+                }}
+              >
+                <PropertyItem
+                  title={item?.propertyDetails?.title}
+                  image={item?.upload?.images}
+                  price={item?.propertyDetails?.InclusivePrice}
+                  location={item?.locationAndAddress?.location}
+                  bedrooms={
+                    item?.amenities?.filter(
+                      (item) => item.name == "bedRooms",
+                    )[0].value
+                  }
+                  area={item?.propertyDetails?.areaSquare}
+                  beds={item?.propertyDetails?.bedRooms}
+                  bathrooms={item?.propertyDetails?.bathRooms}
+                />
+              </TouchableOpacity>
+            )}
+            keyExtractor={(item) => item}
+          />
+        ) : null}
       </View>
     </View>
   );

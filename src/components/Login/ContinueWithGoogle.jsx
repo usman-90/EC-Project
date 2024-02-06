@@ -10,14 +10,7 @@ const ContinueWithGoogle = ({
 }) => {
   return (
     <TouchableOpacity
-      className="bg-red-500"
-      style={{
-        backgroundColor: "white",
-        padding: 10,
-        borderRadius: 5,
-        flexDirection: "row",
-        alignItems: "center",
-      }}
+      className="flex-row items-center bg-gray-100 py-2 w-full justify-center rounded-lg"
       onPress={onPress}
     >
       <Image
