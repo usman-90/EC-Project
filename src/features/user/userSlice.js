@@ -8,7 +8,6 @@ export const userSlice = createSlice({
       userData: {
         name: "",
         email: "",
-        userId: "",
         phoneNumber: null,
         _id: "",
       },

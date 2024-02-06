@@ -21,19 +21,10 @@ import { useSelector } from "react-redux";
 
 const DragableMenu = ({ query, refetchProperties }) => {
   // Needed in order to use .show()
-  const item = useSelector((state) => state?.data);
+  const { filter } = useSelector((state) => state?.search?.data);
   const bottomSheet = useRef();
   // const [filters, setFilters] = useContext(FilterContext);
-  const [filters, setFilters] = useState({
-    areaMax: 5000,
-    areaMin: 0,
-    bathrooms: "",
-    bedrooms: "",
-    category: "all",
-    priceMax: 5000,
-    priceMin: 0,
-    subCategory: ""
-  });
+  const [filters, setFilters] = useState(filter);
   const subCategoriesResult = useQuery({
     queryKey: ["SubCategories", filters?.category],
     queryFn: fetchSubCategories,
@@ -44,12 +35,9 @@ const DragableMenu = ({ query, refetchProperties }) => {
     ...(subCategoriesResult?.data?.data?.data ?? []),
   ];
   // const [values, setValues] = useState([0, 50]);
-  console.log("filters", filters, item);
+  console.log("filters", filters);
 
-  useEffect(() => {
-
-  }, []);
-
+  useEffect(() => {}, []);
 
   const handleFilterChange = (name, val) => {
     setFilters({
@@ -205,10 +193,11 @@ const DragableMenu = ({ query, refetchProperties }) => {
                       >
                         <View style={styles.me_2} className="me-3 mr-5">
                           <Text
-                            className={`h-9 py-2 rounded-md px-3 bg-primary ${item?.keyword === filters?.category
-                              ? "bg-white text-primary border border-primary"
-                              : "bg-primary text-white"
-                              }`}
+                            className={`h-9 py-2 rounded-md px-3 bg-primary ${
+                              item?.keyword === filters?.category
+                                ? "bg-white text-primary border border-primary"
+                                : "bg-primary text-white"
+                            }`}
                           >
                             {item?.name}
                           </Text>
@@ -236,10 +225,11 @@ const DragableMenu = ({ query, refetchProperties }) => {
                     >
                       <View style={styles.me_2} className="me-3 mr-5 mb-3">
                         <Text
-                          className={`h-9 py-2 rounded-md px-3 bg-primary  ${cat?.key === filters?.subCategory
-                            ? "bg-white text-primary border border-primary"
-                            : "bg-primary text-white"
-                            }`}
+                          className={`h-9 py-2 rounded-md px-3 bg-primary  ${
+                            cat?.key === filters?.subCategory
+                              ? "bg-white text-primary border border-primary"
+                              : "bg-primary text-white"
+                          }`}
                         >
                           {cat?.value}
                         </Text>
@@ -249,7 +239,9 @@ const DragableMenu = ({ query, refetchProperties }) => {
                 })}
               </View>
 
-              <Text className="px-6 py-3 text-lg my-1 font-bold">Completeness</Text>
+              <Text className="px-6 py-3 text-lg my-1 font-bold">
+                Completeness
+              </Text>
 
               <View className="px-6 flex-row justify-between my-1 items-center">
                 <Text className="text-base text-gray-500">Bedrooms</Text>
@@ -297,7 +289,9 @@ const DragableMenu = ({ query, refetchProperties }) => {
                 </View>
               </View>
 
-              <Text className="px-6 pt-3 text-lg my-1 font-bold">Price Range</Text>
+              <Text className="px-6 pt-3 text-lg my-1 font-bold">
+                Price Range
+              </Text>
 
               <View className="px-6 mt-2 flex-row justify-center">
                 <Graph style={styles.graph} name="graph-bar" />
@@ -315,9 +309,16 @@ const DragableMenu = ({ query, refetchProperties }) => {
                     step={1}
                     allowOverlap={false}
                     containerStyle={{ height: 25 }}
-                    selectedStyle={{ backgroundColor: '#FFC70F', height: 5 }}
+                    selectedStyle={{ backgroundColor: "#FFC70F", height: 5 }}
                     trackStyle={{ height: 5 }}
-                    markerStyle={{ backgroundColor: '#ffffff', height: 20, width: 20, borderWidth: 1, borderColor: '#FFC70F', top: 2 }}
+                    markerStyle={{
+                      backgroundColor: "#ffffff",
+                      height: 20,
+                      width: 20,
+                      borderWidth: 1,
+                      borderColor: "#FFC70F",
+                      top: 2,
+                    }}
                     snapped
                   />
                 </View>
@@ -349,25 +350,27 @@ const DragableMenu = ({ query, refetchProperties }) => {
                     step={1}
                     allowOverlap={false}
                     containerStyle={{ height: 25 }}
-                    selectedStyle={{ backgroundColor: '#FFC70F', height: 5 }}
+                    selectedStyle={{ backgroundColor: "#FFC70F", height: 5 }}
                     trackStyle={{ height: 5 }}
-                    markerStyle={{ backgroundColor: '#ffffff', height: 20, width: 20, borderWidth: 1, borderColor: '#FFC70F', top: 2 }}
+                    markerStyle={{
+                      backgroundColor: "#ffffff",
+                      height: 20,
+                      width: 20,
+                      borderWidth: 1,
+                      borderColor: "#FFC70F",
+                      top: 2,
+                    }}
                     snapped
-                  />                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 
-
+                  />
                 </View>
                 <View className="flex-row justify-between px-6 h-8">
                   <Text className="text-lg font-bold">
                     {filters?.areaMin}
-                    <Text  style={{fontSize:9}}>
-                      SqFt
-                    </Text>
+                    <Text style={{ fontSize: 9 }}>SqFt</Text>
                   </Text>
                   <Text className="text-lg font-bold">
                     {filters?.areaMax}
-                    <Text style={{fontSize:9}}>
-                      SqFt
-                    </Text>
+                    <Text style={{ fontSize: 9 }}>SqFt</Text>
                   </Text>
                 </View>
               </View>
@@ -382,7 +385,7 @@ const DragableMenu = ({ query, refetchProperties }) => {
                       category: "all",
                       priceMax: 5000,
                       priceMin: 0,
-                      subCategory: ""
+                      subCategory: "",
                     })
                   }
                   className="bg-red-500 text-white px-4 py-2 w-3/12 text-base rounded-lg"

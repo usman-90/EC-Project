@@ -66,10 +66,9 @@ const Otp11 = ({ navigation, route }) => {
       console.log(data, error);
     },
   });
-  const { userData } = useSelector((state) => state?.data);
+  const { userData } = useSelector((state) => state?.user.data);
   const [otp, setOtp] = useState("");
   const [timer, setTimer] = useState(180); // 3 minutes in seconds
-  const [otpResend, setOtpResend] = useState(false); // 3 minutes in seconds
 
   useEffect(() => {
     setIntervals(startOtpResendTimer());

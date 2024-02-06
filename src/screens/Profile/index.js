@@ -20,7 +20,7 @@ import { setUserData } from "../../features/user/userSlice";
 //const data = { name: "Hellooo", email: "hello@gmail.com" };
 
 const Profile = ({ navigation }) => {
-  const { userData } = useSelector((state) => state?.data);
+  const { userData } = useSelector((state) => state?.user?.data);
 
   const onLogoutPress = () => {
     console.log("Logout Pressed.");

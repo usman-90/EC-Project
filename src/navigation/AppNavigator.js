@@ -2,13 +2,12 @@ import { createStackNavigator } from "@react-navigation/stack";
 import Search from "../screens/Search/index";
 import LoginStack from "./LoginStackNavigator";
 import BottomNavigator from "./BottomNavigator";
-import store from "../app/store";
 import { useSelector } from "react-redux";
 
 const RootStack = () => {
   const RootNavigator = createStackNavigator();
 
-  const { token } = useSelector((state) => state?.data);
+  const { token } = useSelector((state) => state?.user?.data);
 
   if (token) {
     return (

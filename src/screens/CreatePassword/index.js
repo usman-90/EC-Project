@@ -10,7 +10,7 @@ import { useSelector } from "react-redux";
 import { CommonActions } from "@react-navigation/native";
 
 const CreatePassword = ({ navigation }) => {
-  const { userData } = useSelector((state) => state?.data);
+  const { userData } = useSelector((state) => state?.user?.data);
   const [newPassword, setNewPassword] = useState("");
   const [pwHasStrongChar, setPwHasStrongChar] = useState(false);
   const [pwHasSpecialChar, setPwHasSpecialChar] = useState(false);

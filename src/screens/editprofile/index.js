@@ -11,7 +11,7 @@ import { setUserData } from "../../features/user/userSlice";
 import { useNavigation } from "@react-navigation/native";
 
 const EditProfile = () => {
-  const { userData, token } = useSelector((state) => state?.data);
+  const { userData, token } = useSelector((state) => state?.user?.data);
   const navigation = useNavigation();
   const editProfileMutation = useMutation({
     mutationFn: editProfile,

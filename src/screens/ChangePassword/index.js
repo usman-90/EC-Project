@@ -10,7 +10,7 @@ import { useNavigation } from "@react-navigation/native";
 
 const ChangePassword = () => {
   const navigation = useNavigation();
-  const { userData } = useSelector((state) => state?.data);
+  const { userData } = useSelector((state) => state?.user?.data);
   const [data, setData] = useState({ oldPassword: "", newPassword: "" });
   const changePasswordMutation = useMutation({
     mutationFn: updatePassword,

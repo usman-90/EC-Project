@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import Heading from "../../components/Heading";
 import InputField from "../../components/InputField";
@@ -14,11 +14,17 @@ import store from "../../app/store";
 import { setUserData } from "../../features/user/userSlice";
 
 const Loginpage = ({ navigation }) => {
-  const userData = useSelector((state) => state?.data);
+  const { userData } = useSelector((state) => state?.user?.data);
+
+  useEffect(() => {
+    console.log("useData on login page", userData);
+  }, [])
+  
 
   const loginMutation = useMutation({
     mutationFn: login,
     onSuccess: (data) => {
+      // console.log("Success on login");
       Toast.show({
         type: "success",
         text1: "Success!",
@@ -29,6 +35,7 @@ const Loginpage = ({ navigation }) => {
       navigation.navigate("BottomTabStack");
     },
     onError: (error) => {
+      // console.log("Error on login");
       Toast.show({
         type: "error",
         text1: "Error !",
@@ -75,7 +82,7 @@ const Loginpage = ({ navigation }) => {
           >
             <TouchableOpacity
               onPress={() => {
-                if (!userData?.userId) {
+                if (!userData?._id) {
                   Toast.show({
                     type: "error",
                     text1: "Request Failed!",
@@ -83,7 +90,10 @@ const Loginpage = ({ navigation }) => {
                   });
                   return;
                 }
-                navigation.navigate("OTP", { comingFrom: "NewUser", email: data.email });
+                navigation.navigate("OTP", {
+                  comingFrom: "NewUser",
+                  email: data.email,
+                });
               }}
             >
               <Text style={{ color: "#FFC70F", textDecorationLine: "none" }}>
