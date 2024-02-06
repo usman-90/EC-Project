@@ -69,18 +69,15 @@ const CreatePassword = ({ navigation }) => {
     });
     if (response.status === 200) {
       console.log("Response", navigation);
-      // navigation.dispatch(
-      //   CommonActions.reset({
-      //     index: 1,
-      //     routes: [
-      //       { name: 'LoginStack' },
-      //       { name: 'BottomTabStack' },
-      //       { name: 'ModalStack' }
-      //     ],
-      //   })
-      // );
-      navigation.navigate("Login");
-    } else {
+      navigation.dispatch(
+        CommonActions.reset({
+          index: 0,
+          routes: [
+            { name: 'LoginStack' }
+          ],
+        })
+      );     
+    }else{
       Toast.show({
         type: "error",
         text1: "Error !",
