@@ -13,7 +13,7 @@ import Icon from "react-native-vector-icons/AntDesign";
 import PasswordIcon from "react-native-vector-icons/SimpleLineIcons";
 import SettingIcon from "react-native-vector-icons/Feather";
 import HeadPhones from "react-native-vector-icons/Feather";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import store from "../../app/store";
 import { setUserData } from "../../features/user/userSlice";
 
@@ -33,6 +33,8 @@ const Profile = ({ navigation }) => {
     navigation.navigate("LoginStack");
   };
 
+	const image = userData?.photo ? {uri: userData?.photo} : null;
+console.log(userData?.photo, "photooooooo")
   return (
     <>
       <View
@@ -40,7 +42,7 @@ const Profile = ({ navigation }) => {
         style={styles.container}
       >
         <ImageBackground
-          source={ProfilePic}
+          source={image ? image : ProfilePic}
           className="w-[45%] h-[22%] flex justify-end items-end"
           imageStyle={styles.roundedFull}
         >

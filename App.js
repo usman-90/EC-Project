@@ -17,9 +17,9 @@ export default function App() {
 	const filters = useState({
 		category: "all",
 		subCategory: "",
-		priceMin: "",
+		priceMin: 0,
 		priceMax: "",
-		areaMin: "",
+		areaMin: 0,
 		areaMax: "",
 		bathrooms: "",
 		bedrooms: "",
