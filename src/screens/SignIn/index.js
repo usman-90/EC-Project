@@ -4,9 +4,11 @@ import LoginBg from "../../../assets/LoginImages/LoginBg.png";
 import ContinueWithGoogle from "../../components/Login/ContinueWithGoogle";
 import { useSelector, useDispatch } from "react-redux";
 import { onGoogleButtonPress } from "../../apiFunctions/signInWithGoogle";
+import {onFacebookButtonPress} from '../../apiFunctions/signInWithFacebook'
 
 const SignIn = ({ navigation }) => {
 	let dispatch = useDispatch()
+
   return (
     <View className="bg-black" style={styles.container}>
       <Image source={LoginBg} style={{ flex: 1.8 }} />
@@ -51,7 +53,9 @@ const SignIn = ({ navigation }) => {
           }}
         >
           <TouchableOpacity
-            onPress={() => navigation.navigate("BottomTabStack")}
+            onPress={() => {
+		    onFacebookButtonPress(dispatch, navigation).then(() => console.log('Signed in with Facebook!'))
+	    }}
             className="flex-row items-center bg-gray-100 py-2 w-full justify-center rounded-lg"
           >
             <AntDesignIcon
