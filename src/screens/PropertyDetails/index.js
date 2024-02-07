@@ -6,6 +6,7 @@ const PropertyDetailWrapper = ({ route, navigation }) => {
   console.log(item?.propertyDetails?.InclusivePrice);
   return (
     <PropertyDetails
+	  propertyId={item?._id}
       title={item?.propertyDetails?.title}
       images={item?.upload?.images}
       price={item?.propertyDetails?.InclusivePrice}

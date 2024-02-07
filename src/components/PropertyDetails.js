@@ -7,7 +7,9 @@ import {
   View,
   TouchableOpacity,
 } from "react-native";
-
+import {getOneSavedProperties, saveProperty, deleteSavedProperties} from "../apiFunctions/properties"
+import { useSelector } from "react-redux";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import AntDesignIcon from "react-native-vector-icons/AntDesign";
 import { Linking } from "react-native";
 import { Marker } from "react-native-maps";
@@ -316,8 +318,35 @@ const PropertyDetails = ({
   navigateBack,
   phone,
   navigation,
+	propertyId
 }) => {
-	const [isPropertyLiked, setIsPropertyLiked] = useState(false)
+
+  const { userData } = useSelector((state) => state?.data);
+	const isPropertySavedQuery = useQuery({
+		queryKey: ["fetchOnePropertySaved",{userId:userData?.userId, propertyId}],
+		queryFn: getOneSavedProperties,
+		onSuccess: (data) => {
+			console.log(data)
+		}
+	})
+	const refetchIsPropertySaved = isPropertySavedQuery?.refetch
+	const savePropertyMutation = useMutation({
+    mutationFn: saveProperty,
+    onSuccess: (data) => {
+        refetchIsPropertySaved();
+    },
+    onSettled: (data, error) => {
+        console.log(data);
+        console.log(error);
+    }
+});
+
+	const unSaveProperty = useMutation({
+		mutationFn: deleteSavedProperties,
+		onSuccess: (data) => {
+			refetchIsPropertySaved()
+		}
+	})
   const loc = location?.location?.split("-");
   const detailsVals = [
     price,
@@ -349,7 +378,9 @@ const PropertyDetails = ({
       .catch((error) =>
         console.error("An error occurred while opening WhatsApp", error),
       );
+
   };
+	let isThisPropertySaved = isPropertySavedQuery?.data?.data?.result ?? null
   return (
     <View className="  basis-full">
       <View className=" px-6 mb-3 flex py-2 flex-row justify-between items-center">
@@ -359,12 +390,20 @@ const PropertyDetails = ({
           </View>
         </TouchableOpacity>
         <Text className="text-lg font-bold">Property Detail</Text>
-	  <TouchableOpacity onPress={() => {setIsPropertyLiked(!isPropertyLiked)
-		console.log(isPropertyLiked)
+	  <TouchableOpacity onPress={async () => {
+		  console.log("invoked" , isThisPropertySaved)
+		  if (isThisPropertySaved){
+			  unSaveProperty?.mutate(isPropertySavedQuery?.data?.data?.result?._id)
+		  }else{
+			  savePropertyMutation.mutate({
+				  userId: userData?.userId,
+				  propertyId
+			  })
+		  }
 	  }}>
-	  <AntDesingIcon name={`${isPropertyLiked ? "heart" : "hearto"}`} style={{
+	  <AntDesingIcon name={`${isThisPropertySaved ? "heart" : "hearto"}`} style={{
 		  fontSize:20,
-		  color: !isPropertyLiked ? "black" : "red"
+		  color: !isThisPropertySaved ? "black" : "red"
 	  }} />
 	  </TouchableOpacity>
       </View>

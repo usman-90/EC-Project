@@ -3,7 +3,7 @@ import axios from "axios";
 const API_URL_OLD =
   "https://realestatebackend-m68pxvdwf-asadullahkhan19.vercel.app";
 const API_URL_NEW = "https://realestatebackend-woad.vercel.app";
-const Local_Host_URL = "http://10.0.2.2:4000";
+const Local_Host_URL = "192.168.100.45";
 
 export function register(data) {
   return axios.post(`${API_URL_NEW}/users/register`, data);
