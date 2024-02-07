@@ -20,7 +20,6 @@ export function fetchAllProperties() {
 
 export function fetchProperties({ queryKey }) {
   const data = queryKey[1];
-
   let params = {
     purpose: data?.purpose,
     category: data?.category,
@@ -48,9 +47,7 @@ export function fetchProperties({ queryKey }) {
       rs[p] = params[p];
     }
   }
-
-  console.log(rs, "dataaaa");
-
+	console.log("rssssssssssssss",rs,"rssssssssssssss")
   return axios.get(
     `https://realestatebackend-m68pxvdwf-asadullahkhan19.vercel.app/property/get-property`,
     {

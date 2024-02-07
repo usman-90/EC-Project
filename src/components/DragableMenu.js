@@ -14,12 +14,13 @@ import {
   View,
 } from "react-native";
 import BottomSheet from "react-native-gesture-bottom-sheet";
+import {fetchProperties} from '../apiFunctions/properties'
 import FilterButton from "./FilterButton";
 import { fetchSubCategories } from "../apiFunctions/properties";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useSelector } from "react-redux";
 
-const DragableMenu = ({ query, refetchProperties }) => {
+const DragableMenu = ({setData, query, refetchProperties }) => {
   // Needed in order to use .show()
   const { filter } = useSelector((state) => state?.search?.data);
   const bottomSheet = useRef();
@@ -37,8 +38,6 @@ const DragableMenu = ({ query, refetchProperties }) => {
   // const [values, setValues] = useState([0, 50]);
   console.log("filters", filters);
 
-  useEffect(() => {}, []);
-
   const handleFilterChange = (name, val) => {
     setFilters({
       ...filters,
@@ -52,7 +51,6 @@ const DragableMenu = ({ query, refetchProperties }) => {
     });
   };
   const handleValuesChange = (newValues) => {
-    console.log(newValues);
     const [min, max] = newValues;
     handleMultipleChanges({
       priceMin: min,
@@ -220,7 +218,6 @@ const DragableMenu = ({ query, refetchProperties }) => {
                       className="my-1"
                       onPress={() => {
                         handleFilterChange("subCategory", cat?.key);
-                        console.log(cat?.key);
                       }}
                     >
                       <View style={styles.me_2} className="me-3 mr-5 mb-3">
@@ -396,8 +393,11 @@ const DragableMenu = ({ query, refetchProperties }) => {
                 </TouchableOpacity>
                 <TouchableOpacity
                   className="bg-primary text-white mx-2 px-4 py-2 w-9/12 text-base rounded-lg"
-                  onPress={() =>
+                  onPress={() =>{
+			  console.log(query ? "yes" : "no")
+			 setData ? setData(null) : null
                     query ? refetchProperties(query) : refetchProperties()
+		  }
                   }
                 >
                   <View className="">

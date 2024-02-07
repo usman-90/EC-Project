@@ -25,15 +25,15 @@ import PropertyItem from "../../components/PropertyItem";
 const SearchResult = ({ route, navigation }) => {
   const [filters] = useContext(FilterContext);
   const propertiesResult = useQuery({
-    queryKey: ["FetchProperties", filters],
+    queryKey: ["FetchPropertiesByFilter", filters],
     queryFn: fetchProperties,
     enabled: false,
   });
   const refetchProperties = propertiesResult?.refetch;
   useEffect(() => {
+	  console.log("ran",route.params.name)
     refetchProperties();
-  }, []);
-  console.log(refetchProperties);
+  }, [route]);
   if (propertiesResult?.isLoading) {
     return <Loader />;
   }
@@ -41,8 +41,7 @@ const SearchResult = ({ route, navigation }) => {
   const { purpose, name } = route.params;
 
   const properties = propertiesResult?.data?.data?.data ?? [];
-  console.log(propertiesResult, "proppppppp");
-
+	console.log("pppp",properties)
   return (
     <View className="px-4">
       <View className="mb-3 flex flex-row pt-2 justify-between items-center">

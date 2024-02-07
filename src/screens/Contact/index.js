@@ -1,8 +1,9 @@
 import React from "react";
 import {TextInput, Image, StatusBar, Text, TouchableOpacity, View } from "react-native";
 import topWave from "../../../assets/Home/topWave.png";
+import LogoSVG from "../../components/Logo.js"
 import logo from "../../../assets/Home/logo.png";
-import buildingIcon from "../../../assets/Home/buildingIcon.png";
+import buildingIcon from "../../../assets/Home/Buildings.png"
 import bottomWave from "../../../assets/Home/bottomWave.png";
 import apart1 from "../../../assets/Home/Image1.png";
 import resi1 from "../../../assets/Home/Image2.png";
@@ -58,11 +59,15 @@ export default function Contact() {
       <StyledView className="h-72">
         <StyledImage source={topWave} className="-top-6" />
         <StyledView className="flex flex-row relative sm:bottom-24 md:bottom-24 h-0">
-          <StyledView className="flex-[.45] flex-col items-center relative">
-            <StyledImage
-              source={logo}
-              className={`sm:w-[155px] sm:h-[33px] absolute sm:left-4 md:left-5 sm:top-5`}
-            />
+          <StyledView className="flex-[.45] bg-red-200 flex-col items-center relative">
+	  <View style={{
+		  position:"absolute",
+			  top:20,
+			left:20,
+			  zIndex:4
+	  }}>
+	  <LogoSVG/>
+	  </View>
             <StyledView
               className="absolute flex-row sm:left-4 md:left-5 sm:top-24 rounded-full"
               style={{ backgroundColor: "#FFF5D3" }}
@@ -74,11 +79,11 @@ export default function Contact() {
               </View>
             </StyledView>
           </StyledView>
-          <StyledView className="flex-[.65] items-center relative">
+          <StyledView style={{position:"relative",zIndex:0}} className=" flex-[.65] items-center relative">
             <AnimatedImage
               source={buildingIcon}
               className={"sm:w-[203px] sm:h-[188px]"}
-              style={{ opacity: opacity1 }}
+              style={{ opacity: opacity1 , position:"relative",zIndex:0}}
             />
           </StyledView>
         </StyledView>

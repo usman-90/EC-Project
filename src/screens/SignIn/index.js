@@ -2,9 +2,11 @@ import { Image, TouchableOpacity, StyleSheet, Text, View } from "react-native";
 import AntDesignIcon from "react-native-vector-icons/AntDesign";
 import LoginBg from "../../../assets/LoginImages/LoginBg.png";
 import ContinueWithGoogle from "../../components/Login/ContinueWithGoogle";
+import { useSelector, useDispatch } from "react-redux";
 import { onGoogleButtonPress } from "../../apiFunctions/signInWithGoogle";
 
 const SignIn = ({ navigation }) => {
+	let dispatch = useDispatch()
   return (
     <View className="bg-black" style={styles.container}>
       <Image source={LoginBg} style={{ flex: 1.8 }} />
@@ -34,7 +36,7 @@ const SignIn = ({ navigation }) => {
             text="Continue With Google"
             textColor="black"
             onPress={() =>
-              onGoogleButtonPress(navigation).then(() =>
+              onGoogleButtonPress(dispatch,navigation).then(() =>
                 console.log("Signed in with Google!"),
               )
             }

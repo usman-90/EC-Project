@@ -1,5 +1,6 @@
 import React from "react";
 import { Image, StatusBar, Text, TouchableOpacity, View } from "react-native";
+import LogoSVG from "../../components/Logo.js"
 import topWave from "../../../assets/Home/topWave.png";
 import logo from "../../../assets/Home/logo.png";
 import buildingIcon from "../../../assets/Home/buildingIcon.png";
@@ -14,6 +15,8 @@ import Animated, {
 } from "react-native-reanimated";
 import ItemsList from "../../components/Home/ItemsList";
 import { useNavigation } from "@react-navigation/native";
+import { useContext } from "react";
+import FilterContext from "../../context/FilterContext";
 
 const featuredItems = [
   {
@@ -29,6 +32,13 @@ const featuredItems = [
 ];
 
 export default function Home() {
+	const [filters, setFilters] = useContext(FilterContext);
+  const handleFilterChange = (name, val) => {
+    setFilters({
+      ...filters,
+      [name]: val,
+    });
+  };
   const navigation = useNavigation();
   const animatedRef = useAnimatedRef();
   const StyledView = styled(View);
@@ -69,13 +79,32 @@ export default function Home() {
             >
               <StyledButton
                 title="Buy"
-                onPress={openListing}
+                onPress={() => {
+                  handleFilterChange("purpose", "forRent");
+			console.log(filters)
+                  navigation.navigate("SearchStack",  {
+			  screen:"SearchResult",
+		  params :{
+                    name: "Rent",
+                    purpose: "rent",
+                  }});
+                }}
                 className="p-1 m-2 w-16 md:p-1 md:m-2 md:w-16 bg-[#FFD549] rounded-full"
               >
                 <Text className="text-center font-bold">Rent</Text>
               </StyledButton>
               <StyledButton
                 title="Rent"
+                onPress={() => {
+                  handleFilterChange("purpose", "forSale");
+                  navigation.navigate("SearchStack", {
+			screen:"SearchResult",
+			params:  {
+                    name: "Buy",
+                    purpose: "forSale",
+                  }}
+		  );
+                }}
                 className="p-1 my-2 w-12 md:p-1 md:my-2 md:mr-2 md:w-12 rounded-full"
               >
                 <Text className="text-gray-500 font-bold">Buy</Text>

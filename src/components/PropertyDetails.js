@@ -317,6 +317,7 @@ const PropertyDetails = ({
   phone,
   navigation,
 }) => {
+	const [isPropertyLiked, setIsPropertyLiked] = useState(false)
   const loc = location?.location?.split("-");
   const detailsVals = [
     price,
@@ -338,6 +339,7 @@ const PropertyDetails = ({
 
     Linking.canOpenURL(whatsappURI)
       .then((supported) => {
+	      console.log(supported)
         if (supported) {
           return Linking.openURL(whatsappURI);
         } else {
@@ -348,7 +350,6 @@ const PropertyDetails = ({
         console.error("An error occurred while opening WhatsApp", error),
       );
   };
-
   return (
     <View className="  basis-full">
       <View className=" px-6 mb-3 flex py-2 flex-row justify-between items-center">
@@ -358,7 +359,14 @@ const PropertyDetails = ({
           </View>
         </TouchableOpacity>
         <Text className="text-lg font-bold">Property Detail</Text>
-        <Image source={0} className="w-10" />
+	  <TouchableOpacity onPress={() => {setIsPropertyLiked(!isPropertyLiked)
+		console.log(isPropertyLiked)
+	  }}>
+	  <AntDesingIcon name={`${isPropertyLiked ? "heart" : "hearto"}`} style={{
+		  fontSize:20,
+		  color: !isPropertyLiked ? "black" : "red"
+	  }} />
+	  </TouchableOpacity>
       </View>
       <ScrollView className="px-6 mb-20">
         <View>

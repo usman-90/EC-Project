@@ -25,7 +25,6 @@ const PropertyItem = ({
   bathrooms,
 }) => {
   const [currImage, setCurrImage] = useState(0);
-  console.log(image);
   return (
     <View className="bg-gray-100 my-3 flex justify-center rounded-lg h-100">
       <View className="flex justify-center rounded">
