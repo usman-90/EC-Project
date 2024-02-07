@@ -1,5 +1,8 @@
 import axios from "axios";
 
+const isNumber = (n) => !isNaN(parseFloat(n))
+
+
 const API_URL_OLD =
   "https://realestatebackend-m68pxvdwf-asadullahkhan19.vercel.app";
 const API_URL_NEW = "https://realestatebackend-woad.vercel.app";
@@ -20,15 +23,16 @@ export function fetchAllProperties() {
 
 export function fetchProperties({ queryKey }) {
   const data = queryKey[1];
+	console.log(data,"dasdasd")
   let params = {
     purpose: data?.purpose,
     category: data?.category,
     area: `${
-      data?.areaMin && data?.areaMax ? data?.areaMin | data?.areaMax : ""
+      isNumber(data?.areaMax) && isNumber(data?.areaMax) ? data?.areaMin.toString() + "|" + data?.areaMax.toString() : ""
     }`,
     bedRooms: data?.bedrooms,
     price: `${
-      data?.priceMin && data?.priceMax ? data?.priceMin | data?.priceMax : ""
+      isNumber(data?.priceMin) && isNumber(data?.priceMax) ? data?.priceMin.toString() + "|" + data?.priceMax.toString() : ""
     }`,
     subCategory: data?.subCategory,
     category: data?.category,
@@ -36,7 +40,7 @@ export function fetchProperties({ queryKey }) {
   };
 
   let rs = {};
-
+console.log(params)
   for (let p in params) {
     if (
       params[p] !== "" &&

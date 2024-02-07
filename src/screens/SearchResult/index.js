@@ -7,6 +7,7 @@ import {
   Text,
   FlatList,
   View,
+	RefreshControl
 } from "react-native";
 import AntDesignIcon from "react-native-vector-icons/AntDesign";
 import SearchBar from "../../components/SearchBar";
@@ -17,12 +18,13 @@ import RecentPropertyItem from "../../components/RecentPropertyItem";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import DragableMenu from "../../components/DragableMenu";
 import FilterContext from "../../context/FilterContext";
-import { useContext, useEffect } from "react";
+import {useState, useCallback, useContext, useEffect } from "react";
 import { fetchProperties } from "../../apiFunctions/properties";
 import Loader from "../../components/Loader";
 import PropertyItem from "../../components/PropertyItem";
 
 const SearchResult = ({ route, navigation }) => {
+	const [isRefreshing, setIsRefreshing] = useState(false);
   const [filters] = useContext(FilterContext);
   const propertiesResult = useQuery({
     queryKey: ["FetchPropertiesByFilter", filters],
@@ -34,14 +36,17 @@ const SearchResult = ({ route, navigation }) => {
 	  console.log("ran",route.params.name)
     refetchProperties();
   }, [route]);
-  if (propertiesResult?.isLoading) {
-    return <Loader />;
-  }
+
+
+const handleRefresh = useCallback(async () => {
+  setIsRefreshing(true);
+		refetchProperties()
+  setIsRefreshing(false);
+});
 
   const { purpose, name } = route.params;
 
   const properties = propertiesResult?.data?.data?.data ?? [];
-	console.log("pppp",properties)
   return (
     <View className="px-4">
       <View className="mb-3 flex flex-row pt-2 justify-between items-center">
@@ -59,6 +64,7 @@ const SearchResult = ({ route, navigation }) => {
       </View>
       <View>
         <FlatList
+		refreshControl={<RefreshControl refreshing={isRefreshing} onRefresh={handleRefresh} />}
           className="grow-0 mb-52"
           data={properties}
           renderItem={({ item }) => {

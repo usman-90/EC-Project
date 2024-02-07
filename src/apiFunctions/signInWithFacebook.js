@@ -33,7 +33,10 @@ import { setUserData } from "../features/user/userSlice";
       },
     }
 	dispatch(setUserData(data1));
-      navigation.navigate("BottomTabStack");
+	    navigation.reset({
+  index: 0,
+  routes: [{ name: 'BottomTabStack' }], 
+});
     } catch (error) {
       console.log(error);
     }

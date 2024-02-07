@@ -8,8 +8,9 @@ import {
   FlatList,
   View,
   TouchableOpacity,
+	RefreshControl
 } from "react-native";
-import { useEffect, useState ,useContext} from "react";
+import { useEffect, useState ,useContext, useCallback} from "react";
 import { searchProperties , fetchProperties} from "../../apiFunctions/properties";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import FilterContext from "../../context/FilterContext";
@@ -19,6 +20,7 @@ import PropertyItem from "../../components/PropertyItem";
 import Loader from "../../components/Loader";
 
 const Search = ({ navigation }) => {
+	const [isRefreshing, setIsRefreshing] = useState(false);
   const [query, setQuery] = useState("");
   const [data, setData] = useState();
 	const [filters] = useContext(FilterContext);
@@ -27,7 +29,9 @@ const Search = ({ navigation }) => {
     queryFn: fetchProperties,
     enabled: false,
   });
-
+  useEffect(() => {
+    searchPropertiesMutation.mutate(query);
+  }, [query]);
   const searchPropertiesMutation = useMutation({
     mutationFn: searchProperties,
     onSuccess: (data) => {
@@ -37,22 +41,21 @@ const Search = ({ navigation }) => {
       console.log(error);
     },
   });
-  useEffect(() => {
-    searchPropertiesMutation.mutate(query);
-  }, [query]);
+
   const properties = propertiesResult?.data?.data?.data ?? [];
 	const refetchProperties = propertiesResult?.refetch;
-  if (propertiesResult?.isLoading) {
-    return <Loader />;
-  }
 
-  if (searchPropertiesMutation?.isLoading) {
-    return <Loader />;
-  }
+const handleRefresh = useCallback(async () => {
+  setIsRefreshing(true);
+	if (query){
+    searchPropertiesMutation.mutate(query);
+	}else{
+		refetchProperties()
+	}
+  setIsRefreshing(false);
+});
+
 	const renderData = data ? data : properties ? properties : null
-	console.log("sdfashdfLOLLLLLLLLLLLLLLLLLLJJLA",properties, "propertiesssss")
-	console.log("sdfashdfLOLLLLLLLLLLLLLLLLLLJ22222222222222",renderData, "propertiesssss")
-	console.log("sdfashdfLOLLLLLLLLLLLLLLLLLLJ222222222222223333333",data, "propertiesssss")
   return (
     <View className="basis-full">
       <View className="px-6 my-3 flex flex-row">
@@ -65,6 +68,7 @@ const Search = ({ navigation }) => {
       <View className="grow-0 py-2">
         {renderData ? (
           <FlatList
+		refreshControl={<RefreshControl refreshing={isRefreshing} onRefresh={handleRefresh} />}
             data={renderData}
             className="px-6"
             renderItem={({ item }) => (
