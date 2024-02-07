@@ -1,5 +1,5 @@
 import React from "react";
-import {TextInput, Image, StatusBar, Text, TouchableOpacity, View } from "react-native";
+import { TextInput, Image, StatusBar, Text, TouchableOpacity, View } from "react-native";
 import topWave from "../../../assets/Home/topWave.png";
 import LogoSVG from "../../components/Logo.js"
 import logo from "../../../assets/Home/logo.png";
@@ -60,14 +60,14 @@ export default function Contact() {
         <StyledImage source={topWave} className="-top-6" />
         <StyledView className="flex flex-row relative sm:bottom-24 md:bottom-24 h-0">
           <StyledView className="flex-[.45] bg-red-200 flex-col items-center relative">
-	  <View style={{
-		  position:"absolute",
-			  top:20,
-			left:20,
-			  zIndex:4
-	  }}>
-	  <LogoSVG/>
-	  </View>
+            <View style={{
+              position: "absolute",
+              top: 20,
+              left: 20,
+              zIndex: 4
+            }}>
+              <LogoSVG />
+            </View>
             <StyledView
               className="absolute flex-row sm:left-4 md:left-5 sm:top-24 rounded-full"
               style={{ backgroundColor: "#FFF5D3" }}
@@ -79,11 +79,11 @@ export default function Contact() {
               </View>
             </StyledView>
           </StyledView>
-          <StyledView style={{position:"relative",zIndex:0}} className=" flex-[.65] items-center relative">
+          <StyledView style={{ position: "relative", zIndex: 0 }} className=" flex-[.65] items-center relative">
             <AnimatedImage
               source={buildingIcon}
               className={"sm:w-[203px] sm:h-[188px]"}
-              style={{ opacity: opacity1 , position:"relative",zIndex:0}}
+              style={{ opacity: opacity1, position: "relative", zIndex: 0 }}
             />
           </StyledView>
         </StyledView>
@@ -104,57 +104,57 @@ export default function Contact() {
         <View className="bg-gray-100 rounded-lg w-full py-3">
           <View className="flex-row justify-between px-4">
             <View className="w-6/12 px-1">
-	  <TextInput
-	  placeholder="First Name"
-	  className="border-b border-gray-300 w-full"
-        editable
-        maxLength={40}
-      />
-	  </View>
+              <TextInput
+                placeholder="First Name"
+                className="border-b border-gray-300 w-full"
+                editable
+                maxLength={40}
+              />
+            </View>
             <View className="w-6/12 px-1">
-	  <TextInput
-	  className="border-b border-gray-300 w-full"
-	  placeholder="Last Name"
-        editable
-        maxLength={40}
-      />
-	  </View>
+              <TextInput
+                className="border-b border-gray-300 w-full"
+                placeholder="Last Name"
+                editable
+                maxLength={40}
+              />
+            </View>
           </View>
-	  
-<View className="px-4 my-2">
-	  <TextInput 
-	  className="border-b border-gray-300 w-full"
-	  placeholder="Email"
-        editable
-        maxLength={40}
-	  />
-</View>
 
-<View className="px-4 my-2">
-	  <TextInput 
-	  className="border-b border-gray-300 w-full"
-	  placeholder="Mobile"
-        editable
-        maxLength={40}
-	  />
-</View>
+          <View className="px-4 my-2">
+            <TextInput
+              className="border-b border-gray-300 w-full"
+              placeholder="Email"
+              editable
+              maxLength={40}
+            />
+          </View>
 
-<View className="px-4 my-3">
-	  <TextInput 
-	  multiline = {true}
-numberOfLines = {4}
-	  className="border-b border-gray-300 h-20 w-full"
-	  placeholder="Message"
-        editable
-	  style={{ textAlignVertical: 'top',}}
-	  />
-</View>
+          <View className="px-4 my-2">
+            <TextInput
+              className="border-b border-gray-300 w-full"
+              placeholder="Mobile"
+              editable
+              maxLength={40}
+            />
+          </View>
 
-	  <TouchableOpacity className="bg-primary justify-center items-center py-2 mx-4 rounded-lg my-3">
-	  <Text className="text-white ">
-	  Submit
-	  </Text>
-	  </TouchableOpacity>
+          <View className="px-4 my-3">
+            <TextInput
+              multiline={true}
+              numberOfLines={4}
+              className="border-b border-gray-300 h-20 w-full"
+              placeholder="Message"
+              editable
+              style={{ textAlignVertical: 'top', }}
+            />
+          </View>
+
+          <TouchableOpacity className="bg-primary justify-center items-center py-2 mx-4 rounded-lg my-3">
+            <Text className="text-white ">
+              Submit
+            </Text>
+          </TouchableOpacity>
 
         </View>
       </View>

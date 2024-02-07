@@ -32,7 +32,7 @@ const featuredItems = [
 ];
 
 export default function Home() {
-	const [filters, setFilters] = useContext(FilterContext);
+  const [filters, setFilters] = useContext(FilterContext);
   const handleFilterChange = (name, val) => {
     setFilters({
       ...filters,
@@ -69,10 +69,13 @@ export default function Home() {
         <StyledImage source={topWave} className="-top-6" />
         <StyledView className="flex flex-row relative sm:bottom-24 md:bottom-24 h-0">
           <StyledView className="flex-[.45] flex-col items-center relative">
-            <StyledImage
+            {/* <StyledImage
               source={logo}
               className={`sm:w-[155px] sm:h-[33px] absolute sm:left-4 md:left-5 sm:top-5`}
-            />
+            /> */}
+            <StyledView className="sm:w-[155px] sm:h-[33px] absolute sm:left-4 md:left-5 sm:top-5" >
+              <LogoSVG />
+            </StyledView>
             <StyledView
               className="absolute flex-row sm:left-4 md:left-5 sm:top-24 rounded-full"
               style={{ backgroundColor: "#FFF5D3" }}
@@ -81,13 +84,14 @@ export default function Home() {
                 title="Buy"
                 onPress={() => {
                   handleFilterChange("purpose", "forRent");
-			console.log(filters)
-                  navigation.navigate("SearchStack",  {
-			  screen:"SearchResult",
-		  params :{
-                    name: "Rent",
-                    purpose: "rent",
-                  }});
+                  console.log(filters)
+                  navigation.navigate("SearchStack", {
+                    screen: "SearchResult",
+                    params: {
+                      name: "Rent",
+                      purpose: "rent",
+                    }
+                  });
                 }}
                 className="p-1 m-2 w-16 md:p-1 md:m-2 md:w-16 bg-[#FFD549] rounded-full"
               >
@@ -98,12 +102,13 @@ export default function Home() {
                 onPress={() => {
                   handleFilterChange("purpose", "forSale");
                   navigation.navigate("SearchStack", {
-			screen:"SearchResult",
-			params:  {
-                    name: "Buy",
-                    purpose: "forSale",
-                  }}
-		  );
+                    screen: "SearchResult",
+                    params: {
+                      name: "Buy",
+                      purpose: "forSale",
+                    }
+                  }
+                  );
                 }}
                 className="p-1 my-2 w-12 md:p-1 md:my-2 md:mr-2 md:w-12 rounded-full"
               >
