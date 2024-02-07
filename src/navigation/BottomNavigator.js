@@ -7,6 +7,7 @@ import ProfileStack from "./ProfileStack";
 import SaveStack from "./SaveStack";
 import * as React from "react";
 import { View, Text, TouchableOpacity } from "react-native";
+import CreatePropertyStack from "./CreatePropertyStack";
 
 function MyTabBar({ state, descriptors, navigation }) {
   return (
@@ -53,16 +54,24 @@ function MyTabBar({ state, descriptors, navigation }) {
             className="items-center bg-white py-4 justify-center"
           >
             <AntDesignIcon
-              name={`${
-                label === "HomeStack"
-                  ? "home"
-                  : label === "SearchStack"
-                    ? "search1"
-                    : label === "SaveStack"
-                      ? "tago"
+              name={`${label === "HomeStack"
+                ? "home"
+                : label === "SearchStack"
+                  ? "search1"
+                  : label === "SaveStack"
+                    ? "tago"
+                    : label === "CreatePropertyStack"
+                      ? "plus"
                       : "profile"
-              }`}
-              style={{ fontSize: 22, color: isFocused ? "#FFC70F" : "black" }}
+                }`}
+
+              style={{ 
+                fontSize: 22, 
+                color: isFocused ? "#FFC70F" : "black", 
+                backgroundColor: label === "CreatePropertyStack" ? '#FFF5D3' : 'transparent', 
+                borderRadius: 20,
+                padding:5, 
+              }}
             />
           </TouchableOpacity>
         );
@@ -89,16 +98,22 @@ export default function BottomNavigator() {
         key={2222}
       />
       <BottomNavigation.Screen
+        name="CreatePropertyStack"
+        component={CreatePropertyStack}
+        options={{ headerShown: false }}
+        key={3333}
+      />
+      <BottomNavigation.Screen
         name="SaveStack"
         component={SaveStack}
         options={{ headerShown: false }}
-        key={3333}
+        key={4444}
       />
       <BottomNavigation.Screen
         name="ProfileStack"
         component={ProfileStack}
         options={{ headerShown: false }}
-        key={4444}
+        key={5555}
       />
     </BottomNavigation.Navigator>
   );

@@ -2,7 +2,7 @@ import React from "react";
 import { Image, StatusBar, Text, TouchableOpacity, View } from "react-native";
 import LogoSVG from "../../components/Logo.js"
 import topWave from "../../../assets/Home/topWave.png";
-import logo from "../../../assets/Home/logo.png";
+// import logo from "../../../assets/Home/logo.png";
 import buildingIcon from "../../../assets/Home/buildingIcon.png";
 import bottomWave from "../../../assets/Home/bottomWave.png";
 import apart1 from "../../../assets/Home/Image1.png";
