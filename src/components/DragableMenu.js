@@ -207,7 +207,7 @@ const DragableMenu = ({setData, query, refetchProperties }) => {
                   keyExtractor={(item) => item.id}
                 />
               </View>
-              <Text className={`px-6 py-3 text-lg my-1 font-bold $ `}>
+              <Text className={`px-6 py-3 text-lg my-1 font-bold`}>
                 Sub Category
               </Text>
 

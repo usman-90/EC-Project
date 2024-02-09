@@ -76,7 +76,7 @@ const CreatePassword = ({ navigation }) => {
             { name: 'LoginStack' }
           ],
         })
-      );     
+      );
     }else{
       Toast.show({
         type: "error",
