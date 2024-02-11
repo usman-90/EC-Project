@@ -1,5 +1,6 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import userSlicer from "../features/user/userSlice";
+import propertySlicer from "../features/property/propertySlice";
 import {
   persistStore,
   persistReducer,
@@ -20,7 +21,8 @@ const persistConfig = {
 
 const rootReducer = combineReducers({
   user: userSlicer,
-  search: searchSlicer, // Add your search slicer here
+  search: searchSlicer,
+  property: propertySlicer 
   // Other reducers (if any)
 });
 

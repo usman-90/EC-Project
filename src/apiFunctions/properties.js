@@ -64,3 +64,7 @@ export function searchProperties(query) {
     },
   );
 }
+
+export function createProperty(data){
+  return axios.post(`${API_URL_NEW}/property/upload`, data);
+}
