@@ -1,6 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, {useRef, useEffect, useState } from "react";
+import CustomMultiSelect from '../../components/MultiSelect' 
+import MultiSelect from 'react-native-multiple-select';
 import {
   FlatList,
+	Switch,
   ScrollView,
   StatusBar,
   Text,
@@ -15,6 +18,81 @@ import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import { storage } from "../../../firebaseConfig";
 import { setPropertyData } from "../../features/property/propertySlice";
 import { CommonActions } from "@react-navigation/native";
+
+
+const recreationNfamily = [
+  { id: "1", name: "Barbeque Area" },
+  { id: "2", name: "Lawn or Garden" },
+  { id: "3", name: "Day Care Center" },
+  { id: "4", name: "Cafeteria or Canteen" },
+  { id: "5", name: "Kids Play Area" }
+];
+
+const healthNfitness = [
+  { id: "6", name: "First Aid Medical Center" },
+  { id: "7", name: "Sauna" },
+  { id: "8", name: "Steam Room" },
+  { id: "9", name: "Jacuzzi" },
+  { id: "10", name: "Swimming Pool" },
+  { id: "11", name: "Facilities for Disabled" }
+];
+
+const laundryNkitchen = [
+  { id: "12", name: "Laundry Room" },
+  { id: "13", name: "Laundry Facility" },
+  { id: "14", name: "Shared Kitchen" }
+];
+
+const building = [
+  { id: "15", name: "Prayer Room" },
+  { id: "16", name: "Balcony or Terrace" },
+  { id: "17", name: "Waiting Room" },
+  { id: "18", name: "Lobby in Building" },
+  { id: "19", name: "Service Elevators" }
+];
+
+const businessNsecurity = [
+  { id: "20", name: "Business Center" },
+  { id: "21", name: "Conference Room" },
+  { id: "22", name: "Security Staff" },
+  { id: "23", name: "CCTV Security" }
+];
+
+const miscalleneous = [
+  { id: "24", name: "Freehold" },
+  { id: "25", name: "Maids Room" },
+  { id: "26", name: "ATM Facility" },
+  { id: "27", name: "24 Hours Concierge" }
+];
+
+
+const technology = [
+  { id: "28", name: "Broadband Internet" },
+  { id: "29", name: "Satellite/Cable TV" },
+  { id: "30", name: "Intercom" }
+];
+
+const advanced = [
+  { id: "31", name: "Double Glazed Windows" },
+  { id: "32", name: "Centrally Air-Conditioned" },
+  { id: "33", name: "Furnished" },
+  { id: "34", name: "Electricity Backup" },
+  { id: "35", name: "Storage Areas" },
+  { id: "36", name: "Study Room" },
+  { id: "37", name: "Central Heating" },
+  { id: "38", name: "Parking Spaces" }
+];
+const cleaningNMaintenance = [
+  { id: "39", name: "Waste Disposal" },
+  { id: "40", name: "Maintenance Staff" },
+  { id: "41", name: "Cleaning Services" }
+];
+
+
+
+
+
+
 
 const propertyTypes = [
   {
@@ -48,8 +126,12 @@ const propertyTypes = [
 ];
 
 export default function CreateProperty({ navigation }) {
+	const [ameneties, setAmeneties] = useState({
+	})
   const propertyData = useSelector((state) => state?.property?.data);
   const [selectedPropertyTypes, setSelectedPropertyTypes] = useState("");
+	const [selectedItems, setSelectedItems] = useState([]);
+  const multiSelectRef = useRef(null);
   const [propertyValues, setPropertyValues] = useState(propertyData);
   const dispatch = useDispatch();
   // const [progress, setProgress] = useState(0);
@@ -69,6 +151,16 @@ export default function CreateProperty({ navigation }) {
       },
     });
   }, [selectedPropertyTypes]);
+console.log(ameneties,"Amenentiessss")
+  const onSelectedItemsChange = (selectedItems) => {
+    setSelectedItems(selectedItems);
+  };
+
+	const onAmeneitiesChange = (id, value) => {
+		console.log(value,"booom")
+		setAmeneties({...ameneties, [id]:value})
+	//	setAmeneties({...ameneties, [id]:[...ameneties[id], value[j]]})
+	}
 
   const handleDataChange = (parentProp, childProp, value) => {
     console.log("Changing values", childProp, value);
@@ -345,64 +437,108 @@ export default function CreateProperty({ navigation }) {
             <View className="mt-6">
               <Text className="font-bold mb-2">Recreation & family</Text>
 
-              <TextInput
-                onChangeText={(value) =>
-                  handleDataChange("kidsplayarea", value)
-                }
-                value={propertyValues.kidsplayarea}
-                placeholder="Kids Play area"
-                keyboardType="default"
-                className="bg-[#e9e9e1] text-black p-1 my-1 px-4 rounded-md"
-                editable={false}
-                selectTextOnFocus={false}
-              />
+
+
+	      <CustomMultiSelect
+		items={recreationNfamily}
+		selectedItems={ameneties.recreationNfamily ?? []}
+		onChange={onAmeneitiesChange}
+		category={"recreationNfamily"}
+		/>
+
             </View>
 
             <View className="mt-6">
               <Text className="font-bold mb-2">Health & Fitness</Text>
 
-              <TextInput
-                onChangeText={(value) => handleDataChange("steamroom", value)}
-                value={propertyValues.steamroom}
-                placeholder="Steam Room"
-                keyboardType="default"
-                className="bg-[#e9e9e1] text-black p-1 my-1 px-4 rounded-md"
-                editable={false}
-                selectTextOnFocus={false}
-              />
+	      <CustomMultiSelect
+		items={healthNfitness}
+		onChange={onAmeneitiesChange}
+		category={"healthNfitness"}
+		/>
             </View>
 
             <View className="mt-6">
               <Text className="font-bold mb-2">Laundry and kitchen</Text>
 
-              <TextInput
-                onChangeText={(value) =>
-                  handleDataChange("laundryfacility", value)
-                }
-                value={propertyValues.laundryfacility}
-                placeholder="Laundry facility"
-                keyboardType="default"
-                className="bg-[#e9e9e1] text-black p-1 my-1 px-4 rounded-md"
-                editable={false}
-                selectTextOnFocus={false}
-              />
+	      <CustomMultiSelect
+		items={laundryNkitchen}
+		onChange={onAmeneitiesChange}
+		category={"laundryNkitchen"}
+		/>
             </View>
 
             <View className="mt-6">
               <Text className="font-bold mb-2">Building</Text>
 
-              <TextInput
-                onChangeText={(value) =>
-                  handleDataChange("laundryfacility", value)
-                }
-                value={propertyValues.laundryfacility}
-                placeholder="Building facility"
-                keyboardType="default"
-                className="bg-[#e9e9e1] text-black p-1 my-1 px-4 rounded-md"
-                editable={false}
-                selectTextOnFocus={false}
-              />
+	      <CustomMultiSelect
+		items={building}
+		onChange={onAmeneitiesChange}
+		category={"building"}
+		/>
             </View>
+
+
+
+            <View className="mt-6">
+              <Text className="font-bold mb-2">Business and Security</Text>
+
+	      <CustomMultiSelect
+		items={businessNsecurity}
+		onChange={onAmeneitiesChange}
+		category={"businessNsecurity"}
+		/>
+            </View>
+            <View className="mt-6">
+              <Text className="font-bold mb-2">Miscellaneous</Text>
+
+	      <CustomMultiSelect
+		items={miscalleneous}
+		onChange={onAmeneitiesChange}
+		category={"miscalleneous"}
+		/>
+            </View>
+            <View className="mt-6">
+              <Text className="font-bold mb-2">Technology</Text>
+
+	      <CustomMultiSelect
+		items={technology}
+		onChange={onAmeneitiesChange}
+		category={"technology"}
+		/>
+            </View>
+            <View className="mt-6">
+              <Text className="font-bold mb-2">Technology</Text>
+
+	      <CustomMultiSelect
+		items={technology}
+		onChange={onAmeneitiesChange}
+		category={"technology"}
+		/>
+            </View>
+
+
+            <View className="mt-6">
+              <Text className="font-bold mb-2">More</Text>
+
+	      <CustomMultiSelect
+		items={advanced}
+		onChange={onAmeneitiesChange}
+		category={"more"}
+		/>
+            </View>
+
+            <View className="mt-6">
+              <Text className="font-bold mb-2">Cleaning and Maintenance</Text>
+
+	      <CustomMultiSelect
+		items={cleaningNMaintenance}
+		onChange={onAmeneitiesChange}
+		category={"cleaningNMaintenance"}
+		/>
+            </View>
+
+
           </View>
         )}
       </ScrollView>
