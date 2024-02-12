@@ -8,40 +8,40 @@ import {
   FlatList,
   View,
   TouchableOpacity,
-	RefreshControl
+  RefreshControl
 } from "react-native";
 import PropertyItem from "../../components/PropertyItem";
 import { getSavedProperties } from "../../apiFunctions/properties";
 import Loader from "../../components/Loader";
-import {useState,useContext, useCallback} from "react"
+import { useState, useContext, useCallback } from "react"
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useSelector } from "react-redux";
 
 const Save = ({ navigation }) => {
   const { userData } = useSelector((state) => state?.user.data);
   const propertiesResult = useQuery({
-    queryKey: ["FetchAllSavedProperties",userData?._id ],
+    queryKey: ["FetchAllSavedProperties", userData?._id],
     queryFn: getSavedProperties,
   });
-const [isRefreshing, setIsRefreshing] = useState(false)
-	const refetchSavedProperties = propertiesResult?.refetch
-const handleRefresh = useCallback(async () => {
-  setIsRefreshing(true);
-	refetchSavedProperties()
-  setIsRefreshing(false);
-});
+  const [isRefreshing, setIsRefreshing] = useState(false)
+  const refetchSavedProperties = propertiesResult?.refetch
+  const handleRefresh = useCallback(async () => {
+    setIsRefreshing(true);
+    refetchSavedProperties()
+    setIsRefreshing(false);
+  });
   let properties = propertiesResult?.data?.data?.properties ?? [];
-	if (properties.length){
-		properties = properties.filter((prop) => prop !== null)
-	}
+  if (properties.length) {
+    properties = properties.filter((prop) => prop !== null)
+  }
 
-	console.log(properties,"lol")
+  console.log(properties, "lol")
   return (
     <View className="basis-full">
       <Text className="text-2xl font-bold py-4 text-center ">Saved</Text>
       <View>
         <FlatList
-		refreshControl={<RefreshControl refreshing={isRefreshing} onRefresh={handleRefresh} />}
+          refreshControl={<RefreshControl refreshing={isRefreshing} onRefresh={handleRefresh} />}
           className="grow-0 mb-52 px-6"
           data={properties}
           renderItem={({ item }) => {

@@ -87,28 +87,28 @@ export default function CameraScreen({ navigation }) {
     }
   };
 
-  function handleSingleTap(event) {
-    const xPercent = event.nativeEvent.x / CAMERA_WIDTH;
-    const yPercent = event.nativeEvent.y / CAMERA_HEIGHT;
-    // Implement your focus logic here based on the tap event
-    console.log("SingleTap:", xPercent, yPercent);
-    // For example, adjust focus using the Camera's ref and autoFocus methods
-    (async () => {
-      try {
-        if (cameraRef) {
-          // console.log(cameraRef._cameraRef);
-          // const cameraInstance = await cameraRef.getCameraInstanceAsync();
-          // cameraInstance.autoFocus({ x: xPercent, y: yPercent });
-        }
-      } catch (error) {
-        console.error("Error adjusting focus:", error);
-      }
-    })();
-  }
+  // function handleSingleTap(event) {
+  //   const xPercent = event.nativeEvent.x / CAMERA_WIDTH;
+  //   const yPercent = event.nativeEvent.y / CAMERA_HEIGHT;
+  //   // Implement your focus logic here based on the tap event
+  //   console.log("SingleTap:", xPercent, yPercent);
+  //   // For example, adjust focus using the Camera's ref and autoFocus methods
+  //   (async () => {
+  //     try {
+  //       if (cameraRef) {
+  //         // console.log(cameraRef._cameraRef);
+  //         // const cameraInstance = await cameraRef.getCameraInstanceAsync();
+  //         // cameraInstance.autoFocus({ x: xPercent, y: yPercent });
+  //       }
+  //     } catch (error) {
+  //       console.error("Error adjusting focus:", error);
+  //     }
+  //   })();
+  // }
 
   return (
     <View className="flex-1">
-      <StatusBar backgroundColor={"transparent"} translucent />
+      <StatusBar backgroundColor={"transparent"} translucent={true} />
       {showCamera && (
           <Camera
             style={{ flex: 1 }}

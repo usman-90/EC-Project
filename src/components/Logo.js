@@ -4,8 +4,8 @@ const LogoSVG = () => {
 
     return (
         <Svg width="180" height="40" viewBox="0 0 200 40" fill="none" xmlns="http://www.w3.org/2000/svg" >
-            <Rect y="0.29" width="170" height="42" fill="url(#pattern0)" style="" />
-            <Rect x="37.3525" y="0.15" width="130.826" height="5.9" fill="#FFD549" style="fill:#FFD549;fill:color(display-p3 1.0000 0.8338 0.2875);fill-opacity:1;" />
+            <Rect y="0.299805" width="180" height="38.9879" fill="url(#pattern0)" />
+            <Rect x="39.3525" y="0.299805" width="138.826" height="5.10121" fill="#FFD549" style="fill:#FFD549;fill:color(display-p3 1.0000 0.8338 0.2875);fill-opacity:1;" />
             <Defs>
                 <Pattern id="pattern0" patternContentUnits="objectBoundingBox" width="1" height="1">
                     <Use href="#image0_261_107" transform="scale(0.00202429 0.00934579)" />

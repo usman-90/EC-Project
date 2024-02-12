@@ -259,7 +259,7 @@ export default function CreateProperty({ navigation }) {
                 onChangeText={(value) =>
                   handleDataChange("propertyDetails", "refNo", value)
                 }
-                value={propertyValues.propertyDetails.refNo}
+                value={propertyValues.propertyDetails.refNo !== 0 ? propertyValues.propertyDetails.refNo : ""}
                 placeholder="Reference Number"
                 keyboardType="number-pad"
                 className="bg-[#e9e9e1] text-black p-1 my-1 px-4 rounded-md"
@@ -268,9 +268,9 @@ export default function CreateProperty({ navigation }) {
 
               <TextInput
                 onChangeText={(value) =>
-                  handleDataChange("propertyDetails", "areasq", value)
+                  handleDataChange("propertyDetails", "areaSquare", value)
                 }
-                value={propertyValues.propertyDetails.areaSquare.toString()}
+                value={propertyValues.propertyDetails.areaSquare !== 0 ? propertyValues.propertyDetails.areaSquare.toString() : ""}
                 placeholder="Area Sq(ft)"
                 keyboardType="number-pad"
                 className="bg-[#e9e9e1] text-black p-1 my-1 px-4 rounded-md"
@@ -281,7 +281,7 @@ export default function CreateProperty({ navigation }) {
                 onChangeText={(value) =>
                   handleDataChange("propertyDetails", "InclusivePrice", value)
                 }
-                value={propertyValues.propertyDetails.InclusivePrice.toString()}
+                value={propertyValues.propertyDetails.InclusivePrice !== 0 ? propertyValues.propertyDetails.InclusivePrice.toString() : ""}
                 placeholder="Inclusive price"
                 keyboardType="number-pad"
                 className="bg-[#e9e9e1] text-black p-1 my-1 px-4 rounded-md"
@@ -319,7 +319,7 @@ export default function CreateProperty({ navigation }) {
                 onChangeText={(value) =>
                   handleDataChange("propertyDetails", "PermitNumber", value)
                 }
-                value={propertyValues.propertyDetails.PermitNumber.toString()}
+                value={propertyValues.propertyDetails.PermitNumber !== 0 ? propertyValues.propertyDetails.PermitNumber.toString() : ""}
                 placeholder="Permit Number"
                 keyboardType="number-pad"
                 className="bg-[#e9e9e1] text-black p-1 my-1 px-4 rounded-md"

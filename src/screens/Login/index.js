@@ -17,7 +17,7 @@ import { setPropertyData } from "../../features/property/propertySlice";
 const Loginpage = ({ navigation }) => {
   const { userData } = useSelector((state) => state?.user?.data);
   const propertyInformation = useSelector((state) => state?.property?.data);
-
+  const dispatch = useDispatch();
 
   // useEffect(() => {
   //   console.log("useData on login page", userData);
@@ -40,7 +40,7 @@ const Loginpage = ({ navigation }) => {
           ListingOwner: userData.name,
           contactPerson: userData.name,
           email: userData.email,
-          phone: userData.phoneNumber
+          phone: userData.phoneNumber,
         }
       }));
       console.log("Login user data", data?.data.data);
@@ -149,7 +149,7 @@ const Loginpage = ({ navigation }) => {
               text="Continue With Google"
               textColor="black"
               onPress={() =>
-                onGoogleButtonPress(navigation).then(() =>
+                onGoogleButtonPress(dispatch, navigation).then(() =>
                   console.log("Signed in with Google!"),
                 )
               }

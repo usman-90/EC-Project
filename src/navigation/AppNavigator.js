@@ -8,7 +8,7 @@ const RootStack = () => {
   const RootNavigator = createStackNavigator();
 
   const { token } = useSelector((state) => {
-    // console.log("Redux values", state);
+    console.log("Redux values", state);
     return state?.user?.data;
   });
 

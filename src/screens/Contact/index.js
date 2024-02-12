@@ -5,36 +5,20 @@ import LogoSVG from "../../components/Logo.js"
 import logo from "../../../assets/Home/logo.png";
 import buildingIcon from "../../../assets/Home/Buildings.png"
 import bottomWave from "../../../assets/Home/bottomWave.png";
-import apart1 from "../../../assets/Home/Image1.png";
-import resi1 from "../../../assets/Home/Image2.png";
 import { styled } from "nativewind";
 import Animated, {
   useAnimatedRef,
   useAnimatedScrollHandler,
   useSharedValue,
 } from "react-native-reanimated";
-import ItemsList from "../../components/Home/ItemsList";
 import { useNavigation } from "@react-navigation/native";
-
-const featuredItems = [
-  {
-    propertiesNo: "3 Properties",
-    rentType: "Apartment",
-    Image: apart1,
-  },
-  {
-    propertiesNo: "1 Property",
-    rentType: "Residential",
-    Image: resi1,
-  },
-];
 
 export default function Contact() {
   const navigation = useNavigation();
   const animatedRef = useAnimatedRef();
   const StyledView = styled(View);
   const StyledText = styled(Text);
-  const StyledButton = styled(TouchableOpacity);
+  // const StyledButton = styled(TouchableOpacity);
   const StyledImage = styled(Image);
   const StyledScrollView = styled(Animated.ScrollView);
   const opacity1 = useSharedValue(1);
@@ -45,9 +29,9 @@ export default function Contact() {
     opacity1.value = opaVal;
   });
 
-  const openListing = () => {
-    navigation.navigate("HouseShowcase");
-  };
+  // const openListing = () => {
+  //   navigation.navigate("HouseShowcase");
+  // };
 
   return (
     <StyledScrollView
@@ -60,14 +44,18 @@ export default function Contact() {
         <StyledImage source={topWave} className="-top-6" />
         <StyledView className="flex flex-row relative sm:bottom-24 md:bottom-24 h-0">
           <StyledView className="flex-[.45] bg-red-200 flex-col items-center relative">
-            <View style={{
+            {/* <View style={{
               position: "absolute",
               top: 20,
               left: 20,
               zIndex: 4
             }}>
               <LogoSVG />
-            </View>
+            </View> */}
+            <StyledImage
+              source={logo}
+              className={`sm:w-[155px] sm:h-[33px] absolute sm:left-4 md:left-5 sm:top-5`}
+            />
             <StyledView
               className="absolute flex-row sm:left-4 md:left-5 sm:top-24 rounded-full"
               style={{ backgroundColor: "#FFF5D3" }}

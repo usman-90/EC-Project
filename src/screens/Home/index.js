@@ -1,8 +1,8 @@
 import React from "react";
 import { Image, StatusBar, Text, TouchableOpacity, View } from "react-native";
-import LogoSVG from "../../components/Logo.js"
+// import LogoSVG from "../../components/Logo.js"
 import topWave from "../../../assets/Home/topWave.png";
-// import logo from "../../../assets/Home/logo.png";
+import logo from "../../../assets/Home/logo.png";
 import buildingIcon from "../../../assets/Home/buildingIcon.png";
 import bottomWave from "../../../assets/Home/bottomWave.png";
 import apart1 from "../../../assets/Home/Image1.png";
@@ -69,13 +69,13 @@ export default function Home() {
         <StyledImage source={topWave} className="-top-6" />
         <StyledView className="flex flex-row relative sm:bottom-24 md:bottom-24 h-0">
           <StyledView className="flex-[.45] flex-col items-center relative">
-            {/* <StyledImage
+            <StyledImage
               source={logo}
               className={`sm:w-[155px] sm:h-[33px] absolute sm:left-4 md:left-5 sm:top-5`}
-            /> */}
-            <StyledView className="sm:w-[155px] sm:h-[33px] absolute sm:left-4 md:left-5 sm:top-5" >
+            />
+            {/* <StyledView className="sm:w-[155px] sm:h-[33px] absolute sm:left-4 md:left-5 sm:top-5" >
               <LogoSVG />
-            </StyledView>
+            </StyledView> */}
             <StyledView
               className="absolute flex-row sm:left-4 md:left-5 sm:top-24 rounded-full"
               style={{ backgroundColor: "#FFF5D3" }}

@@ -2,10 +2,11 @@ import {
   FlatList,
   View,
   TouchableOpacity,
-	RefreshControl
+  RefreshControl,
+  StatusBar
 } from "react-native";
-import { useEffect, useState ,useContext, useCallback} from "react";
-import { searchProperties , fetchProperties} from "../../apiFunctions/properties";
+import { useEffect, useState, useContext, useCallback } from "react";
+import { searchProperties, fetchProperties } from "../../apiFunctions/properties";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import FilterContext from "../../context/FilterContext";
 import SearchBar from "../../components/SearchBar";
@@ -14,7 +15,7 @@ import PropertyItem from "../../components/PropertyItem";
 import Loader from "../../components/Loader";
 
 const Search = ({ navigation }) => {
-	const [isRefreshing, setIsRefreshing] = useState(false);
+  const [isRefreshing, setIsRefreshing] = useState(false);
   const [query, setQuery] = useState("");
   const [data, setData] = useState();
   const [filters] = useContext(FilterContext);
@@ -37,7 +38,7 @@ const Search = ({ navigation }) => {
   });
 
   const properties = propertiesResult?.data?.data?.data ?? [];
-  
+
   if (propertiesResult?.isLoading) {
     return <Loader />;
   }
@@ -48,21 +49,22 @@ const Search = ({ navigation }) => {
   console.log("sdfashdfLOLLLLLLLLLLLLLLLLLLJJLA", properties, "propertiesssss")
   console.log("sdfashdfLOLLLLLLLLLLLLLLLLLLJ22222222222222", renderData, "propertiesssss")
   console.log("sdfashdfLOLLLLLLLLLLLLLLLLLLJ222222222222223333333", data, "propertiesssss")
-	const refetchProperties = propertiesResult?.refetch;
+  const refetchProperties = propertiesResult?.refetch;
 
-const handleRefresh = useCallback(async () => {
-  setIsRefreshing(true);
-	if (query){
-    searchPropertiesMutation.mutate(query);
-	}else{
-		refetchProperties()
-	}
-  setIsRefreshing(false);
-});
+  const handleRefresh = useCallback(async () => {
+    setIsRefreshing(true);
+    if (query) {
+      searchPropertiesMutation.mutate(query);
+    } else {
+      refetchProperties()
+    }
+    setIsRefreshing(false);
+  });
 
-	const renderData = data ? data : properties ? properties : null
+  const renderData = data ? data : properties ? properties : null
   return (
     <View className="basis-full">
+      <StatusBar backgroundColor={"#fff"} translucent={false} />
       <View className="px-6 my-3 flex flex-row">
         <SearchBar value={query} setValue={setQuery} />
         <DragableMenu
@@ -73,7 +75,7 @@ const handleRefresh = useCallback(async () => {
       <View className="grow-0 py-2">
         {renderData ? (
           <FlatList
-		refreshControl={<RefreshControl refreshing={isRefreshing} onRefresh={handleRefresh} />}
+            refreshControl={<RefreshControl refreshing={isRefreshing} onRefresh={handleRefresh} />}
             data={renderData}
             className="px-6"
             renderItem={({ item }) => <SearchedItem navigation={navigation} item={item} />}
