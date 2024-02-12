@@ -54,9 +54,9 @@ export default function Home() {
     opacity1.value = opaVal;
   });
 
-  const openListing = () => {
-    navigation.navigate("HouseShowcase");
-  };
+  // const openListing = () => {
+  //   navigation.navigate("HouseShowcase");
+  // };
 
   return (
     <StyledScrollView

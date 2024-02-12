@@ -18,9 +18,9 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { useSelector } from "react-redux";
 
 const Save = ({ navigation }) => {
-  const { userData } = useSelector((state) => state?.data);
+  const { userData } = useSelector((state) => state?.user.data);
   const propertiesResult = useQuery({
-    queryKey: ["FetchAllSavedProperties",userData?.userId ],
+    queryKey: ["FetchAllSavedProperties",userData?._id ],
     queryFn: getSavedProperties,
   });
 const [isRefreshing, setIsRefreshing] = useState(false)

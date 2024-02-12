@@ -7,7 +7,7 @@ import {
   View,
   TouchableOpacity,
 } from "react-native";
-import {getOneSavedProperties, saveProperty, deleteSavedProperties} from "../apiFunctions/properties"
+import { getOneSavedProperties, saveProperty, deleteSavedProperties } from "../apiFunctions/properties"
 import { useSelector } from "react-redux";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import AntDesignIcon from "react-native-vector-icons/AntDesign";
@@ -19,7 +19,7 @@ import FontAwesomeIcon from "react-native-vector-icons/FontAwesome5";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import CommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import Pin from "../../assets/Properties/location-pin.png";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Back from "../../assets/Search/Notification.png";
 import Like from "../../assets/Properties/Like.png";
 import MainIMG from "../../assets/Properties/IMG.png";
@@ -291,12 +291,12 @@ const featureIcons = {
   ),
   Sauna: <FontAwesomeIcon name="bath" />,
   "Balcony or Terrace": (
-    <MaterialIcons
+    <AntDesingIcon
       style={{
         color: "#FFC70F",
         fontSize: 20,
       }}
-      name="balcony"
+      name="windows"
     />
   ),
 };
@@ -318,35 +318,40 @@ const PropertyDetails = ({
   navigateBack,
   phone,
   navigation,
-	propertyId
+  propertyId
 }) => {
 
-  const { userData } = useSelector((state) => state?.data);
-	const isPropertySavedQuery = useQuery({
-		queryKey: ["fetchOnePropertySaved",{userId:userData?.userId, propertyId}],
-		queryFn: getOneSavedProperties,
-		onSuccess: (data) => {
-			console.log(data)
-		}
-	})
-	const refetchIsPropertySaved = isPropertySavedQuery?.refetch
-	const savePropertyMutation = useMutation({
+  const { userData } = useSelector((state) => state?.user.data);
+  const isPropertySavedQuery = useQuery({
+    queryKey: ["fetchOnePropertySaved", { userId: userData?._id, propertyId }],
+    queryFn: getOneSavedProperties,
+    onSuccess: (data) => {
+      console.log(data)
+    }
+  })
+  const refetchIsPropertySaved = isPropertySavedQuery?.refetch
+  const savePropertyMutation = useMutation({
     mutationFn: saveProperty,
     onSuccess: (data) => {
-        refetchIsPropertySaved();
+      refetchIsPropertySaved();
     },
     onSettled: (data, error) => {
-        console.log(data);
-        console.log(error);
+      console.log(data);
+      console.log(error);
     }
-});
+  });
 
-	const unSaveProperty = useMutation({
-		mutationFn: deleteSavedProperties,
-		onSuccess: (data) => {
-			refetchIsPropertySaved()
-		}
-	})
+  useEffect(() => {
+    console.log("User got", userData);
+  }, [])
+  
+
+  const unSaveProperty = useMutation({
+    mutationFn: deleteSavedProperties,
+    onSuccess: (data) => {
+      refetchIsPropertySaved()
+    }
+  })
   const loc = location?.location?.split("-");
   const detailsVals = [
     price,
@@ -368,7 +373,7 @@ const PropertyDetails = ({
 
     Linking.canOpenURL(whatsappURI)
       .then((supported) => {
-	      console.log(supported)
+        console.log(supported)
         if (supported) {
           return Linking.openURL(whatsappURI);
         } else {
@@ -380,7 +385,7 @@ const PropertyDetails = ({
       );
 
   };
-	let isThisPropertySaved = isPropertySavedQuery?.data?.data?.result ?? null
+  let isThisPropertySaved = isPropertySavedQuery?.data?.data?.result ?? null
   return (
     <View className="  basis-full">
       <View className=" px-6 mb-3 flex py-2 flex-row justify-between items-center">
@@ -390,22 +395,23 @@ const PropertyDetails = ({
           </View>
         </TouchableOpacity>
         <Text className="text-lg font-bold">Property Detail</Text>
-	  <TouchableOpacity onPress={async () => {
-		  console.log("invoked" , isThisPropertySaved)
-		  if (isThisPropertySaved){
-			  unSaveProperty?.mutate(isPropertySavedQuery?.data?.data?.result?._id)
-		  }else{
-			  savePropertyMutation.mutate({
-				  userId: userData?.userId,
-				  propertyId
-			  })
-		  }
-	  }}>
-	  <AntDesingIcon name={`${isThisPropertySaved ? "heart" : "hearto"}`} style={{
-		  fontSize:20,
-		  color: !isThisPropertySaved ? "black" : "red"
-	  }} />
-	  </TouchableOpacity>
+        <TouchableOpacity onPress={async () => {
+          console.log("invoked", isThisPropertySaved)
+          if (isThisPropertySaved) {
+            unSaveProperty?.mutate(isPropertySavedQuery?.data?.data?.result?._id)
+          } else {
+            console.log("Mutation run with userId", userData?._id);
+            savePropertyMutation.mutate({
+              userId: userData?._id,
+              propertyId
+            })
+          }
+        }}>
+          <AntDesingIcon name={`${isThisPropertySaved ? "heart" : "hearto"}`} style={{
+            fontSize: 20,
+            color: !isThisPropertySaved ? "black" : "red"
+          }} />
+        </TouchableOpacity>
       </View>
       <ScrollView className="px-6 mb-20">
         <View>

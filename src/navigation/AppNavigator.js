@@ -7,7 +7,10 @@ import { useSelector } from "react-redux";
 const RootStack = () => {
   const RootNavigator = createStackNavigator();
 
-  const { token } = useSelector((state) => state?.user?.data);
+  const { token } = useSelector((state) => {
+    // console.log("Redux values", state);
+    return state?.user?.data;
+  });
 
   if (token) {
     return (

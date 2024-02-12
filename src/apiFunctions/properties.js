@@ -6,7 +6,7 @@ const isNumber = (n) => !isNaN(parseFloat(n))
 const API_URL_OLD =
   "https://realestatebackend-m68pxvdwf-asadullahkhan19.vercel.app";
 const API_URL_NEW = "https://realestatebackend-woad.vercel.app";
-const Local_Host_URL = "192.168.100.45:4000"
+const Local_Host_URL = "https://192.168.100.45:4000"
 
 export function fetchSubCategories({ queryKey }) {
   const category = queryKey[1];
@@ -70,14 +70,15 @@ export function searchProperties(query) {
 
 export function saveProperty(data) {
   const { userId, propertyId } = data
+  // console.log("Data got", userId, propertyId, "Request going on", `${API_URL_NEW}/users/save-property/${userId}/${propertyId}`);
   return axios.post(
-    `http://${Local_Host_URL}/users/save-property/${userId}/${propertyId}`
+    `${API_URL_NEW}/users/save-property/${userId}/${propertyId}`
   );
 }
 
 export function getOneSavedProperties({ queryKey }) {
   const { userId, propertyId } = queryKey[1]
-  const endpoint = `http://${Local_Host_URL}/users/get-one-save-property/${userId}/${propertyId}`
+  const endpoint = `${API_URL_NEW}/users/get-one-save-property/${userId}/${propertyId}`
   return axios.get(endpoint);
 }
 
@@ -85,7 +86,7 @@ export function getSavedProperties({ queryKey }) {
   const userId = queryKey[1]
   console.log(userId, "idddddddd")
   return axios.get(
-    `http://${Local_Host_URL}/users/get-save-property/${userId}`
+    `${API_URL_NEW}/users/get-save-property/${userId}`
   );
 }
 
@@ -95,7 +96,7 @@ export function createProperty(data) {
 
 export function deleteSavedProperties(saveId) {
   return axios.delete(
-    `http://${Local_Host_URL}/users/delete-save-property/${saveId}`
+    `${API_URL_NEW}/users/delete-save-property/${saveId}`
   );
 }
 

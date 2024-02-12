@@ -2,8 +2,8 @@ import React, { useEffect, useState } from "react";
 import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import Heading from "../../components/Heading";
 import InputField from "../../components/InputField";
-import CheckBox from "../../components/Login/checkbox";
-import CustomButton from "../../components/Button";
+// import CheckBox from "../../components/Login/checkbox";
+// import CustomButton from "../../components/Button";
 import ContinueWithGoogle from "../../components/Login/ContinueWithGoogle";
 import { login } from "../../apiFunctions/register";
 import Toast from "react-native-toast-message";
@@ -12,18 +12,21 @@ import { useSelector, useDispatch } from "react-redux";
 import { onGoogleButtonPress } from "../../apiFunctions/signInWithGoogle";
 import store from "../../app/store";
 import { setUserData } from "../../features/user/userSlice";
+import { setPropertyData } from "../../features/property/propertySlice";
 
 const Loginpage = ({ navigation }) => {
   const { userData } = useSelector((state) => state?.user?.data);
+  const propertyInformation = useSelector((state) => state?.property?.data);
 
-  useEffect(() => {
-    console.log("useData on login page", userData);
-  }, [])
-  
+
+  // useEffect(() => {
+  //   console.log("useData on login page", userData);
+  // }, []);
 
   const loginMutation = useMutation({
     mutationFn: login,
     onSuccess: (data) => {
+      const { userData } = data?.data.data;
       // console.log("Success on login");
       Toast.show({
         type: "success",
@@ -31,6 +34,15 @@ const Loginpage = ({ navigation }) => {
         text2: "Logged In successfully! 👋",
       });
       store.dispatch(setUserData(data?.data.data));
+      store.dispatch(setPropertyData({
+        ...propertyInformation,
+        contactDetails: {
+          ListingOwner: userData.name,
+          contactPerson: userData.name,
+          email: userData.email,
+          phone: userData.phoneNumber
+        }
+      }));
       console.log("Login user data", data?.data.data);
       navigation.navigate("BottomTabStack");
     },
