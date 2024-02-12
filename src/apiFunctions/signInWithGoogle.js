@@ -21,5 +21,8 @@ export async function onGoogleButtonPress(dispatch,navigation) {
       },
     }
 	dispatch(setUserData(data1));
-    navigation.navigate("BottomTabStack")
+	navigation.reset({
+  index: 0,
+  routes: [{ name: 'BottomTabStack' }], 
+});
 }

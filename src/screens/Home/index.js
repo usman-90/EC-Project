@@ -84,7 +84,7 @@ export default function Home() {
                 title="Buy"
                 onPress={() => {
                   handleFilterChange("purpose", "forRent");
-                  console.log(filters)
+                  // console.log(filters)
                   navigation.navigate("SearchStack", {
                     screen: "SearchResult",
                     params: {

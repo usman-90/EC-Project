@@ -56,6 +56,8 @@ const Loginpage = ({ navigation }) => {
     setData({ ...data, [name]: val });
   };
 
+
+
   return (
     <>
       <View className="italic" style={styles.container}>
