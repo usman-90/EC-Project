@@ -4,10 +4,10 @@ import LoginBg from "../../../assets/LoginImages/LoginBg.png";
 import ContinueWithGoogle from "../../components/Login/ContinueWithGoogle";
 import { useSelector, useDispatch } from "react-redux";
 import { onGoogleButtonPress } from "../../apiFunctions/signInWithGoogle";
-import {onFacebookButtonPress} from '../../apiFunctions/signInWithFacebook'
+import { onFacebookButtonPress } from '../../apiFunctions/signInWithFacebook'
 
 const SignIn = ({ navigation }) => {
-	let dispatch = useDispatch()
+  let dispatch = useDispatch()
 
   return (
     <View className="bg-black" style={styles.container}>
@@ -37,10 +37,15 @@ const SignIn = ({ navigation }) => {
             imageHeight={25}
             text="Continue With Google"
             textColor="black"
-            onPress={() =>
-              onGoogleButtonPress(dispatch,navigation).then(() =>
-                console.log("Signed in with Google!"),
-              )
+            onPress={() => {
+              onGoogleButtonPress(dispatch, navigation)
+              .then((e) => {
+                console.log("Signed in with Google!",e);
+              })
+              .catch(error => {
+                console.log("Error on Google sign in:", error);
+              });
+            }
             }
           />
         </View>
@@ -54,8 +59,8 @@ const SignIn = ({ navigation }) => {
         >
           <TouchableOpacity
             onPress={() => {
-		    onFacebookButtonPress(dispatch, navigation).then(() => console.log('Signed in with Facebook!'))
-	    }}
+              onFacebookButtonPress(dispatch, navigation).then(() => console.log('Signed in with Facebook!'))
+            }}
             className="flex-row items-center bg-gray-100 py-2 w-full justify-center rounded-lg"
           >
             <AntDesignIcon
