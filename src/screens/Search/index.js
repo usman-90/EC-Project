@@ -39,13 +39,6 @@ const Search = ({ navigation }) => {
 
   const properties = propertiesResult?.data?.data?.data ?? [];
 
-  if (propertiesResult?.isLoading) {
-    return <Loader />;
-  }
-
-  if (searchPropertiesMutation?.isLoading) {
-    return <Loader />;
-  }
   console.log("sdfashdfLOLLLLLLLLLLLLLLLLLLJJLA", properties, "propertiesssss")
   console.log("sdfashdfLOLLLLLLLLLLLLLLLLLLJ22222222222222", renderData, "propertiesssss")
   console.log("sdfashdfLOLLLLLLLLLLLLLLLLLLJ222222222222223333333", data, "propertiesssss")
