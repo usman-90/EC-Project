@@ -1,5 +1,5 @@
 import React, { useState, useRef, useContext, useEffect } from "react";
-// import FilterContext from "../context/FilterContext";
+ import FilterContext from "../context/FilterContext";
 import Icon from "react-native-vector-icons/AntDesign";
 import Graph from "react-native-vector-icons/Foundation";
 import MultiSlider from "@ptomasroos/react-native-multi-slider";
@@ -22,10 +22,10 @@ import { useSelector } from "react-redux";
 
 const DragableMenu = ({setData, query, refetchProperties }) => {
   // Needed in order to use .show()
-  const { filter } = useSelector((state) => state?.search?.data);
+  //const { filter } = useSelector((state) => state?.search?.data);
   const bottomSheet = useRef();
-  // const [filters, setFilters] = useContext(FilterContext);
-  const [filters, setFilters] = useState(filter);
+   const [filters, setFilters] = useContext(FilterContext);
+  //const [filters, setFilters] = useState(filter);
   const subCategoriesResult = useQuery({
     queryKey: ["SubCategories", filters?.category],
     queryFn: fetchSubCategories,
@@ -36,7 +36,7 @@ const DragableMenu = ({setData, query, refetchProperties }) => {
     ...(subCategoriesResult?.data?.data?.data ?? []),
   ];
   // const [values, setValues] = useState([0, 50]);
-  console.log("filters", filters);
+  console.log("DragableMenu", filters);
 
   const handleFilterChange = (name, val) => {
     setFilters({

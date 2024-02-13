@@ -37,12 +37,9 @@ const Search = ({ navigation }) => {
     },
   });
 
+  const refetchProperties = propertiesResult?.refetch;
   const properties = propertiesResult?.data?.data?.data ?? [];
 
-  console.log("sdfashdfLOLLLLLLLLLLLLLLLLLLJJLA", properties, "propertiesssss")
-  console.log("sdfashdfLOLLLLLLLLLLLLLLLLLLJ22222222222222", renderData, "propertiesssss")
-  console.log("sdfashdfLOLLLLLLLLLLLLLLLLLLJ222222222222223333333", data, "propertiesssss")
-  const refetchProperties = propertiesResult?.refetch;
 
   const handleRefresh = useCallback(async () => {
     setIsRefreshing(true);
@@ -54,7 +51,8 @@ const Search = ({ navigation }) => {
     setIsRefreshing(false);
   });
 
-  const renderData = data ? data : properties ? properties : null
+  const renderData = data ? data : properties ? properties : [] 
+	console.log("IN SEARCHHHHH",filters)
   return (
     <View className="basis-full">
       <StatusBar backgroundColor={"#fff"} translucent={false} />
@@ -72,7 +70,7 @@ const Search = ({ navigation }) => {
             data={renderData}
             className="px-6"
             renderItem={({ item }) => <SearchedItem navigation={navigation} item={item} />}
-            keyExtractor={(item) => item}
+            keyExtractor={(item, idx) => idx}
           />
         ) : null}
       </View>
