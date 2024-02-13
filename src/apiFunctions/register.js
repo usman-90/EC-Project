@@ -37,5 +37,5 @@ export function updateResetPassword(data) {
 
 export function socialLogin(data) {
   console.log("social login data", data);
-  return axios.post(`${Local_Host_URL}/users/social-login`, data);
+  return axios.post(`${API_URL_NEW}/users/social-login`, data);
 }
