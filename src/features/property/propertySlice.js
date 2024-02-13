@@ -4,18 +4,18 @@ export const propertySlice = createSlice({
   name: "property",
   initialState: {
     data: {
-      _id: "65c795ddf4edf337647a1681",
+      _id: "",
       typesAndPurpose: {
         category: "commercial",
-        subCategory: "office",
+        subCategory: "",
         purpose: "forRent",
       },
       locationAndAddress: {
         location:
-          "Flat302 - Muwaileh Commercial - Industrial Area - Sharjah - United Arab Emirates",
-        longitude: 54.407007002975796,
-        latitude: 24.43214670001102,
-        address: "peoples chowrangi",
+          "",
+        longitude: 0,
+        latitude: 0,
+        address: "",
       },
       propertyDetails: {
         refNo: "",
@@ -193,7 +193,7 @@ export const propertySlice = createSlice({
       isLoading: false,
       isError: false,
       featuredProperties: [],
-      ownerId: "65c219469836d496b37d36b5",
+      ownerId: "",
     },
   },
   reducers: {
