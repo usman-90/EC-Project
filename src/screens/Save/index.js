@@ -16,6 +16,7 @@ import Loader from "../../components/Loader";
 import { useState, useContext, useCallback } from "react"
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useSelector } from "react-redux";
+import EmptyList from '../../components/NoItem'
 
 const Save = ({ navigation }) => {
   const { userData } = useSelector((state) => state?.user.data);
@@ -70,6 +71,7 @@ const Save = ({ navigation }) => {
             );
           }}
           keyExtractor={(item, idx) => idx}
+	ListEmptyComponent={<EmptyList/>}
         />
     </View>
   );

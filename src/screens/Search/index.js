@@ -13,6 +13,7 @@ import SearchBar from "../../components/SearchBar";
 import DragableMenu from "../../components/DragableMenu";
 import PropertyItem from "../../components/PropertyItem";
 import Loader from "../../components/Loader";
+import EmptyList from '../../components/NoItem'
 
 const Search = ({ navigation }) => {
   const [isRefreshing, setIsRefreshing] = useState(false);
@@ -71,6 +72,7 @@ const Search = ({ navigation }) => {
             className="px-6"
             renderItem={({ item }) => <SearchedItem navigation={navigation} item={item} />}
             keyExtractor={(item, idx) => idx}
+		ListEmptyComponent={<EmptyList/>}
           />
         ) : null}
       </View>
