@@ -33,8 +33,8 @@ const Profile = ({ navigation }) => {
     navigation.navigate("LoginStack");
   };
 
-	const image = userData?.photo ? {uri: userData?.photo} : null;
-console.log(userData?.photo, "photooooooo")
+  const image = userData?.photo ? { uri: userData?.photo } : null;
+  console.log(userData?.photo, "photooooooo");
   return (
     <>
       <View
@@ -60,7 +60,7 @@ console.log(userData?.photo, "photooooooo")
         <View className=" bg-[#f2e1aa] py-2 px-6 rounded-full">
           <Text>{userData?.email}</Text>
         </View>
-        
+
         <View className="items-center justify-center flex flex-col  w-full bg-white rounded-lg mt-8 shadow-2xl  shadow-stone-600">
           <TouchableOpacity
             onPress={() => navigation.navigate("EditProfile")}
@@ -88,6 +88,18 @@ console.log(userData?.photo, "photooooooo")
             <TouchableOpacity
               onPress={() => navigation.navigate("ChangePassword")}
             >
+              <Icon name="arrowright" size={25} />
+            </TouchableOpacity>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => navigation.navigate("Listing")}
+            className="flex flex-row justify-between w-full py-4 px-6 border-b border-gray-200 "
+          >
+            <View className="flex flex-row gap-4">
+              <PasswordIcon name="lock" size={30} style={styles.edit} />
+              <Text className="text-base pt-1">Listing Inventory</Text>
+            </View>
+            <TouchableOpacity onPress={() => navigation.navigate("Listing")}>
               <Icon name="arrowright" size={25} />
             </TouchableOpacity>
           </TouchableOpacity>

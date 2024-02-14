@@ -1,13 +1,20 @@
 import {
   Image,
   ScrollView,
+  Alert,
   StyleSheet,
   Text,
   FlatList,
   View,
   TouchableOpacity,
 } from "react-native";
-import { getOneSavedProperties, saveProperty, deleteSavedProperties } from "../apiFunctions/properties"
+import SimpleMenu from "./PopUpMenu";
+import {
+  getOneSavedProperties,
+  saveProperty,
+  deleteSavedProperties,
+  deleteProperty,
+} from "../apiFunctions/properties";
 import { useSelector } from "react-redux";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import AntDesignIcon from "react-native-vector-icons/AntDesign";
@@ -318,18 +325,25 @@ const PropertyDetails = ({
   navigateBack,
   phone,
   navigation,
-  propertyId
+  propertyId,
+  ownerId,
 }) => {
-
   const { userData } = useSelector((state) => state?.user.data);
   const isPropertySavedQuery = useQuery({
     queryKey: ["fetchOnePropertySaved", { userId: userData?._id, propertyId }],
     queryFn: getOneSavedProperties,
     onSuccess: (data) => {
-      console.log(data)
-    }
-  })
-  const refetchIsPropertySaved = isPropertySavedQuery?.refetch
+      console.log(data);
+    },
+  });
+  const deletePropertyMutation = useMutation({
+    mutationFn: deleteProperty,
+    onSettled: (data, error) => {
+      console.log(data);
+      console.log(error);
+    },
+  });
+  const refetchIsPropertySaved = isPropertySavedQuery?.refetch;
   const savePropertyMutation = useMutation({
     mutationFn: saveProperty,
     onSuccess: (data) => {
@@ -338,20 +352,19 @@ const PropertyDetails = ({
     onSettled: (data, error) => {
       console.log(data);
       console.log(error);
-    }
+    },
   });
 
   useEffect(() => {
     console.log("User got", userData);
-  }, [])
-  
+  }, []);
 
   const unSaveProperty = useMutation({
     mutationFn: deleteSavedProperties,
     onSuccess: (data) => {
-      refetchIsPropertySaved()
-    }
-  })
+      refetchIsPropertySaved();
+    },
+  });
   const loc = location?.location?.split("-");
   const detailsVals = [
     price,
@@ -365,7 +378,6 @@ const PropertyDetails = ({
   ];
   const [isTextExpanded, setIsTextExpanded] = useState(false);
   const [currImage, setCurrImage] = useState(null);
-
   const openWhatsApp = () => {
     const phoneNumber = +9290078601;
 
@@ -373,7 +385,7 @@ const PropertyDetails = ({
 
     Linking.canOpenURL(whatsappURI)
       .then((supported) => {
-        console.log(supported)
+        console.log(supported);
         if (supported) {
           return Linking.openURL(whatsappURI);
         } else {
@@ -383,9 +395,26 @@ const PropertyDetails = ({
       .catch((error) =>
         console.error("An error occurred while opening WhatsApp", error),
       );
-
   };
-  let isThisPropertySaved = isPropertySavedQuery?.data?.data?.result ?? null
+  let isThisPropertySaved = isPropertySavedQuery?.data?.data?.result ?? null;
+
+  const createTwoButtonAlert = () =>
+    Alert.alert(
+      "Delete Property",
+      "Are you sure you want to delete this property permanently?",
+      [
+        {
+          text: "Cancel",
+          onPress: () => console.log("Cancel Pressed"),
+          style: "cancel",
+        },
+        {
+          text: "OK",
+          onPress: () => deletePropertyMutation.mutate(propertyId),
+        },
+      ],
+    );
+
   return (
     <View className="  basis-full">
       <View className=" px-6 mb-3 flex py-2 flex-row justify-between items-center">
@@ -395,22 +424,30 @@ const PropertyDetails = ({
           </View>
         </TouchableOpacity>
         <Text className="text-lg font-bold">Property Detail</Text>
-        <TouchableOpacity onPress={async () => {
-          console.log("invoked", isThisPropertySaved)
-          if (isThisPropertySaved) {
-            unSaveProperty?.mutate(isPropertySavedQuery?.data?.data?.result?._id)
-          } else {
-            console.log("Mutation run with userId", userData?._id);
-            savePropertyMutation.mutate({
-              userId: userData?._id,
-              propertyId
-            })
-          }
-        }}>
-          <AntDesingIcon name={`${isThisPropertySaved ? "heart" : "hearto"}`} style={{
-            fontSize: 20,
-            color: !isThisPropertySaved ? "black" : "red"
-          }} />
+
+        <TouchableOpacity
+          onPress={async () => {
+            console.log("invoked", isThisPropertySaved);
+            if (isThisPropertySaved) {
+              unSaveProperty?.mutate(
+                isPropertySavedQuery?.data?.data?.result?._id,
+              );
+            } else {
+              console.log("Mutation run with userId", userData?._id);
+              savePropertyMutation.mutate({
+                userId: userData?._id,
+                propertyId,
+              });
+            }
+          }}
+        >
+          <AntDesingIcon
+            name={`${isThisPropertySaved ? "heart" : "hearto"}`}
+            style={{
+              fontSize: 20,
+              color: !isThisPropertySaved ? "black" : "red",
+            }}
+          />
         </TouchableOpacity>
       </View>
       <ScrollView className="px-6 mb-20">
@@ -561,11 +598,42 @@ const PropertyDetails = ({
           <Text className="text-sm text-gray-500 ">Total Price</Text>
           <Text className="text-lg font-bold ">AED {price}</Text>
         </View>
-        <TouchableOpacity onPress={openWhatsApp}>
-          <Text className="bg-primary text-white font-bold text-base py-2 px-4 rounded-xl">
-            Booking Now
-          </Text>
-        </TouchableOpacity>
+
+        {ownerId === userData?._id ? (
+          <View className="flex flex-row">
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate("CreatePropertyStack", {
+                  screen: "CreatePropertyScreen",
+                });
+              }}
+            >
+              <AntDesingIcon
+                style={{
+                  color: "#FFC70F",
+                  fontSize: 24,
+                  marginHorizontal: 16,
+                }}
+                name="edit"
+              />
+            </TouchableOpacity>
+            <TouchableOpacity onPress={createTwoButtonAlert}>
+              <AntDesingIcon
+                style={{
+                  color: "red",
+                  fontSize: 22,
+                }}
+                name="delete"
+              />
+            </TouchableOpacity>
+          </View>
+        ) : (
+          <TouchableOpacity onPress={openWhatsApp}>
+            <Text className="bg-primary text-white font-bold text-base py-2 px-4 rounded-xl">
+              Booking Now
+            </Text>
+          </TouchableOpacity>
+        )}
       </View>
     </View>
   );

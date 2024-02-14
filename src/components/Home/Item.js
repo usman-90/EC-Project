@@ -21,30 +21,30 @@ export default function Item(props) {
       [name]: val,
     });
   };
-	console.log(filters,"from home",setFilters)
+  console.log(filters, "from home", setFilters);
   return (
-	  <TouchableOpacity 
-		onPress={() => {
-			console.log(item?.value,"lol")
-			handleFilterChange("subCategory",item.value)
-			navigation.navigate("SearchStack")
-			console.log(filters,"after change")
-		}}
-	  >
-    <StyledView className="bg-zinc-400 w-64 h-64 m-4">
-      <StyledText className="absolute z-10 top-6 left-6 text-white text-xs">
-        {item.propertiesNo}
-      </StyledText>
-      <StyledText className="absolute z-10 top-12 left-6 text-white text-xl">
-        {item.rentType}
-      </StyledText>
-      <StyledImage source={item.Image} className="h-full w-full" />
-      <StyledButton>
-        <StyledText className="absolute z-10 bottom-9 left-6 text-white text-sm">
-          MORE DETAILS
+    <TouchableOpacity
+      onPress={() => {
+        console.log(item?.value, "lol");
+        handleFilterChange("subCategory", item.value);
+        navigation.navigate("SearchStack");
+        console.log(filters, "after change");
+      }}
+    >
+      <StyledView className="bg-zinc-400 w-64 h-64 m-4">
+        <StyledText className="absolute z-10 top-6 left-6 text-white text-xs">
+          {item.propertiesNo}
         </StyledText>
-      </StyledButton>
-    </StyledView>
-	  </TouchableOpacity>
+        <StyledText className="absolute z-10 top-12 left-6 text-white text-xl">
+          {item.rentType}
+        </StyledText>
+        <StyledImage source={item.Image} className="h-full w-full" />
+        <StyledButton>
+          <StyledText className="absolute z-10 bottom-9 left-6 text-white text-sm">
+            MORE DETAILS
+          </StyledText>
+        </StyledButton>
+      </StyledView>
+    </TouchableOpacity>
   );
 }

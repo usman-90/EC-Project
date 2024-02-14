@@ -1,5 +1,5 @@
 import React, { useState, useRef, useContext, useEffect } from "react";
- import FilterContext from "../context/FilterContext";
+import FilterContext from "../context/FilterContext";
 import Icon from "react-native-vector-icons/AntDesign";
 import Graph from "react-native-vector-icons/Foundation";
 import MultiSlider from "@ptomasroos/react-native-multi-slider";
@@ -14,17 +14,17 @@ import {
   View,
 } from "react-native";
 import BottomSheet from "react-native-gesture-bottom-sheet";
-import {fetchProperties} from '../apiFunctions/properties'
+import { fetchProperties } from "../apiFunctions/properties";
 import FilterButton from "./FilterButton";
 import { fetchSubCategories } from "../apiFunctions/properties";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useSelector } from "react-redux";
 
-const DragableMenu = ({setData, query, refetchProperties }) => {
+const DragableMenu = ({ setData, query, refetchProperties }) => {
   // Needed in order to use .show()
   //const { filter } = useSelector((state) => state?.search?.data);
   const bottomSheet = useRef();
-   const [filters, setFilters] = useContext(FilterContext);
+  const [filters, setFilters] = useContext(FilterContext);
   //const [filters, setFilters] = useState(filter);
   const subCategoriesResult = useQuery({
     queryKey: ["SubCategories", filters?.category],
@@ -393,12 +393,11 @@ const DragableMenu = ({setData, query, refetchProperties }) => {
                 </TouchableOpacity>
                 <TouchableOpacity
                   className="bg-primary text-white mx-2 px-4 py-2 w-9/12 text-base rounded-lg"
-                  onPress={() =>{
-			  console.log(query ? "yes" : "no")
-			 setData ? setData(null) : null
-                    query ? refetchProperties(query) : refetchProperties()
-		  }
-                  }
+                  onPress={() => {
+                    console.log(query ? "yes" : "no");
+                    setData ? setData(null) : null;
+                    query ? refetchProperties(query) : refetchProperties();
+                  }}
                 >
                   <View className="">
                     <Text className="text-white w-full text-center">

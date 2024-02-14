@@ -34,8 +34,9 @@ export function updateResetPassword(data) {
   return axios.put(`${API_URL_NEW}/users/reset-password`, data);
 }
 
-
 export function socialLogin(data) {
   console.log("social login data", data);
-  return axios.post(`${API_URL_NEW}/users/social-login`, data, { timeout: 15000 });
+  return axios.post(`${API_URL_NEW}/users/social-login`, data, {
+    timeout: 15000,
+  });
 }

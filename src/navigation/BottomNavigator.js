@@ -54,23 +54,24 @@ function MyTabBar({ state, descriptors, navigation }) {
             className="items-center bg-white py-4 justify-center"
           >
             <AntDesignIcon
-              name={`${label === "HomeStack"
-                ? "home"
-                : label === "SearchStack"
-                  ? "search1"
-                  : label === "SaveStack"
-                    ? "tago"
-                    : label === "CreatePropertyStack"
-                      ? "plus"
-                      : "profile"
-                }`}
-
-              style={{ 
-                fontSize: 22, 
-                color: isFocused ? "#FFC70F" : "black", 
-                backgroundColor: label === "CreatePropertyStack" ? '#FFF5D3' : 'transparent', 
+              name={`${
+                label === "HomeStack"
+                  ? "home"
+                  : label === "SearchStack"
+                    ? "search1"
+                    : label === "SaveStack"
+                      ? "tago"
+                      : label === "CreatePropertyStack"
+                        ? "plus"
+                        : "profile"
+              }`}
+              style={{
+                fontSize: 22,
+                color: isFocused ? "#FFC70F" : "black",
+                backgroundColor:
+                  label === "CreatePropertyStack" ? "#FFF5D3" : "transparent",
                 borderRadius: 20,
-                padding:5, 
+                padding: 5,
               }}
             />
           </TouchableOpacity>

@@ -7,7 +7,7 @@ import {
   Text,
   FlatList,
   View,
-	RefreshControl
+  RefreshControl,
 } from "react-native";
 import AntDesignIcon from "react-native-vector-icons/AntDesign";
 import SearchBar from "../../components/SearchBar";
@@ -18,14 +18,14 @@ import RecentPropertyItem from "../../components/RecentPropertyItem";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import DragableMenu from "../../components/DragableMenu";
 import FilterContext from "../../context/FilterContext";
-import {useState, useCallback, useContext, useEffect } from "react";
+import { useState, useCallback, useContext, useEffect } from "react";
 import { fetchProperties } from "../../apiFunctions/properties";
 import Loader from "../../components/Loader";
 import PropertyItem from "../../components/PropertyItem";
-import EmptyList from '../../components/NoItem'
+import EmptyList from "../../components/NoItem";
 
 const SearchResult = ({ route, navigation }) => {
-	const [isRefreshing, setIsRefreshing] = useState(false);
+  const [isRefreshing, setIsRefreshing] = useState(false);
   const [filters] = useContext(FilterContext);
   const propertiesResult = useQuery({
     queryKey: ["FetchPropertiesByFilter", filters],
@@ -34,16 +34,15 @@ const SearchResult = ({ route, navigation }) => {
   });
   const refetchProperties = propertiesResult?.refetch;
   useEffect(() => {
-	  console.log("ran",route.params.name)
+    console.log("ran", route.params.name);
     refetchProperties();
   }, [route]);
 
-
-const handleRefresh = useCallback(async () => {
-  setIsRefreshing(true);
-		refetchProperties()
-  setIsRefreshing(false);
-});
+  const handleRefresh = useCallback(async () => {
+    setIsRefreshing(true);
+    refetchProperties();
+    setIsRefreshing(false);
+  });
 
   const { purpose, name } = route.params;
 
@@ -65,7 +64,12 @@ const handleRefresh = useCallback(async () => {
       </View>
       <View>
         <FlatList
-		refreshControl={<RefreshControl refreshing={isRefreshing} onRefresh={handleRefresh} />}
+          refreshControl={
+            <RefreshControl
+              refreshing={isRefreshing}
+              onRefresh={handleRefresh}
+            />
+          }
           className="grow-0 mb-52"
           data={properties}
           renderItem={({ item }) => {
@@ -95,7 +99,7 @@ const handleRefresh = useCallback(async () => {
             );
           }}
           keyExtractor={(item, idx) => idx}
-		ListEmptyComponent={<EmptyList/>}
+          ListEmptyComponent={<EmptyList />}
         />
       </View>
     </View>

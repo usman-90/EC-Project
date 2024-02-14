@@ -22,13 +22,13 @@ const featuredItems = [
   {
     propertiesNo: "3 Properties",
     rentType: "Apartment",
-	  value:"apartment",
+    value: "apartment",
     Image: apart1,
   },
   {
     propertiesNo: "1 Property",
     rentType: "Residential",
-	  value:"residentialBuilding",
+    value: "residentialBuilding",
     Image: resi1,
   },
 ];
@@ -92,7 +92,7 @@ export default function Home() {
                     params: {
                       name: "Rent",
                       purpose: "rent",
-                    }
+                    },
                   });
                 }}
                 className="p-1 m-2 w-16 md:p-1 md:m-2 md:w-16 bg-[#FFD549] rounded-full"
@@ -108,9 +108,8 @@ export default function Home() {
                     params: {
                       name: "Buy",
                       purpose: "forSale",
-                    }
-                  }
-                  );
+                    },
+                  });
                 }}
                 className="p-1 my-2 w-12 md:p-1 md:my-2 md:mr-2 md:w-12 rounded-full"
               >

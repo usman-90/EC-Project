@@ -4,8 +4,9 @@ import { socialLogin } from './register';
 import { setPropertyData } from '../features/property/propertySlice';
 
 GoogleSignin.configure({
-	webClientId: '276924636442-p16kdksu0aacmvoa10e08qo0ldahho8v.apps.googleusercontent.com',
-	scopes: ['profile', 'email'],
+  webClientId:
+    "276924636442-p16kdksu0aacmvoa10e08qo0ldahho8v.apps.googleusercontent.com",
+  scopes: ["profile", "email"],
 });
 
 export function onGoogleButtonPress(dispatch, navigation, propertyInformation) {

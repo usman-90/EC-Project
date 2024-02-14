@@ -34,15 +34,17 @@ const Loginpage = ({ navigation }) => {
         text2: "Logged In successfully! 👋",
       });
       store.dispatch(setUserData(data?.data.data));
-      store.dispatch(setPropertyData({
-        ...propertyInformation,
-        contactDetails: {
-          ListingOwner: userData.name,
-          contactPerson: userData.name,
-          email: userData.email,
-          phone: userData.phoneNumber,
-        }
-      }));
+      store.dispatch(
+        setPropertyData({
+          ...propertyInformation,
+          contactDetails: {
+            ListingOwner: userData.name,
+            contactPerson: userData.name,
+            email: userData.email,
+            phone: userData.phoneNumber,
+          },
+        }),
+      );
       console.log("Login user data", data?.data.data);
       navigation.navigate("BottomTabStack");
     },
@@ -67,8 +69,6 @@ const Loginpage = ({ navigation }) => {
   const handleDataChange = (name, val) => {
     setData({ ...data, [name]: val });
   };
-
-
 
   return (
     <>

@@ -3,17 +3,20 @@ import {
   View,
   TouchableOpacity,
   RefreshControl,
-  StatusBar
+  StatusBar,
 } from "react-native";
 import { useEffect, useState, useContext, useCallback } from "react";
-import { searchProperties, fetchProperties } from "../../apiFunctions/properties";
+import {
+  searchProperties,
+  fetchProperties,
+} from "../../apiFunctions/properties";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import FilterContext from "../../context/FilterContext";
 import SearchBar from "../../components/SearchBar";
 import DragableMenu from "../../components/DragableMenu";
 import PropertyItem from "../../components/PropertyItem";
 import Loader from "../../components/Loader";
-import EmptyList from '../../components/NoItem'
+import EmptyList from "../../components/NoItem";
 
 const Search = ({ navigation }) => {
   const [isRefreshing, setIsRefreshing] = useState(false);
@@ -41,38 +44,41 @@ const Search = ({ navigation }) => {
   const refetchProperties = propertiesResult?.refetch;
   const properties = propertiesResult?.data?.data?.data ?? [];
 
-
   const handleRefresh = useCallback(async () => {
     setIsRefreshing(true);
     if (query) {
       searchPropertiesMutation.mutate(query);
     } else {
-      refetchProperties()
+      refetchProperties();
     }
     setIsRefreshing(false);
   });
 
-  const renderData = data ? data : properties ? properties : [] 
-	console.log("IN SEARCHHHHH",filters)
+  const renderData = data ? data : properties ? properties : [];
+  console.log("IN SEARCHHHHH", filters);
   return (
     <View className="basis-full">
       <StatusBar backgroundColor={"#fff"} translucent={false} />
       <View className="px-6 my-3 flex flex-row">
         <SearchBar value={query} setValue={setQuery} />
-        <DragableMenu
-          setData={setData}
-          refetchProperties={refetchProperties}
-        />
+        <DragableMenu setData={setData} refetchProperties={refetchProperties} />
       </View>
       <View className="grow-0 py-2">
         {renderData ? (
           <FlatList
-            refreshControl={<RefreshControl refreshing={isRefreshing} onRefresh={handleRefresh} />}
+            refreshControl={
+              <RefreshControl
+                refreshing={isRefreshing}
+                onRefresh={handleRefresh}
+              />
+            }
             data={renderData}
             className="px-6"
-            renderItem={({ item }) => <SearchedItem navigation={navigation} item={item} />}
+            renderItem={({ item }) => (
+              <SearchedItem navigation={navigation} item={item} />
+            )}
             keyExtractor={(item, idx) => idx}
-		ListEmptyComponent={<EmptyList/>}
+            ListEmptyComponent={<EmptyList />}
           />
         ) : null}
       </View>
@@ -81,10 +87,7 @@ const Search = ({ navigation }) => {
 };
 export default Search;
 
-
 const SearchedItem = ({ navigation, item }) => {
-
-
   return (
     <TouchableOpacity
       onPress={() => {
@@ -99,14 +102,12 @@ const SearchedItem = ({ navigation, item }) => {
         price={item?.propertyDetails?.InclusivePrice}
         location={item?.locationAndAddress?.location}
         bedrooms={
-          item?.amenities?.filter(
-            (item) => item.name == "bedRooms",
-          )[0].value
+          item?.amenities?.filter((item) => item.name == "bedRooms")[0].value
         }
         area={item?.propertyDetails?.areaSquare}
         beds={item?.propertyDetails?.bedRooms}
         bathrooms={item?.propertyDetails?.bathRooms}
       />
     </TouchableOpacity>
-  )
-}
+  );
+};

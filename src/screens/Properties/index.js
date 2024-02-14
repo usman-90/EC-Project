@@ -29,7 +29,7 @@ const Properties = ({ navigation }) => {
     queryFn: fetchAllProperties,
   });
 
-	const [filters, setFilters] = useContext(FilterContext);
+  const [filters, setFilters] = useContext(FilterContext);
   if (propertiesData?.isLoading) {
     return <Loader />;
   }

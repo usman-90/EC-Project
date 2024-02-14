@@ -11,8 +11,7 @@ export const propertySlice = createSlice({
         purpose: "forRent",
       },
       locationAndAddress: {
-        location:
-          "",
+        location: "",
         longitude: 0,
         latitude: 0,
         address: "",
