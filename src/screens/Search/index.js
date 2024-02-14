@@ -13,6 +13,7 @@ import SearchBar from "../../components/SearchBar";
 import DragableMenu from "../../components/DragableMenu";
 import PropertyItem from "../../components/PropertyItem";
 import Loader from "../../components/Loader";
+import EmptyList from '../../components/NoItem'
 
 const Search = ({ navigation }) => {
   const [isRefreshing, setIsRefreshing] = useState(false);
@@ -37,19 +38,9 @@ const Search = ({ navigation }) => {
     },
   });
 
+  const refetchProperties = propertiesResult?.refetch;
   const properties = propertiesResult?.data?.data?.data ?? [];
 
-  if (propertiesResult?.isLoading) {
-    return <Loader />;
-  }
-
-  if (searchPropertiesMutation?.isLoading) {
-    return <Loader />;
-  }
-  console.log("sdfashdfLOLLLLLLLLLLLLLLLLLLJJLA", properties, "propertiesssss")
-  console.log("sdfashdfLOLLLLLLLLLLLLLLLLLLJ22222222222222", renderData, "propertiesssss")
-  console.log("sdfashdfLOLLLLLLLLLLLLLLLLLLJ222222222222223333333", data, "propertiesssss")
-  const refetchProperties = propertiesResult?.refetch;
 
   const handleRefresh = useCallback(async () => {
     setIsRefreshing(true);
@@ -61,7 +52,8 @@ const Search = ({ navigation }) => {
     setIsRefreshing(false);
   });
 
-  const renderData = data ? data : properties ? properties : null
+  const renderData = data ? data : properties ? properties : [] 
+	console.log("IN SEARCHHHHH",filters)
   return (
     <View className="basis-full">
       <StatusBar backgroundColor={"#fff"} translucent={false} />
@@ -79,7 +71,8 @@ const Search = ({ navigation }) => {
             data={renderData}
             className="px-6"
             renderItem={({ item }) => <SearchedItem navigation={navigation} item={item} />}
-            keyExtractor={(item) => item}
+            keyExtractor={(item, idx) => idx}
+		ListEmptyComponent={<EmptyList/>}
           />
         ) : null}
       </View>

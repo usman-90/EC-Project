@@ -22,6 +22,7 @@ import {useState, useCallback, useContext, useEffect } from "react";
 import { fetchProperties } from "../../apiFunctions/properties";
 import Loader from "../../components/Loader";
 import PropertyItem from "../../components/PropertyItem";
+import EmptyList from '../../components/NoItem'
 
 const SearchResult = ({ route, navigation }) => {
 	const [isRefreshing, setIsRefreshing] = useState(false);
@@ -94,6 +95,7 @@ const handleRefresh = useCallback(async () => {
             );
           }}
           keyExtractor={(item, idx) => idx}
+		ListEmptyComponent={<EmptyList/>}
         />
       </View>
     </View>

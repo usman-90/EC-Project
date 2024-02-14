@@ -24,7 +24,7 @@ export function fetchAllProperties() {
 
 export function fetchProperties({ queryKey }) {
   const data = queryKey[1];
-  console.log(data, "dasdasd")
+  console.log("fetchhhhhhhhhhh",data, "dasdasd")
   let params = {
     purpose: data?.purpose,
     category: data?.category,

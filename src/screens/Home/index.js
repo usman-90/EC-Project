@@ -22,11 +22,13 @@ const featuredItems = [
   {
     propertiesNo: "3 Properties",
     rentType: "Apartment",
+	  value:"apartment",
     Image: apart1,
   },
   {
     propertiesNo: "1 Property",
     rentType: "Residential",
+	  value:"residentialBuilding",
     Image: resi1,
   },
 ];

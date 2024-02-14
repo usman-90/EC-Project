@@ -16,6 +16,7 @@ import Loader from "../../components/Loader";
 import { useState, useContext, useCallback } from "react"
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useSelector } from "react-redux";
+import EmptyList from '../../components/NoItem'
 
 const Save = ({ navigation }) => {
   const { userData } = useSelector((state) => state?.user.data);
@@ -37,12 +38,11 @@ const Save = ({ navigation }) => {
 
   console.log(properties, "lol")
   return (
-    <View className="basis-full">
+    <View className="basis-full ">
       <Text className="text-2xl font-bold py-4 text-center ">Saved</Text>
-      <View>
         <FlatList
           refreshControl={<RefreshControl refreshing={isRefreshing} onRefresh={handleRefresh} />}
-          className="grow-0 mb-52 px-6"
+          className="px-6 "
           data={properties}
           renderItem={({ item }) => {
             return (
@@ -71,8 +71,8 @@ const Save = ({ navigation }) => {
             );
           }}
           keyExtractor={(item, idx) => idx}
+	ListEmptyComponent={<EmptyList/>}
         />
-      </View>
     </View>
   );
 };
