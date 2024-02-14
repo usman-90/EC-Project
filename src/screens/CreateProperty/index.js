@@ -18,38 +18,44 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import { storage } from "../../../firebaseConfig";
-import { setPropertyData } from "../../features/property/propertySlice";
+import { resetPropertyData, setPropertyData } from "../../features/property/propertySlice";
 import { CommonActions } from "@react-navigation/native";
 
 const recreationNfamily = [
   {
     name: "Barbeque",
     value: "Barbeque",
-    _id: "65c795ddf4edf337647a1682",
+    // _id: "65c795ddf4edf337647a1682",
   },
   { name: "Garden", value: "Garden" },
-  { name: "Care", value: "Care", _id: "65c795ddf4edf337647a1683" },
+  {
+    name: "Care", value: "Care",
+    // _id: "65c795ddf4edf337647a1683" 
+  },
   { name: "Cafeteria or Canteen", value: "Cafeteria or Canteen" },
   {
     name: "Kids Play Area",
     value: "Kids Play Area",
-    _id: "65c795ddf4edf337647a1684",
+    // _id: "65c795ddf4edf337647a1684",
   },
 ];
 
 const healthNfitness = [
   { name: "First Aid Medical Center", value: "First Aid Medical Center" },
-  { name: "Sauna", value: "Sauna", _id: "65c795ddf4edf337647a1685" },
+  {
+    name: "Sauna", value: "Sauna",
+    // _id: "65c795ddf4edf337647a1685" 
+  },
   {
     name: "Steam Room",
     value: "Steam Room",
-    _id: "65c795ddf4edf337647a1687",
+    // _id: "65c795ddf4edf337647a1687",
   },
   { name: "Jacuzzi", value: "Jacuzzi" },
   {
     name: "Swimming Pool",
     value: "Swimming Pool",
-    _id: "65c795ddf4edf337647a1686",
+    // _id: "65c795ddf4edf337647a1686",
   },
   { name: "Facilities for Disabled", value: "Facilities for Disabled" },
 ];
@@ -58,7 +64,7 @@ const laundryNkitchen = [
   {
     name: "Laundry Facility",
     value: "Laundry Facility",
-    _id: "65c795ddf4edf337647a1688",
+    // _id: "65c795ddf4edf337647a1688",
   },
   { name: "Shared Kitchen", value: "Shared Kitchen" },
 
@@ -69,14 +75,14 @@ const building = [
   {
     name: "Reception/Waiting room",
     value: "Reception/Waiting room",
-    _id: "65c795ddf4edf337647a168a",
+    // _id: "65c795ddf4edf337647a168a",
   },
   { name: "Balcony or Terrace", value: "Balcony or Terrace" },
   { name: "Lobby in Building", value: "Lobby in Building" },
   {
     name: "Service Elevator",
     value: "Service Elevator",
-    _id: "65c795ddf4edf337647a1689",
+    // _id: "65c795ddf4edf337647a1689",
   },
 ];
 
@@ -88,7 +94,7 @@ const businessNsecurity = [
   {
     name: "CCTV security",
     value: "CCTV security",
-    _id: "65c795ddf4edf337647a168b",
+    // _id: "65c795ddf4edf337647a168b",
   },
 ];
 
@@ -123,17 +129,17 @@ const cleaningNMaintenance = [
   {
     name: "Waste Disposal",
     value: "Waste Disposal",
-    _id: "65c795ddf4edf337647a168c",
+    // _id: "65c795ddf4edf337647a168c",
   },
   {
     name: "Maintenance Staff",
     value: "Maintenance Staff",
-    _id: "65c795ddf4edf337647a168d",
+    // _id: "65c795ddf4edf337647a168d",
   },
   {
     name: "Cleaning Services",
     value: "Cleaning Services",
-    _id: "65c795ddf4edf337647a168e",
+    // _id: "65c795ddf4edf337647a168e",
   },
 ];
 
@@ -169,7 +175,17 @@ const propertyTypes = [
 ];
 
 export default function CreateProperty({ navigation }) {
-  const [ameneties, setAmeneties] = useState({});
+  const [ameneties, setAmeneties] = useState({
+    building: [],
+    businessNsecurity: [],
+    cleaningNMaintenance: [],
+    healthNfitness: [],
+    laundryNkitchen: [],
+    miscalleneous: [],
+    more: [],
+    recreationNfamily: [],
+    technology: []
+  });
   const propertyData = useSelector((state) => state?.property?.data);
   const [selectedPropertyTypes, setSelectedPropertyTypes] = useState(propertyData.typesAndPurpose.category);
   const [locationSelected, setLocationSelected] = useState("");
@@ -181,7 +197,6 @@ export default function CreateProperty({ navigation }) {
   //   console.log("Upcomming property information", propertyValues);
   // }, []);
   useEffect(() => {
-
     console.log("selectedPropertyTypes", propertyData);
     const { typesAndPurpose } = propertyValues;
     setPropertyValues({
@@ -193,16 +208,35 @@ export default function CreateProperty({ navigation }) {
     });
   }, [selectedPropertyTypes]);
 
+  useEffect(() => {
+    const vv = [
+      ...ameneties.building,
+      ...ameneties.businessNsecurity,
+      ...ameneties.cleaningNMaintenance,
+      ...ameneties.healthNfitness,
+      ...ameneties.laundryNkitchen,
+      ...ameneties.miscalleneous,
+      ...ameneties.more,
+      ...ameneties.recreationNfamily,
+      ...ameneties.technology
+    ];
+    setPropertyValues({
+      ...propertyValues,
+      ameneties: vv
+    });
+    console.log("combined array", vv);
+  }, [ameneties]);
+
   const onAmeneitiesChange = (id, value) => {
     setAmeneties({ ...ameneties, [id]: value });
-    console.log("booom", ameneties);
+    // console.log("booom", ameneties);
     //	setAmeneties({...ameneties, [id]:[...ameneties[id], value[j]]})
   };
 
-  console.log(ameneties);
+  // console.log("ameneties", ameneties);
 
   const handleDataChange = (parentProp, childProp, value) => {
-    console.log("Changing values", childProp, value);
+    // console.log("Changing values", childProp, value);
     setPropertyValues({
       ...propertyValues,
       [parentProp]: {
@@ -245,26 +279,21 @@ export default function CreateProperty({ navigation }) {
       });
       console.log("propertyValues", propertyValues);
 
-      // const response = await createProperty(propertyValues);
-      // console.log("Upload was completed then I was executed", response);
-      // dispatch(
-      //   setPropertyData({
-      //     ...propertyValues,
-      //     upload: {
-      //       images: [],
-      //       videos: [],
-      //     },
-      //   }),
-      // );
+      const response = await createProperty(propertyValues);
+      console.log("Property added", response);
 
-      // navigation.dispatch(
-      //   CommonActions.reset({
-      //     index: 0,
-      //     routes: [
-      //       { name: 'HomeStack' }
-      //     ],
-      //   })
-      // );
+      dispatch(
+        resetPropertyData(propertyValues),
+      );
+
+      navigation.dispatch(
+        CommonActions.reset({
+          index: 0,
+          routes: [
+            { name: 'HomeStack' }
+          ],
+        })
+      );
     }
   };
 
@@ -653,11 +682,10 @@ const RenderSingleTag = ({
     >
       <View>
         <Text
-          className={`py-3 px-3 rounded-sm text-[10px] w-[83px] text-center bg-primary ${
-            item?.keyword === selectedPropertyTypes
-              ? "bg-white text-primary border border-primary"
-              : "bg-primary text-white"
-          }`}
+          className={`py-3 px-3 rounded-sm text-[10px] w-[83px] text-center bg-primary ${item?.keyword === selectedPropertyTypes
+            ? "bg-white text-primary border border-primary"
+            : "bg-primary text-white"
+            }`}
         >
           {item?.name}
         </Text>

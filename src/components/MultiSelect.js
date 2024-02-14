@@ -7,11 +7,11 @@ const CustomMultiSelect = ({ items, onChange, category, placeholder }) => {
   const multiSelectRef = useRef(null);
 
   const onSelectedItemsChange = (selectedItems) => {
-    console.log(selectedItems, "lollllllllllll");
     let arr = items.filter((elem) => {
       return selectedItems.includes(elem.value);
     });
-    console.log(arr);
+    // console.log(arr);
+    console.log("selectedItems", arr);
     onChange(category, arr);
   };
 
