@@ -22,70 +22,119 @@ import { setPropertyData } from "../../features/property/propertySlice";
 import { CommonActions } from "@react-navigation/native";
 
 const recreationNfamily = [
-  { key: "1", value: "Barbeque Area" },
-  { key: "2", value: "Lawn or Garden" },
-  { key: "3", value: "Day Care Center" },
-  { key: "4", value: "Cafeteria or Canteen" },
-  { key: "5", value: "Kids Play Area" },
+  {
+    name: "Barbeque",
+    value: "Barbeque",
+    _id: "65c795ddf4edf337647a1682",
+  },
+  { name: "Garden", value: "Garden" },
+  { name: "Care", value: "Care", _id: "65c795ddf4edf337647a1683" },
+  { name: "Cafeteria or Canteen", value: "Cafeteria or Canteen" },
+  {
+    name: "Kids Play Area",
+    value: "Kids Play Area",
+    _id: "65c795ddf4edf337647a1684",
+  },
 ];
 
 const healthNfitness = [
-  { key: "6", value: "First Aid Medical Center" },
-  { key: "7", value: "Sauna" },
-  { key: "8", value: "Steam Room" },
-  { key: "9", value: "Jacuzzi" },
-  { key: "10", value: "Swimming Pool" },
-  { key: "11", value: "Facilities for Disabled" },
+  { name: "First Aid Medical Center", value: "First Aid Medical Center" },
+  { name: "Sauna", value: "Sauna", _id: "65c795ddf4edf337647a1685" },
+  {
+    name: "Steam Room",
+    value: "Steam Room",
+    _id: "65c795ddf4edf337647a1687",
+  },
+  { name: "Jacuzzi", value: "Jacuzzi" },
+  {
+    name: "Swimming Pool",
+    value: "Swimming Pool",
+    _id: "65c795ddf4edf337647a1686",
+  },
+  { name: "Facilities for Disabled", value: "Facilities for Disabled" },
 ];
 
 const laundryNkitchen = [
-  { key: "12", value: "Laundry Room" },
-  { key: "13", value: "Laundry Facility" },
-  { key: "14", value: "Shared Kitchen" },
+  {
+    name: "Laundry Facility",
+    value: "Laundry Facility",
+    _id: "65c795ddf4edf337647a1688",
+  },
+  { name: "Shared Kitchen", value: "Shared Kitchen" },
+
+  { name: "Lanudry Room", value: "Lanudry Room" },
 ];
 
 const building = [
-  { key: "15", value: "Prayer Room" },
-  { key: "16", value: "Balcony or Terrace" },
-  { key: "17", value: "Waiting Room" },
-  { key: "18", value: "Lobby in Building" },
-  { key: "19", value: "Service Elevators" },
+  {
+    name: "Reception/Waiting room",
+    value: "Reception/Waiting room",
+    _id: "65c795ddf4edf337647a168a",
+  },
+  { name: "Balcony or Terrace", value: "Balcony or Terrace" },
+  { name: "Lobby in Building", value: "Lobby in Building" },
+  {
+    name: "Service Elevator",
+    value: "Service Elevator",
+    _id: "65c795ddf4edf337647a1689",
+  },
 ];
 
 const businessNsecurity = [
-  { key: "20", value: "Business Center" },
-  { key: "21", value: "Conference Room" },
-  { key: "22", value: "Security Staff" },
-  { key: "23", value: "CCTV Security" },
+  { name: "Business Center", value: "Business Center" },
+  { name: "Conference Room", value: "Conference Room" },
+  { name: "Security Staff", value: "Security Staff" },
+
+  {
+    name: "CCTV security",
+    value: "CCTV security",
+    _id: "65c795ddf4edf337647a168b",
+  },
 ];
 
 const miscalleneous = [
-  { key: "24", value: "Freehold" },
-  { key: "25", value: "Maids Room" },
-  { key: "26", value: "ATM Facility" },
-  { key: "27", value: "24 Hours Concierge" },
+  { name: "Freehold", value: "Freehold" },
+  { name: "Maids Room", value: "Maids Room" },
+  { name: "ATM Facility", value: "ATM Facility" },
+  { name: "24 Hours Challenge", value: "24 Hours Challenge" },
 ];
 
 const technology = [
-  { key: "28", value: "Broadband Internet" },
-  { key: "29", value: "Satellite/Cable TV" },
-  { key: "30", value: "Intercom" },
+  { name: "Braodband Internet", value: "Braodband Internet" },
+  { name: "Satellite/Cable Tv", value: "Satellite/Cable Tv" },
+  { name: "Intercom", value: "Intercom" },
 ];
 
 const advanced = [
-  { key: "31", value: "Double Glazed Windows" },
-  { key: "32", value: "Centrally Air-Conditioned" },
-  { key: "33", value: "Furnished" },
-  { key: "34", value: "Electricity Backup" },
-  { key: "35", value: "Storage Areas" },
-  { key: "36", value: "Study Room" },
-  { key: "37", value: "Central Heating" },
-  { key: "38", value: "Parking Spaces" },
+  { name: "Double Glazed Windows", value: "Double Glazed Windows" },
+  {
+    name: "Centrally Air-Conditioned",
+    value: "Centrally Air-Conditioned",
+  },
+
+  { name: "Furnished", value: "Furnished" },
+  { name: "Electricity Backup", value: "Electricity Backup" },
+  { name: "Storage Areas", value: "Storage Areas" },
+  { name: "Study Room", value: "Study Room" },
+  { name: "Central Heating", value: "Central Heating" },
+  { name: "parkingSpaces", value: "2" },
 ];
 const cleaningNMaintenance = [
-  { key: "39", value: "Waste Disposal" },
-  { key: "40", value: "Maintenance Staff" },
-  { key: "41", value: "Cleaning Services" },
+  {
+    name: "Waste Disposal",
+    value: "Waste Disposal",
+    _id: "65c795ddf4edf337647a168c",
+  },
+  {
+    name: "Maintenance Staff",
+    value: "Maintenance Staff",
+    _id: "65c795ddf4edf337647a168d",
+  },
+  {
+    name: "Cleaning Services",
+    value: "Cleaning Services",
+    _id: "65c795ddf4edf337647a168e",
+  },
 ];
 
 const propertyTypes = [
@@ -128,7 +177,6 @@ export default function CreateProperty({ navigation }) {
   const dispatch = useDispatch();
   const [steps, setSteps] = useState(1);
   const [locationSuggestions, setLocationSuggestions] = useState([]);
-
   // useEffect(() => {
   //   console.log("Upcomming property information", propertyValues);
   // }, []);
@@ -149,7 +197,7 @@ export default function CreateProperty({ navigation }) {
     console.log("booom", ameneties);
     //	setAmeneties({...ameneties, [id]:[...ameneties[id], value[j]]})
   };
-
+  console.log(ameneties);
   const handleDataChange = (parentProp, childProp, value) => {
     console.log("Changing values", childProp, value);
     setPropertyValues({
