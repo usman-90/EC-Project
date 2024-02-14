@@ -7,11 +7,12 @@ import { useMutation } from "@tanstack/react-query";
 import ContinueWithGoogle from "../../components/Login/ContinueWithGoogle";
 import { register } from "../../apiFunctions/register";
 import Toast from "react-native-toast-message";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setUserData } from "../../features/user/userSlice";
 import { onGoogleButtonPress } from "../../apiFunctions/signInWithGoogle";
 
 const Register = ({ navigation }) => {
+  const propertyInformation = useSelector((state) => state?.property?.data);
   const dispatch = useDispatch();
   const [data, setData] = useState({
     name: "",
@@ -127,7 +128,7 @@ const Register = ({ navigation }) => {
               text="Continue With Google"
               textColor="black"
               onPress={() =>
-                onGoogleButtonPress(navigation).then(() =>
+                onGoogleButtonPress(dispatch, navigation, propertyInformation).then(() =>
                   console.log("Signed in with Google!"),
                 )
               }

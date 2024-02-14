@@ -177,6 +177,7 @@ export default function CreateProperty({ navigation }) {
   const onDoneClicked = async () => {
     if (steps === 1) {
       setSteps(2);
+      dispatch(setPropertyData(propertyValues));
     } else if (steps === 2) {
       const updatedImages = await Promise.all(
         propertyValues?.upload?.images.map(async (imageUri) => {
@@ -240,8 +241,7 @@ export default function CreateProperty({ navigation }) {
         uploadTask.on(
           "state_changed",
           (snapshot) => {
-            const progress =
-              (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+            const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
             console.log("Uploaded progress", progress.toFixed());
           },
           (error) => {
@@ -549,7 +549,7 @@ export default function CreateProperty({ navigation }) {
                 category={"cleaningNMaintenance"}
               />
             </View>
-            
+
           </View>
         )}
       </ScrollView>

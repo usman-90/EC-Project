@@ -8,7 +8,8 @@ import { onFacebookButtonPress } from '../../apiFunctions/signInWithFacebook'
 
 const SignIn = ({ navigation }) => {
   let dispatch = useDispatch()
-
+  const propertyInformation = useSelector((state) => state?.property?.data);
+  
   return (
     <View className="bg-black" style={styles.container}>
       <Image source={LoginBg} style={{ flex: 1.8 }} />
@@ -38,7 +39,7 @@ const SignIn = ({ navigation }) => {
             text="Continue With Google"
             textColor="black"
             onPress={() => {
-              onGoogleButtonPress(dispatch, navigation)
+              onGoogleButtonPress(dispatch, navigation, propertyInformation)
               .then((e) => {
                 console.log("Signed in with Google!",e);
               })

@@ -149,7 +149,7 @@ const Loginpage = ({ navigation }) => {
               text="Continue With Google"
               textColor="black"
               onPress={() =>
-                onGoogleButtonPress(dispatch, navigation).then(() =>
+                onGoogleButtonPress(dispatch, navigation, propertyInformation).then(() =>
                   console.log("Signed in with Google!"),
                 )
               }
