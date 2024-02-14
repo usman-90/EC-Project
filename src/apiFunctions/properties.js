@@ -5,7 +5,7 @@ const isNumber = (n) => !isNaN(parseFloat(n));
 const API_URL_OLD =
   "https://realestatebackend-m68pxvdwf-asadullahkhan19.vercel.app";
 const API_URL_NEW = "https://realestatebackend-woad.vercel.app";
-const Local_Host_URL = "http://192.168.100.13:4000";
+const Local_Host_URL = "http://192.168.1.103:4000";
 
 export function fetchSubCategories({ queryKey }) {
   const category = queryKey[1];
@@ -94,6 +94,7 @@ export function getSavedProperties({ queryKey }) {
 }
 
 export function createProperty(data) {
+  // console.log("data for upload", data);
   return axios.post(`${API_URL_NEW}/property/upload`, data);
 }
 

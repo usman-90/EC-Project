@@ -18,7 +18,10 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import { storage } from "../../../firebaseConfig";
-import { resetPropertyData, setPropertyData } from "../../features/property/propertySlice";
+import {
+  resetPropertyData,
+  setPropertyData,
+} from "../../features/property/propertySlice";
 import { CommonActions } from "@react-navigation/native";
 
 const recreationNfamily = [
@@ -29,8 +32,9 @@ const recreationNfamily = [
   },
   { name: "Garden", value: "Garden" },
   {
-    name: "Care", value: "Care",
-    // _id: "65c795ddf4edf337647a1683" 
+    name: "Care",
+    value: "Care",
+    // _id: "65c795ddf4edf337647a1683"
   },
   { name: "Cafeteria or Canteen", value: "Cafeteria or Canteen" },
   {
@@ -43,8 +47,9 @@ const recreationNfamily = [
 const healthNfitness = [
   { name: "First Aid Medical Center", value: "First Aid Medical Center" },
   {
-    name: "Sauna", value: "Sauna",
-    // _id: "65c795ddf4edf337647a1685" 
+    name: "Sauna",
+    value: "Sauna",
+    // _id: "65c795ddf4edf337647a1685"
   },
   {
     name: "Steam Room",
@@ -175,7 +180,7 @@ const propertyTypes = [
 ];
 
 export default function CreateProperty({ navigation }) {
-  const [ameneties, setAmeneties] = useState({
+  const [amenities, setAmenities] = useState({
     building: [],
     businessNsecurity: [],
     cleaningNMaintenance: [],
@@ -184,10 +189,12 @@ export default function CreateProperty({ navigation }) {
     miscalleneous: [],
     more: [],
     recreationNfamily: [],
-    technology: []
+    technology: [],
   });
   const propertyData = useSelector((state) => state?.property?.data);
-  const [selectedPropertyTypes, setSelectedPropertyTypes] = useState(propertyData.typesAndPurpose.category);
+  const [selectedPropertyTypes, setSelectedPropertyTypes] = useState(
+    propertyData.typesAndPurpose.category,
+  );
   const [locationSelected, setLocationSelected] = useState("");
   const [propertyValues, setPropertyValues] = useState(propertyData);
   const dispatch = useDispatch();
@@ -210,30 +217,31 @@ export default function CreateProperty({ navigation }) {
 
   useEffect(() => {
     const vv = [
-      ...ameneties.building,
-      ...ameneties.businessNsecurity,
-      ...ameneties.cleaningNMaintenance,
-      ...ameneties.healthNfitness,
-      ...ameneties.laundryNkitchen,
-      ...ameneties.miscalleneous,
-      ...ameneties.more,
-      ...ameneties.recreationNfamily,
-      ...ameneties.technology
+      ...amenities.building,
+      ...amenities.businessNsecurity,
+      ...amenities.cleaningNMaintenance,
+      ...amenities.healthNfitness,
+      ...amenities.laundryNkitchen,
+      ...amenities.miscalleneous,
+      ...amenities.more,
+      ...amenities.recreationNfamily,
+      ...amenities.technology,
     ];
     setPropertyValues({
       ...propertyValues,
-      ameneties: vv
+      amenities: vv,
     });
     console.log("combined array", vv);
-  }, [ameneties]);
+  }, [amenities]);
 
   const onAmeneitiesChange = (id, value) => {
-    setAmeneties({ ...ameneties, [id]: value });
-    // console.log("booom", ameneties);
-    //	setAmeneties({...ameneties, [id]:[...ameneties[id], value[j]]})
+    setAmenities({ ...amenities, [id]: value });
+    // console.log("booom", amenities);
+
+    //	setAmenities({...amenities, [id]:[...amenities[id], value[j]]})
   };
 
-  // console.log("ameneties", ameneties);
+  // console.log("amenities", amenities);
 
   const handleDataChange = (parentProp, childProp, value) => {
     // console.log("Changing values", childProp, value);
@@ -270,29 +278,31 @@ export default function CreateProperty({ navigation }) {
           return await handleImageUpload(imageUri);
         }),
       );
-      setPropertyValues({
+      // setPropertyValues({
+      //   ...propertyValues,
+      //   upload: {
+      //     ...propertyValues.upload,
+      //     images: updatedImages,
+      //   },
+      // });
+      console.log("propertyValues", propertyValues);
+
+      const response = await createProperty({
         ...propertyValues,
         upload: {
           ...propertyValues.upload,
           images: updatedImages,
         },
       });
-      console.log("propertyValues", propertyValues);
-
-      const response = await createProperty(propertyValues);
       console.log("Property added", response);
 
-      dispatch(
-        resetPropertyData(propertyValues),
-      );
+      dispatch(resetPropertyData(propertyValues));
 
       navigation.dispatch(
         CommonActions.reset({
           index: 0,
-          routes: [
-            { name: 'HomeStack' }
-          ],
-        })
+          routes: [{ name: "HomeStack" }],
+        }),
       );
     }
   };
@@ -300,7 +310,7 @@ export default function CreateProperty({ navigation }) {
   const handleCategoryChange = (value) => {
     setSelectedPropertyTypes(value);
     handleDataChange("typesAndPurpose", "category", value);
-  }
+  };
 
   const handleBackPress = () => {
     if (steps === 1) {
@@ -327,7 +337,8 @@ export default function CreateProperty({ navigation }) {
         uploadTask.on(
           "state_changed",
           (snapshot) => {
-            const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+            const progress =
+              (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
             console.log("Uploaded progress", progress.toFixed());
           },
           (error) => {
@@ -469,7 +480,11 @@ export default function CreateProperty({ navigation }) {
 
               <TextInput
                 onChangeText={(value) =>
-                  handleDataChange("propertyDetails", "areaSquare", value)
+                  handleDataChange(
+                    "propertyDetails",
+                    "areaSquare",
+                    parseInt(value),
+                  )
                 }
                 value={
                   propertyValues.propertyDetails.areaSquare !== 0
@@ -484,7 +499,11 @@ export default function CreateProperty({ navigation }) {
 
               <TextInput
                 onChangeText={(value) =>
-                  handleDataChange("propertyDetails", "InclusivePrice", value)
+                  handleDataChange(
+                    "propertyDetails",
+                    "InclusivePrice",
+                    parseInt(value),
+                  )
                 }
                 value={
                   propertyValues.propertyDetails.InclusivePrice !== 0
@@ -526,7 +545,11 @@ export default function CreateProperty({ navigation }) {
 
               <TextInput
                 onChangeText={(value) =>
-                  handleDataChange("propertyDetails", "PermitNumber", value)
+                  handleDataChange(
+                    "propertyDetails",
+                    "PermitNumber",
+                    parseInt(value),
+                  )
                 }
                 value={
                   propertyValues.propertyDetails.PermitNumber !== 0
@@ -560,7 +583,7 @@ export default function CreateProperty({ navigation }) {
 
               <CustomMultiSelect
                 items={recreationNfamily}
-                selectedItems={ameneties.recreationNfamily ?? []}
+                selectedItems={amenities.recreationNfamily ?? []}
                 onChange={onAmeneitiesChange}
                 category={"recreationNfamily"}
               />
@@ -682,10 +705,11 @@ const RenderSingleTag = ({
     >
       <View>
         <Text
-          className={`py-3 px-3 rounded-sm text-[10px] w-[83px] text-center bg-primary ${item?.keyword === selectedPropertyTypes
-            ? "bg-white text-primary border border-primary"
-            : "bg-primary text-white"
-            }`}
+          className={`py-3 px-3 rounded-sm text-[10px] w-[83px] text-center bg-primary ${
+            item?.keyword === selectedPropertyTypes
+              ? "bg-white text-primary border border-primary"
+              : "bg-primary text-white"
+          }`}
         >
           {item?.name}
         </Text>

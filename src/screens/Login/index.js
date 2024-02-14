@@ -43,6 +43,7 @@ const Loginpage = ({ navigation }) => {
             email: userData.email,
             phone: userData.phoneNumber,
           },
+          ownerId: userData?._id
         }),
       );
       console.log("Login user data", data?.data.data);
