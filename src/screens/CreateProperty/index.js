@@ -171,7 +171,7 @@ const propertyTypes = [
 export default function CreateProperty({ navigation }) {
   const [ameneties, setAmeneties] = useState({});
   const propertyData = useSelector((state) => state?.property?.data);
-  const [selectedPropertyTypes, setSelectedPropertyTypes] = useState("");
+  const [selectedPropertyTypes, setSelectedPropertyTypes] = useState(propertyData.typesAndPurpose.category);
   const [locationSelected, setLocationSelected] = useState("");
   const [propertyValues, setPropertyValues] = useState(propertyData);
   const dispatch = useDispatch();
@@ -180,8 +180,9 @@ export default function CreateProperty({ navigation }) {
   // useEffect(() => {
   //   console.log("Upcomming property information", propertyValues);
   // }, []);
-
   useEffect(() => {
+
+    console.log("selectedPropertyTypes", propertyData);
     const { typesAndPurpose } = propertyValues;
     setPropertyValues({
       ...propertyValues,
@@ -197,7 +198,9 @@ export default function CreateProperty({ navigation }) {
     console.log("booom", ameneties);
     //	setAmeneties({...ameneties, [id]:[...ameneties[id], value[j]]})
   };
+
   console.log(ameneties);
+
   const handleDataChange = (parentProp, childProp, value) => {
     console.log("Changing values", childProp, value);
     setPropertyValues({
@@ -264,6 +267,11 @@ export default function CreateProperty({ navigation }) {
       // );
     }
   };
+
+  const handleCategoryChange = (value) => {
+    setSelectedPropertyTypes(value);
+    handleDataChange("typesAndPurpose", "category", value);
+  }
 
   const handleBackPress = () => {
     if (steps === 1) {
@@ -353,7 +361,7 @@ export default function CreateProperty({ navigation }) {
                     <RenderSingleTag
                       item={item}
                       selectedPropertyTypes={selectedPropertyTypes}
-                      setSelectedPropertyTypes={setSelectedPropertyTypes}
+                      handleCategoryChange={handleCategoryChange}
                     />
                   );
                 }}
@@ -633,12 +641,12 @@ export default function CreateProperty({ navigation }) {
 const RenderSingleTag = ({
   item,
   selectedPropertyTypes,
-  setSelectedPropertyTypes,
+  handleCategoryChange,
 }) => {
   return (
     <TouchableOpacity
       onPress={() => {
-        setSelectedPropertyTypes(item?.keyword);
+        handleCategoryChange(item?.keyword);
       }}
       key={`key-${item?.keyword}`}
       className={"mr-8 mb-4"}
