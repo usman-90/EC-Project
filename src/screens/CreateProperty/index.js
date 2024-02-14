@@ -1,9 +1,8 @@
-import React, {useRef, useEffect, useState } from "react";
-import CustomMultiSelect from '../../components/MultiSelect' 
-import MultiSelect from 'react-native-multiple-select';
+import React, { useRef, useEffect, useState } from "react";
+import CustomMultiSelect from '../../components/MultiSelect'
 import {
   FlatList,
-	Switch,
+  Switch,
   ScrollView,
   StatusBar,
   Text,
@@ -12,7 +11,7 @@ import {
   View,
 } from "react-native";
 import AntDesignIcon from "react-native-vector-icons/AntDesign";
-import { createProperty } from "../../apiFunctions/properties";
+import { createProperty, getLocationSuggestions } from "../../apiFunctions/properties";
 import { useDispatch, useSelector } from "react-redux";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import { storage } from "../../../firebaseConfig";
@@ -21,78 +20,72 @@ import { CommonActions } from "@react-navigation/native";
 
 
 const recreationNfamily = [
-  { id: "1", name: "Barbeque Area" },
-  { id: "2", name: "Lawn or Garden" },
-  { id: "3", name: "Day Care Center" },
-  { id: "4", name: "Cafeteria or Canteen" },
-  { id: "5", name: "Kids Play Area" }
+  { key: "1", value: "Barbeque Area" },
+  { key: "2", value: "Lawn or Garden" },
+  { key: "3", value: "Day Care Center" },
+  { key: "4", value: "Cafeteria or Canteen" },
+  { key: "5", value: "Kids Play Area" }
 ];
 
 const healthNfitness = [
-  { id: "6", name: "First Aid Medical Center" },
-  { id: "7", name: "Sauna" },
-  { id: "8", name: "Steam Room" },
-  { id: "9", name: "Jacuzzi" },
-  { id: "10", name: "Swimming Pool" },
-  { id: "11", name: "Facilities for Disabled" }
+  { key: "6", value: "First Aid Medical Center" },
+  { key: "7", value: "Sauna" },
+  { key: "8", value: "Steam Room" },
+  { key: "9", value: "Jacuzzi" },
+  { key: "10", value: "Swimming Pool" },
+  { key: "11", value: "Facilities for Disabled" }
 ];
 
 const laundryNkitchen = [
-  { id: "12", name: "Laundry Room" },
-  { id: "13", name: "Laundry Facility" },
-  { id: "14", name: "Shared Kitchen" }
+  { key: "12", value: "Laundry Room" },
+  { key: "13", value: "Laundry Facility" },
+  { key: "14", value: "Shared Kitchen" }
 ];
 
 const building = [
-  { id: "15", name: "Prayer Room" },
-  { id: "16", name: "Balcony or Terrace" },
-  { id: "17", name: "Waiting Room" },
-  { id: "18", name: "Lobby in Building" },
-  { id: "19", name: "Service Elevators" }
+  { key: "15", value: "Prayer Room" },
+  { key: "16", value: "Balcony or Terrace" },
+  { key: "17", value: "Waiting Room" },
+  { key: "18", value: "Lobby in Building" },
+  { key: "19", value: "Service Elevators" }
 ];
 
 const businessNsecurity = [
-  { id: "20", name: "Business Center" },
-  { id: "21", name: "Conference Room" },
-  { id: "22", name: "Security Staff" },
-  { id: "23", name: "CCTV Security" }
+  { key: "20", value: "Business Center" },
+  { key: "21", value: "Conference Room" },
+  { key: "22", value: "Security Staff" },
+  { key: "23", value: "CCTV Security" }
 ];
 
 const miscalleneous = [
-  { id: "24", name: "Freehold" },
-  { id: "25", name: "Maids Room" },
-  { id: "26", name: "ATM Facility" },
-  { id: "27", name: "24 Hours Concierge" }
+  { key: "24", value: "Freehold" },
+  { key: "25", value: "Maids Room" },
+  { key: "26", value: "ATM Facility" },
+  { key: "27", value: "24 Hours Concierge" }
 ];
 
 
 const technology = [
-  { id: "28", name: "Broadband Internet" },
-  { id: "29", name: "Satellite/Cable TV" },
-  { id: "30", name: "Intercom" }
+  { key: "28", value: "Broadband Internet" },
+  { key: "29", value: "Satellite/Cable TV" },
+  { key: "30", value: "Intercom" }
 ];
 
 const advanced = [
-  { id: "31", name: "Double Glazed Windows" },
-  { id: "32", name: "Centrally Air-Conditioned" },
-  { id: "33", name: "Furnished" },
-  { id: "34", name: "Electricity Backup" },
-  { id: "35", name: "Storage Areas" },
-  { id: "36", name: "Study Room" },
-  { id: "37", name: "Central Heating" },
-  { id: "38", name: "Parking Spaces" }
+  { key: "31", value: "Double Glazed Windows" },
+  { key: "32", value: "Centrally Air-Conditioned" },
+  { key: "33", value: "Furnished" },
+  { key: "34", value: "Electricity Backup" },
+  { key: "35", value: "Storage Areas" },
+  { key: "36", value: "Study Room" },
+  { key: "37", value: "Central Heating" },
+  { key: "38", value: "Parking Spaces" }
 ];
 const cleaningNMaintenance = [
-  { id: "39", name: "Waste Disposal" },
-  { id: "40", name: "Maintenance Staff" },
-  { id: "41", name: "Cleaning Services" }
+  { key: "39", value: "Waste Disposal" },
+  { key: "40", value: "Maintenance Staff" },
+  { key: "41", value: "Cleaning Services" }
 ];
-
-
-
-
-
-
 
 const propertyTypes = [
   {
@@ -126,20 +119,18 @@ const propertyTypes = [
 ];
 
 export default function CreateProperty({ navigation }) {
-	const [ameneties, setAmeneties] = useState({
-	})
+  const [ameneties, setAmeneties] = useState({})
   const propertyData = useSelector((state) => state?.property?.data);
   const [selectedPropertyTypes, setSelectedPropertyTypes] = useState("");
-	const [selectedItems, setSelectedItems] = useState([]);
-  const multiSelectRef = useRef(null);
+  const [locationSelected, setLocationSelected] = useState("");
   const [propertyValues, setPropertyValues] = useState(propertyData);
   const dispatch = useDispatch();
-  // const [progress, setProgress] = useState(0);
   const [steps, setSteps] = useState(1);
+  const [locationSuggestions, setLocationSuggestions] = useState([]);
 
-  useEffect(() => {
-    console.log("Upcomming property information", propertyValues);
-  }, []);
+  // useEffect(() => {
+  //   console.log("Upcomming property information", propertyValues);
+  // }, []);
 
   useEffect(() => {
     const { typesAndPurpose } = propertyValues;
@@ -151,16 +142,12 @@ export default function CreateProperty({ navigation }) {
       },
     });
   }, [selectedPropertyTypes]);
-console.log(ameneties,"Amenentiessss")
-  const onSelectedItemsChange = (selectedItems) => {
-    setSelectedItems(selectedItems);
-  };
 
-	const onAmeneitiesChange = (id, value) => {
-		console.log(value,"booom")
-		setAmeneties({...ameneties, [id]:value})
-	//	setAmeneties({...ameneties, [id]:[...ameneties[id], value[j]]})
-	}
+  const onAmeneitiesChange = (id, value) => {
+    setAmeneties({ ...ameneties, [id]: value });
+    console.log("booom", ameneties);
+    //	setAmeneties({...ameneties, [id]:[...ameneties[id], value[j]]})
+  }
 
   const handleDataChange = (parentProp, childProp, value) => {
     console.log("Changing values", childProp, value);
@@ -182,6 +169,11 @@ console.log(ameneties,"Amenentiessss")
     }
   };
 
+  const onLocationSelected = (value) => {
+    setLocationSelected(true);
+    handleDataChange("locationAndAddress", "location", value);
+  }
+
   const onDoneClicked = async () => {
     if (steps === 1) {
       setSteps(2);
@@ -191,7 +183,6 @@ console.log(ameneties,"Amenentiessss")
           return await handleImageUpload(imageUri);
         }),
       );
-      console.log("updatedImages", updatedImages);
       setPropertyValues({
         ...propertyValues,
         upload: {
@@ -199,27 +190,28 @@ console.log(ameneties,"Amenentiessss")
           images: updatedImages,
         },
       });
+      console.log("propertyValues", propertyValues);
 
-      const response = await createProperty(propertyValues);
-      console.log("Upload was completed then I was executed", response);
-      dispatch(
-        setPropertyData({
-          ...propertyValues,
-          upload: {
-            images: [],
-            videos: [],
-          },
-        }),
-      );
+      // const response = await createProperty(propertyValues);
+      // console.log("Upload was completed then I was executed", response);
+      // dispatch(
+      //   setPropertyData({
+      //     ...propertyValues,
+      //     upload: {
+      //       images: [],
+      //       videos: [],
+      //     },
+      //   }),
+      // );
 
-      navigation.dispatch(
-        CommonActions.reset({
-          index: 0,
-          routes: [
-            { name: 'HomeStack' }
-          ],
-        })
-      );
+      // navigation.dispatch(
+      //   CommonActions.reset({
+      //     index: 0,
+      //     routes: [
+      //       { name: 'HomeStack' }
+      //     ],
+      //   })
+      // );
     }
   };
 
@@ -295,7 +287,7 @@ console.log(ameneties,"Amenentiessss")
         <View className="w-8 h-8"></View>
       </View>
 
-      <ScrollView showsVerticalScrollIndicator={false}>
+      <ScrollView showsVerticalScrollIndicator={false} >
         {steps == 1 && (
           <View id="first-step" className="mb-16">
             <View className="top-1">
@@ -323,15 +315,37 @@ console.log(ameneties,"Amenentiessss")
               <Text className="font-bold mb-2">Location & address</Text>
 
               <TextInput
-                onChangeText={(value) =>
-                  handleDataChange("locationAndAddress", "location", value)
+                onChangeText={async (value) => {
+                  setLocationSelected(false);
+                  handleDataChange("locationAndAddress", "location", value);
+                  setLocationSuggestions((await getLocationSuggestions({ value })).data);
                 }
-                value={propertyValues.locationAndAddress.location}
-                placeholder="location"
+                }
+                value={propertyValues.locationAndAddress.location !== 0 ? propertyValues.locationAndAddress.location : ""}
+                placeholder="Location"
                 keyboardType="default"
                 className="bg-[#e9e9e1] text-black p-1 my-1 px-4 rounded-md"
                 returnKeyType="next"
               />
+
+              {locationSuggestions.length > 0 && !locationSelected &&
+                <FlatList
+                  className={"mt-4"}
+                  data={locationSuggestions}
+                  // horizontal={true}
+                  numColumns={1}
+                  scrollEnabled={false}
+                  renderItem={({ item }) => {
+                    return (
+                      <LocationSuggestion
+                        item={item}
+                        // selectedPropertyTypes={selectedPropertyTypes}
+                        onLocationSelected={onLocationSelected}
+                      />
+                    );
+                  }}
+                />
+              }
 
               <TextInput
                 onChangeText={(value) =>
@@ -428,6 +442,7 @@ console.log(ameneties,"Amenentiessss")
                 className="bg-[#e9e9e1] text-black p-1 my-1 px-4 rounded-md"
                 returnKeyType="next"
               />
+
             </View>
           </View>
         )}
@@ -437,45 +452,42 @@ console.log(ameneties,"Amenentiessss")
             <View className="mt-6">
               <Text className="font-bold mb-2">Recreation & family</Text>
 
-
-
-	      <CustomMultiSelect
-		items={recreationNfamily}
-		selectedItems={ameneties.recreationNfamily ?? []}
-		onChange={onAmeneitiesChange}
-		category={"recreationNfamily"}
-		/>
-
+              <CustomMultiSelect
+                items={recreationNfamily}
+                selectedItems={ameneties.recreationNfamily ?? []}
+                onChange={onAmeneitiesChange}
+                category={"recreationNfamily"}
+              />
             </View>
 
             <View className="mt-6">
               <Text className="font-bold mb-2">Health & Fitness</Text>
 
-	      <CustomMultiSelect
-		items={healthNfitness}
-		onChange={onAmeneitiesChange}
-		category={"healthNfitness"}
-		/>
+              <CustomMultiSelect
+                items={healthNfitness}
+                onChange={onAmeneitiesChange}
+                category={"healthNfitness"}
+              />
             </View>
 
             <View className="mt-6">
               <Text className="font-bold mb-2">Laundry and kitchen</Text>
 
-	      <CustomMultiSelect
-		items={laundryNkitchen}
-		onChange={onAmeneitiesChange}
-		category={"laundryNkitchen"}
-		/>
+              <CustomMultiSelect
+                items={laundryNkitchen}
+                onChange={onAmeneitiesChange}
+                category={"laundryNkitchen"}
+              />
             </View>
 
             <View className="mt-6">
               <Text className="font-bold mb-2">Building</Text>
 
-	      <CustomMultiSelect
-		items={building}
-		onChange={onAmeneitiesChange}
-		category={"building"}
-		/>
+              <CustomMultiSelect
+                items={building}
+                onChange={onAmeneitiesChange}
+                category={"building"}
+              />
             </View>
 
 
@@ -483,62 +495,61 @@ console.log(ameneties,"Amenentiessss")
             <View className="mt-6">
               <Text className="font-bold mb-2">Business and Security</Text>
 
-	      <CustomMultiSelect
-		items={businessNsecurity}
-		onChange={onAmeneitiesChange}
-		category={"businessNsecurity"}
-		/>
+              <CustomMultiSelect
+                items={businessNsecurity}
+                onChange={onAmeneitiesChange}
+                category={"businessNsecurity"}
+              />
             </View>
             <View className="mt-6">
               <Text className="font-bold mb-2">Miscellaneous</Text>
 
-	      <CustomMultiSelect
-		items={miscalleneous}
-		onChange={onAmeneitiesChange}
-		category={"miscalleneous"}
-		/>
+              <CustomMultiSelect
+                items={miscalleneous}
+                onChange={onAmeneitiesChange}
+                category={"miscalleneous"}
+              />
             </View>
             <View className="mt-6">
               <Text className="font-bold mb-2">Technology</Text>
 
-	      <CustomMultiSelect
-		items={technology}
-		onChange={onAmeneitiesChange}
-		category={"technology"}
-		/>
+              <CustomMultiSelect
+                items={technology}
+                onChange={onAmeneitiesChange}
+                category={"technology"}
+              />
             </View>
             <View className="mt-6">
               <Text className="font-bold mb-2">Technology</Text>
 
-	      <CustomMultiSelect
-		items={technology}
-		onChange={onAmeneitiesChange}
-		category={"technology"}
-		/>
+              <CustomMultiSelect
+                items={technology}
+                onChange={onAmeneitiesChange}
+                category={"technology"}
+              />
             </View>
 
 
             <View className="mt-6">
               <Text className="font-bold mb-2">More</Text>
 
-	      <CustomMultiSelect
-		items={advanced}
-		onChange={onAmeneitiesChange}
-		category={"more"}
-		/>
+              <CustomMultiSelect
+                items={advanced}
+                onChange={onAmeneitiesChange}
+                category={"more"}
+              />
             </View>
 
             <View className="mt-6">
               <Text className="font-bold mb-2">Cleaning and Maintenance</Text>
 
-	      <CustomMultiSelect
-		items={cleaningNMaintenance}
-		onChange={onAmeneitiesChange}
-		category={"cleaningNMaintenance"}
-		/>
+              <CustomMultiSelect
+                items={cleaningNMaintenance}
+                onChange={onAmeneitiesChange}
+                category={"cleaningNMaintenance"}
+              />
             </View>
-
-
+            
           </View>
         )}
       </ScrollView>
@@ -554,8 +565,7 @@ console.log(ameneties,"Amenentiessss")
   );
 }
 
-const RenderSingleTag = ({
-  item,
+const RenderSingleTag = ({ item,
   selectedPropertyTypes,
   setSelectedPropertyTypes,
 }) => {
@@ -569,13 +579,37 @@ const RenderSingleTag = ({
     >
       <View>
         <Text
-          className={`py-3 px-3 rounded-sm text-[10px] w-[83px] text-center bg-primary ${
-            item?.keyword === selectedPropertyTypes
-              ? "bg-white text-primary border border-primary"
-              : "bg-primary text-white"
-          }`}
+          className={`py-3 px-3 rounded-sm text-[10px] w-[83px] text-center bg-primary ${item?.keyword === selectedPropertyTypes
+            ? "bg-white text-primary border border-primary"
+            : "bg-primary text-white"
+            }`}
         >
           {item?.name}
+        </Text>
+      </View>
+    </TouchableOpacity>
+  );
+};
+
+const LocationSuggestion = ({ item, onLocationSelected }) => {
+  return (
+    <TouchableOpacity
+      onPress={() => {
+        onLocationSelected(item?.fulladdress);
+      }}
+      key={`key-${item?.address}`}
+      className={"mb-2"}
+    >
+      <View className='py-0 rounded-sm w-full'>
+        <Text
+          className={`text-[11px] font-bold pt-2 px-3 text-left `}
+        >
+          {item?.address}
+        </Text>
+        <Text
+          className={`text-[10px] pb-2 px-3 text-left`}
+        >
+          {item?.fulladdress}
         </Text>
       </View>
     </TouchableOpacity>
