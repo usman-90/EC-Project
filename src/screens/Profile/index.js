@@ -92,6 +92,20 @@ console.log(userData?.photo, "photooooooo")
             </TouchableOpacity>
           </TouchableOpacity>
           <TouchableOpacity
+            onPress={() => navigation.navigate("Listing")}
+            className="flex flex-row justify-between w-full py-4 px-6 border-b border-gray-200 "
+          >
+            <View className="flex flex-row gap-4">
+              <PasswordIcon name="lock" size={30} style={styles.edit} />
+              <Text className="text-base pt-1">Listing Inventory</Text>
+            </View>
+            <TouchableOpacity
+              onPress={() => navigation.navigate("Listing")}
+            >
+              <Icon name="arrowright" size={25} />
+            </TouchableOpacity>
+          </TouchableOpacity>
+          <TouchableOpacity
             onPress={() => navigation.navigate("contact")}
             className="flex flex-row justify-between w-full py-4 px-6 border-b border-gray-200 "
           >
