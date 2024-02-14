@@ -1,9 +1,16 @@
 import React from "react";
-import { TextInput, Image, StatusBar, Text, TouchableOpacity, View } from "react-native";
+import {
+  TextInput,
+  Image,
+  StatusBar,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import topWave from "../../../assets/Home/topWave.png";
-import LogoSVG from "../../components/Logo.js"
+import LogoSVG from "../../components/Logo.js";
 import logo from "../../../assets/Home/logo.png";
-import buildingIcon from "../../../assets/Home/Buildings.png"
+import buildingIcon from "../../../assets/Home/Buildings.png";
 import bottomWave from "../../../assets/Home/bottomWave.png";
 import { styled } from "nativewind";
 import Animated, {
@@ -67,7 +74,10 @@ export default function Contact() {
               </View>
             </StyledView>
           </StyledView>
-          <StyledView style={{ position: "relative", zIndex: 0 }} className=" flex-[.65] items-center relative">
+          <StyledView
+            style={{ position: "relative", zIndex: 0 }}
+            className=" flex-[.65] items-center relative"
+          >
             <AnimatedImage
               source={buildingIcon}
               className={"sm:w-[203px] sm:h-[188px]"}
@@ -134,16 +144,13 @@ export default function Contact() {
               className="border-b border-gray-300 h-20 w-full"
               placeholder="Message"
               editable
-              style={{ textAlignVertical: 'top', }}
+              style={{ textAlignVertical: "top" }}
             />
           </View>
 
           <TouchableOpacity className="bg-primary justify-center items-center py-2 mx-4 rounded-lg my-3">
-            <Text className="text-white ">
-              Submit
-            </Text>
+            <Text className="text-white ">Submit</Text>
           </TouchableOpacity>
-
         </View>
       </View>
     </StyledScrollView>

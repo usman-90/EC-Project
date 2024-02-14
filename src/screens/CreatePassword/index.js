@@ -72,12 +72,10 @@ const CreatePassword = ({ navigation }) => {
       navigation.dispatch(
         CommonActions.reset({
           index: 0,
-          routes: [
-            { name: 'LoginStack' }
-          ],
-        })
+          routes: [{ name: "LoginStack" }],
+        }),
       );
-    }else{
+    } else {
       Toast.show({
         type: "error",
         text1: "Error !",

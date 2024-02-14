@@ -22,7 +22,7 @@ const persistConfig = {
 const rootReducer = combineReducers({
   user: userSlicer,
   search: searchSlicer,
-  property: propertySlicer 
+  property: propertySlicer,
   // Other reducers (if any)
 });
 

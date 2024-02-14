@@ -77,11 +77,10 @@ const Otp11 = ({ navigation, route }) => {
       clearInterval(intervals);
     };
   }, []);
-  
+
   useEffect(() => {
-    console.log("Coming from ", route.params)
-  }, [])
-  
+    console.log("Coming from ", route.params);
+  }, []);
 
   const startOtpResendTimer = () => {
     const interval = setInterval(() => {
@@ -97,10 +96,10 @@ const Otp11 = ({ navigation, route }) => {
     }, 1000);
 
     return interval;
-  }
+  };
 
   const resendOTP = async () => {
-    const {email} = route.params;
+    const { email } = route.params;
     setTimer(180);
     setIntervals(startOtpResendTimer());
 
@@ -120,7 +119,7 @@ const Otp11 = ({ navigation, route }) => {
         );
       }
     }
-  }
+  };
 
   const formatTime = (timeInSeconds) => {
     const minutes = Math.floor(timeInSeconds / 60);

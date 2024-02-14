@@ -32,8 +32,8 @@ const Register = ({ navigation }) => {
       dataToDispatch._id = resData?.data?.data;
       dispatch(
         setUserData({
-          userData: dataToDispatch
-        })
+          userData: dataToDispatch,
+        }),
       );
       navigation.navigate("OTP", { comingFrom: "NewUser", email: data.email });
     },

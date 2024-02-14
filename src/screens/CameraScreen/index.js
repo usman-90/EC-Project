@@ -110,62 +110,62 @@ export default function CameraScreen({ navigation }) {
     <View className="flex-1">
       <StatusBar backgroundColor={"transparent"} translucent={true} />
       {showCamera && (
-          <Camera
-            style={{ flex: 1 }}
-            type={type}
-            autoFocus={Camera.Constants.AutoFocus.on}
-            ref={(ref) => setCameraRef(ref)}
-            focusDepth={1}
-            ratio="16:9"
-          >
-            <View className="absolute w-screen">
-              <View className="h-full items-end mt-8">
-                <View>
-                  {imagesData.length > 0 &&
-                    imagesData.map((e, i) => (
-                      <ImageComponent e={e} key={"image-" + i} />
-                    ))}
-                </View>
+        <Camera
+          style={{ flex: 1 }}
+          type={type}
+          autoFocus={Camera.Constants.AutoFocus.on}
+          ref={(ref) => setCameraRef(ref)}
+          focusDepth={1}
+          ratio="16:9"
+        >
+          <View className="absolute w-screen">
+            <View className="h-full items-end mt-8">
+              <View>
+                {imagesData.length > 0 &&
+                  imagesData.map((e, i) => (
+                    <ImageComponent e={e} key={"image-" + i} />
+                  ))}
               </View>
             </View>
-            <View className="flex-row justify-around items-center h-32 absolute w-screen bottom-0">
-              <TouchableOpacity onPress={toggleCameraType}>
-                <View className="w-20 h-20 items-center justify-center">
-                  <AntDesignIcon
-                    name={`sync`}
-                    style={{
-                      fontSize: 28,
-                      color: "#FFC70F",
-                      borderRadius: 20,
-                      padding: 5,
-                    }}
-                  />
-                </View>
-              </TouchableOpacity>
+          </View>
+          <View className="flex-row justify-around items-center h-32 absolute w-screen bottom-0">
+            <TouchableOpacity onPress={toggleCameraType}>
+              <View className="w-20 h-20 items-center justify-center">
+                <AntDesignIcon
+                  name={`sync`}
+                  style={{
+                    fontSize: 28,
+                    color: "#FFC70F",
+                    borderRadius: 20,
+                    padding: 5,
+                  }}
+                />
+              </View>
+            </TouchableOpacity>
 
-              <TouchableOpacity onPress={takePicture}>
-                <View className="w-20 h-20 bg-slate-500 rounded-full border-solid border-8 border-gray-300"></View>
-              </TouchableOpacity>
+            <TouchableOpacity onPress={takePicture}>
+              <View className="w-20 h-20 bg-slate-500 rounded-full border-solid border-8 border-gray-300"></View>
+            </TouchableOpacity>
 
-              <TouchableOpacity
-                onPress={() => {
-                  navigation.navigate("CreatePropertyScreen");
-                }}
-              >
-                <View className="w-20 h-20 items-center justify-center">
-                  <AntDesignIcon
-                    name={`check`}
-                    style={{
-                      fontSize: 28,
-                      color: "#FFC70F",
-                      borderRadius: 20,
-                      padding: 5,
-                    }}
-                  />
-                </View>
-              </TouchableOpacity>
-            </View>
-          </Camera>
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate("CreatePropertyScreen");
+              }}
+            >
+              <View className="w-20 h-20 items-center justify-center">
+                <AntDesignIcon
+                  name={`check`}
+                  style={{
+                    fontSize: 28,
+                    color: "#FFC70F",
+                    borderRadius: 20,
+                    padding: 5,
+                  }}
+                />
+              </View>
+            </TouchableOpacity>
+          </View>
+        </Camera>
       )}
     </View>
   );
