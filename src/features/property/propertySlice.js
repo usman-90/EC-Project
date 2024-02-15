@@ -23,8 +23,8 @@ const propertyPayload = {
     InclusivePrice: 0,
     PermitNumber: 0,
     ownerShipStatus: "",
-    bedRooms: 0,
-    bathRooms: 0,
+    bedRooms: 1,
+    bathRooms: 1,
   },
   rentalDetails: {
     rent: "500",

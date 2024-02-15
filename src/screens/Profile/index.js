@@ -11,17 +11,18 @@ import ProfilePic from "../../../Asset/Images/Profile/default-profile.png";
 import EditIcon from "../../../Asset/Images/Profile/edit-line.png";
 import Icon from "react-native-vector-icons/AntDesign";
 import PasswordIcon from "react-native-vector-icons/SimpleLineIcons";
-import SettingIcon from "react-native-vector-icons/Feather";
+import ListingIcon from "react-native-vector-icons/SimpleLineIcons";
 import HeadPhones from "react-native-vector-icons/Feather";
 import { useSelector, useDispatch } from "react-redux";
 import store from "../../app/store";
 import { setUserData } from "../../features/user/userSlice";
+import { resetPropertyData } from "../../features/property/propertySlice";
 
 //const data = { name: "Hellooo", email: "hello@gmail.com" };
 
 const Profile = ({ navigation }) => {
   const { userData } = useSelector((state) => state?.user?.data);
-
+  const propertyInformation = useSelector(state => state?.property?.data)
   const onLogoutPress = () => {
     console.log("Logout Pressed.");
     store.dispatch(
@@ -29,6 +30,7 @@ const Profile = ({ navigation }) => {
         token: "",
         userData: {},
       }),
+    store.dispatch(resetPropertyData(propertyInformation))
     );
     navigation.navigate("LoginStack");
   };
@@ -96,8 +98,8 @@ const Profile = ({ navigation }) => {
             className="flex flex-row justify-between w-full py-4 px-6 border-b border-gray-200 "
           >
             <View className="flex flex-row gap-4">
-              <PasswordIcon name="lock" size={30} style={styles.edit} />
-              <Text className="text-base pt-1">Listing Inventory</Text>
+              <ListingIcon name="list" size={30} style={styles.edit} />
+              <Text className="text-base pt-1">My Listing</Text>
             </View>
             <TouchableOpacity onPress={() => navigation.navigate("Listing")}>
               <Icon name="arrowright" size={25} />

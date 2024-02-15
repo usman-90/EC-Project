@@ -66,8 +66,8 @@ const Listing = ({ navigation }) => {
     navigation.goBack();
   };
 
+  
   console.log("user Listings", properties);
-
   return (
     <View className="flex-1  bg-[#f2f2f2]">
       <StatusBar translucent={false} />
@@ -84,7 +84,7 @@ const Listing = ({ navigation }) => {
           />
         </View>
         <View className="items-center flex-row h-8">
-          <Text className="font-bold">Listing Inventory</Text>
+          <Text className="font-bold">My Listing</Text>
         </View>
         <View className="w-8 h-8"></View>
       </View>
@@ -112,10 +112,10 @@ const Listing = ({ navigation }) => {
                 image={item?.upload?.images}
                 price={item?.propertyDetails?.InclusivePrice}
                 location={item?.locationAndAddress?.location}
-                bedrooms={
-                  item?.amenities?.filter((item) => item.name == "bedRooms")[0]
-                    .value
-                }
+                // bedrooms={
+                //   item?.amenities?.filter((item) => item.name == "bedRooms")[0]
+                //     .value
+                // }
                 area={item?.propertyDetails?.areaSquare}
                 beds={item?.propertyDetails?.bedRooms}
                 bathrooms={item?.propertyDetails?.bathRooms}

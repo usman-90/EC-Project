@@ -117,8 +117,12 @@ export function getListings({ queryKey }) {
   });
 }
 
-export function deleteProperty({ queryKey }) {
-  const data = queryKey[1];
-  console.log("Send the propId", data);
-  return axios.get(`${API_URL_NEW}/property/delete-property/${data}`);
+export function deleteProperty(propertyId) {
+  console.log("Send the propId", propertyId);
+  return axios.get(`${API_URL_NEW}/property/delete-property/${propertyId}`);
+}
+
+export function getPropertyByPropertyId(propertyId) {
+  console.log("Send the propId", propertyId);
+  return axios.get(`${API_URL_NEW}/property/property-detials/${propertyId}`);
 }

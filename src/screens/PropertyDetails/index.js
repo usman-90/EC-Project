@@ -2,7 +2,7 @@ import PropertyDetails from "../../components/PropertyDetails";
 
 const PropertyDetailWrapper = ({ route, navigation }) => {
   const { item } = route?.params;
-  console.log(item);
+  console.log("Selected Property", item);
   return (
     <PropertyDetails
       propertyId={item?._id}

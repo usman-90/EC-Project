@@ -29,8 +29,6 @@ const PropertyItem = ({
   const [currImage, setCurrImage] = useState(0);
   const { userData } = useSelector((state) => state?.user.data);
 
-  console.log(userData?._id);
-
   return (
     <View className="bg-gray-100 my-3 flex justify-center rounded-lg h-100">
       <View className="flex justify-center rounded">

@@ -200,9 +200,11 @@ export default function CreateProperty({ navigation }) {
   const dispatch = useDispatch();
   const [steps, setSteps] = useState(1);
   const [locationSuggestions, setLocationSuggestions] = useState([]);
+
   // useEffect(() => {
-  //   console.log("Upcomming property information", propertyValues);
+  //   console.log("Upcomming property information", route);
   // }, []);
+
   useEffect(() => {
     console.log("selectedPropertyTypes", propertyData);
     const { typesAndPurpose } = propertyValues;
@@ -216,7 +218,7 @@ export default function CreateProperty({ navigation }) {
   }, [selectedPropertyTypes]);
 
   useEffect(() => {
-    const vv = [
+    const combinedAminities = [
       ...amenities.building,
       ...amenities.businessNsecurity,
       ...amenities.cleaningNMaintenance,
@@ -229,9 +231,9 @@ export default function CreateProperty({ navigation }) {
     ];
     setPropertyValues({
       ...propertyValues,
-      amenities: vv,
+      amenities: combinedAminities,
     });
-    console.log("combined array", vv);
+    console.log("combined array", combinedAminities);
   }, [amenities]);
 
   const onAmeneitiesChange = (id, value) => {
@@ -296,7 +298,7 @@ export default function CreateProperty({ navigation }) {
       });
       console.log("Property added", response);
 
-      dispatch(resetPropertyData(propertyValues));
+      // dispatch(resetPropertyData(propertyValues));
 
       navigation.dispatch(
         CommonActions.reset({
@@ -572,6 +574,7 @@ export default function CreateProperty({ navigation }) {
                 className="bg-[#e9e9e1] text-black p-1 my-1 px-4 rounded-md"
                 returnKeyType="next"
               />
+
             </View>
           </View>
         )}
@@ -636,16 +639,85 @@ export default function CreateProperty({ navigation }) {
                 onChange={onAmeneitiesChange}
                 category={"miscalleneous"}
               />
-            </View>
-            <View className="mt-6">
-              <Text className="font-bold mb-2">Technology</Text>
 
-              <CustomMultiSelect
-                items={technology}
-                onChange={onAmeneitiesChange}
-                category={"technology"}
+{/* 
+              <TextInput
+                onChangeText={(value) =>
+                  handleDataChange(
+                    "propertyDetails",
+                    "InclusivePrice",
+                    parseInt(value),
+                  )
+                }
+                value={
+                  propertyValues.propertyDetails.InclusivePrice !== 0
+                    ? propertyValues.propertyDetails.InclusivePrice.toString()
+                    : ""
+                }
+                placeholder="Inclusive price"
+                keyboardType="number-pad"
+                className="bg-[#e9e9e1] text-black p-1 my-1 px-4 rounded-md"
+                returnKeyType="next"
               />
+
+              <TextInput
+                onChangeText={(value) =>
+                  handleDataChange(
+                    "propertyDetails",
+                    "InclusivePrice",
+                    parseInt(value),
+                  )
+                }
+                value={
+                  propertyValues.propertyDetails.InclusivePrice !== 0
+                    ? propertyValues.propertyDetails.InclusivePrice.toString()
+                    : ""
+                }
+                placeholder="Inclusive price"
+                keyboardType="number-pad"
+                className="bg-[#e9e9e1] text-black p-1 my-1 px-4 rounded-md"
+                returnKeyType="next"
+              />
+
+              <TextInput
+                onChangeText={(value) =>
+                  handleDataChange(
+                    "propertyDetails",
+                    "InclusivePrice",
+                    parseInt(value),
+                  )
+                }
+                value={
+                  propertyValues.propertyDetails.InclusivePrice !== 0
+                    ? propertyValues.propertyDetails.InclusivePrice.toString()
+                    : ""
+                }
+                placeholder="Inclusive price"
+                keyboardType="number-pad"
+                className="bg-[#e9e9e1] text-black p-1 my-1 px-4 rounded-md"
+                returnKeyType="next"
+              />
+
+              <TextInput
+                onChangeText={(value) =>
+                  handleDataChange(
+                    "propertyDetails",
+                    "InclusivePrice",
+                    parseInt(value),
+                  )
+                }
+                value={
+                  propertyValues.propertyDetails.InclusivePrice !== 0
+                    ? propertyValues.propertyDetails.InclusivePrice.toString()
+                    : ""
+                }
+                placeholder="Inclusive price"
+                keyboardType="number-pad"
+                className="bg-[#e9e9e1] text-black p-1 my-1 px-4 rounded-md"
+                returnKeyType="next"
+              /> */}
             </View>
+
             <View className="mt-6">
               <Text className="font-bold mb-2">Technology</Text>
 
@@ -705,11 +777,10 @@ const RenderSingleTag = ({
     >
       <View>
         <Text
-          className={`py-3 px-3 rounded-sm text-[10px] w-[83px] text-center bg-primary ${
-            item?.keyword === selectedPropertyTypes
-              ? "bg-white text-primary border border-primary"
-              : "bg-primary text-white"
-          }`}
+          className={`py-3 px-3 rounded-sm text-[10px] w-[83px] text-center bg-primary ${item?.keyword === selectedPropertyTypes
+            ? "bg-white text-primary border border-primary"
+            : "bg-primary text-white"
+            }`}
         >
           {item?.name}
         </Text>

@@ -7,10 +7,12 @@ import {
   View,
   useWindowDimensions,
 } from "react-native";
+import sendImage from '../../../assets/CameraScreen/send.png'
 import Toast from "react-native-toast-message";
 import AntDesignIcon from "react-native-vector-icons/AntDesign";
 import { useDispatch, useSelector } from "react-redux";
 import { setPropertyData } from "../../features/property/propertySlice";
+import { CommonActions } from "@react-navigation/native";
 
 export default function CameraScreen({ navigation }) {
   const dispatch = useDispatch();
@@ -46,6 +48,24 @@ export default function CameraScreen({ navigation }) {
     });
     return unsubscribeblur;
   }, []);
+
+  useEffect(() => {
+    console.log("useEffect ran");
+    if (propertyInformation?._id) {
+      // navigation.navigate("CreatePropertyScreen");
+      navigation.dispatch(
+        CommonActions.reset({
+          index: 0,
+          routes: [
+            {
+              name: 'CreatePropertyScreen', 
+            }
+          ],
+        }),
+      );
+    }
+  }, [])
+  
 
   function toggleCameraType() {
     setType((current) =>
@@ -151,7 +171,7 @@ export default function CameraScreen({ navigation }) {
               }}
             >
               <View className="w-20 h-20 items-center justify-center">
-                <AntDesignIcon
+                {/* <AntDesignIcon
                   name={`check`}
                   style={{
                     fontSize: 28,
@@ -159,7 +179,8 @@ export default function CameraScreen({ navigation }) {
                     borderRadius: 20,
                     padding: 5,
                   }}
-                />
+                /> */}
+                <Image source={sendImage} />
               </View>
             </TouchableOpacity>
           </View>
