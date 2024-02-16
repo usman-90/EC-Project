@@ -98,6 +98,11 @@ export function createProperty(data) {
   return axios.post(`${API_URL_NEW}/property/upload`, data);
 }
 
+export function updateProperty(data) {
+  // console.log("data for upload", data);
+  return axios.post(`${API_URL_NEW}/property/update-property`, data);
+}
+
 export function deleteSavedProperties(saveId) {
   return axios.delete(`${API_URL_NEW}/users/delete-save-property/${saveId}`);
 }

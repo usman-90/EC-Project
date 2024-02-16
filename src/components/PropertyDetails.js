@@ -801,7 +801,7 @@ const PropertyDetails = ({
           <Text className="text-lg font-bold ">AED {price}</Text>
         </View>
 
-        {ownerId === userData?._id ? (
+        {ownerId === userData?._id ?  (
           <View className="flex flex-row">
             <TouchableOpacity
               onPress={() => {

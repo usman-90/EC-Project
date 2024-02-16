@@ -14,6 +14,7 @@ import AntDesignIcon from "react-native-vector-icons/AntDesign";
 import {
   createProperty,
   getLocationSuggestions,
+  updateProperty,
 } from "../../apiFunctions/properties";
 import { useDispatch, useSelector } from "react-redux";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
@@ -217,24 +218,31 @@ export default function CreateProperty({ navigation }) {
     });
   }, [selectedPropertyTypes]);
 
-  useEffect(() => {
-    const combinedAminities = [
-      ...amenities.building,
-      ...amenities.businessNsecurity,
-      ...amenities.cleaningNMaintenance,
-      ...amenities.healthNfitness,
-      ...amenities.laundryNkitchen,
-      ...amenities.miscalleneous,
-      ...amenities.more,
-      ...amenities.recreationNfamily,
-      ...amenities.technology,
-    ];
-    setPropertyValues({
-      ...propertyValues,
-      amenities: combinedAminities,
-    });
-    console.log("combined array", combinedAminities);
-  }, [amenities]);
+  // useEffect(() => {
+  //   const combinedAminities = [
+  //     ...amenities.building,
+  //     ...amenities.businessNsecurity,
+  //     ...amenities.cleaningNMaintenance,
+  //     ...amenities.healthNfitness,
+  //     ...amenities.laundryNkitchen,
+  //     ...amenities.miscalleneous,
+  //     ...amenities.more,
+  //     ...amenities.recreationNfamily,
+  //     ...amenities.technology,
+  //   ];
+  //   setPropertyValues({
+  //     ...propertyValues,
+  //     amenities: combinedAminities,
+  //   });
+  //   console.log("combined array", propertyValues);
+  // }, [amenities]);
+
+  function filterItems(arr1, arr2) {
+    const namesArr2 = arr2.map(item => item.name);
+
+    // Filter items from arr1 that have a name present in arr2
+    return arr1.filter(item => namesArr2.includes(item.name));
+  }
 
   const onAmeneitiesChange = (id, value) => {
     setAmenities({ ...amenities, [id]: value });
@@ -273,29 +281,51 @@ export default function CreateProperty({ navigation }) {
   const onDoneClicked = async () => {
     if (steps === 1) {
       setSteps(2);
-      dispatch(setPropertyData(propertyValues));
+      console.log("propertyValues on step 1", propertyValues);
+      if (propertyData._id === undefined) {
+        dispatch(setPropertyData(propertyValues));
+      }
     } else if (steps === 2) {
       const updatedImages = await Promise.all(
         propertyValues?.upload?.images.map(async (imageUri) => {
           return await handleImageUpload(imageUri);
         }),
       );
-      // setPropertyValues({
-      //   ...propertyValues,
-      //   upload: {
-      //     ...propertyValues.upload,
-      //     images: updatedImages,
-      //   },
-      // });
+      let response = null;
+
+      const combinedAminities = [
+        ...amenities.building,
+        ...amenities.businessNsecurity,
+        ...amenities.cleaningNMaintenance,
+        ...amenities.healthNfitness,
+        ...amenities.laundryNkitchen,
+        ...amenities.miscalleneous,
+        ...amenities.more,
+        ...amenities.recreationNfamily,
+        ...amenities.technology,
+      ];
       console.log("propertyValues", propertyValues);
 
-      const response = await createProperty({
-        ...propertyValues,
-        upload: {
-          ...propertyValues.upload,
-          images: updatedImages,
-        },
-      });
+      if (propertyValues._id) {
+        response = await updateProperty({
+          ...propertyValues,
+          amenities: combinedAminities,
+          upload: {
+            ...propertyValues.upload,
+            images: updatedImages,
+          },
+        });
+      } else {
+        response = await createProperty({
+          ...propertyValues,
+          amenities: combinedAminities,
+          upload: {
+            ...propertyValues.upload,
+            images: updatedImages,
+          },
+        });
+      }
+
       console.log("Property added", response);
 
       // dispatch(resetPropertyData(propertyValues));
@@ -589,6 +619,7 @@ export default function CreateProperty({ navigation }) {
                 selectedItems={amenities.recreationNfamily ?? []}
                 onChange={onAmeneitiesChange}
                 category={"recreationNfamily"}
+                editSelected={filterItems(propertyData.amenities, recreationNfamily)}
               />
             </View>
 
@@ -599,6 +630,7 @@ export default function CreateProperty({ navigation }) {
                 items={healthNfitness}
                 onChange={onAmeneitiesChange}
                 category={"healthNfitness"}
+                editSelected={filterItems(propertyData.amenities, healthNfitness)}
               />
             </View>
 
@@ -609,6 +641,7 @@ export default function CreateProperty({ navigation }) {
                 items={laundryNkitchen}
                 onChange={onAmeneitiesChange}
                 category={"laundryNkitchen"}
+                editSelected={filterItems(propertyData.amenities, laundryNkitchen)}
               />
             </View>
 
@@ -619,6 +652,7 @@ export default function CreateProperty({ navigation }) {
                 items={building}
                 onChange={onAmeneitiesChange}
                 category={"building"}
+                editSelected={filterItems(propertyData.amenities, building)}
               />
             </View>
 
@@ -629,6 +663,7 @@ export default function CreateProperty({ navigation }) {
                 items={businessNsecurity}
                 onChange={onAmeneitiesChange}
                 category={"businessNsecurity"}
+                editSelected={filterItems(propertyData.amenities, businessNsecurity)}
               />
             </View>
             <View className="mt-6">
@@ -638,9 +673,10 @@ export default function CreateProperty({ navigation }) {
                 items={miscalleneous}
                 onChange={onAmeneitiesChange}
                 category={"miscalleneous"}
+                editSelected={filterItems(propertyData.amenities, miscalleneous)}
               />
 
-{/* 
+              {/* 
               <TextInput
                 onChangeText={(value) =>
                   handleDataChange(
@@ -725,6 +761,7 @@ export default function CreateProperty({ navigation }) {
                 items={technology}
                 onChange={onAmeneitiesChange}
                 category={"technology"}
+                editSelected={filterItems(propertyData.amenities, technology)}
               />
             </View>
 
@@ -735,6 +772,7 @@ export default function CreateProperty({ navigation }) {
                 items={advanced}
                 onChange={onAmeneitiesChange}
                 category={"more"}
+                editSelected={filterItems(propertyData.amenities, advanced)}
               />
             </View>
 
@@ -745,6 +783,7 @@ export default function CreateProperty({ navigation }) {
                 items={cleaningNMaintenance}
                 onChange={onAmeneitiesChange}
                 category={"cleaningNMaintenance"}
+                editSelected={filterItems(propertyData.amenities, cleaningNMaintenance)}
               />
             </View>
           </View>

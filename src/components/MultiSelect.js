@@ -1,9 +1,9 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { View } from "react-native";
 import { MultipleSelectList } from "react-native-dropdown-select-list";
 
-const CustomMultiSelect = ({ items, onChange, category, placeholder }) => {
-  const [selectedItems, setSelectedItems] = useState([]);
+const CustomMultiSelect = ({ items, onChange, category, placeholder, editSelected }) => {
+  const [selectedItems, setSelectedItems] = useState(editSelected.length > 0 ? editSelected : []);
   const multiSelectRef = useRef(null);
 
   const onSelectedItemsChange = (selectedItems) => {
@@ -14,6 +14,11 @@ const CustomMultiSelect = ({ items, onChange, category, placeholder }) => {
     console.log("selectedItems", arr);
     onChange(category, arr);
   };
+
+  useEffect(() => {
+    console.log("editSelected", editSelected);
+  }, [])
+  
 
   return (
     <View style={{ flex: 1 }}>
