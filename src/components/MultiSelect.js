@@ -1,30 +1,39 @@
 import React, { useState, useRef, useEffect } from "react";
 import { View } from "react-native";
-import { MultipleSelectList } from "react-native-dropdown-select-list";
+import { MultipleSelectList } from "./CreateProperty/ReactNativeDropdownList";
 
-const CustomMultiSelect = ({ items, onChange, category, placeholder, editSelected }) => {
-  const [selectedItems, setSelectedItems] = useState(editSelected.length > 0 ? editSelected : []);
+const CustomMultiSelect = ({
+  items,
+  onChange,
+  category,
+  placeholder,
+  editSelected,
+}) => {
+  const [selectedItems, setSelectedItems] = useState(editSelected.length > 0 ? editSelected.map(item => item.name) : []);
   const multiSelectRef = useRef(null);
 
-  const onSelectedItemsChange = (selectedItems) => {
+  const onSelectedItemsChange = (pickedItems) => {
+    console.log("selectedItems", pickedItems, items);
     let arr = items.filter((elem) => {
-      return selectedItems.includes(elem.value);
+      return pickedItems.includes(elem.name);
     });
-    // console.log(arr);
-    console.log("selectedItems", arr);
+    console.log("filtered array", arr);
     onChange(category, arr);
   };
 
   useEffect(() => {
-    console.log("editSelected", editSelected);
-  }, [])
-  
+    if (editSelected.length > 0) {
+      onChange(category, editSelected);
+    }
+    console.log("editSelected", items, category, placeholder, editSelected);
+  }, []);
 
   return (
     <View style={{ flex: 1 }}>
       <MultipleSelectList
         setSelected={(val) => setSelectedItems(val)}
         data={items}
+        selected={editSelected}
         save="value"
         placeholder={placeholder}
         onSelect={(_) => onSelectedItemsChange(selectedItems)}

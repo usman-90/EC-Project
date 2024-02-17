@@ -1,7 +1,5 @@
 import React, { useRef, useCallback, useEffect, useState } from "react";
 import PropertyItem from "../../components/PropertyItem";
-import { SelectList } from "react-native-dropdown-select-list";
-import CustomMultiSelect from "../../components/MultiSelect";
 import {
   FlatList,
   RefreshControl,
@@ -23,6 +21,7 @@ import { CommonActions } from "@react-navigation/native";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import EmptyList from "../../components/NoItem";
 import { getListings } from "../../apiFunctions/properties";
+import { SelectList } from "../../components/CreateProperty/ReactNativeDropdownList";
 
 const data = [
   {

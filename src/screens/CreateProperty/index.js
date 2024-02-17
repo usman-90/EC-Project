@@ -181,17 +181,6 @@ const propertyTypes = [
 ];
 
 export default function CreateProperty({ navigation }) {
-  const [amenities, setAmenities] = useState({
-    building: [],
-    businessNsecurity: [],
-    cleaningNMaintenance: [],
-    healthNfitness: [],
-    laundryNkitchen: [],
-    miscalleneous: [],
-    more: [],
-    recreationNfamily: [],
-    technology: [],
-  });
   const propertyData = useSelector((state) => state?.property?.data);
   const [selectedPropertyTypes, setSelectedPropertyTypes] = useState(
     propertyData.typesAndPurpose.category,
@@ -201,13 +190,27 @@ export default function CreateProperty({ navigation }) {
   const dispatch = useDispatch();
   const [steps, setSteps] = useState(1);
   const [locationSuggestions, setLocationSuggestions] = useState([]);
-
-  // useEffect(() => {
-  //   console.log("Upcomming property information", route);
-  // }, []);
+  const [amenities, setAmenities] = useState({
+    building: filterItems(propertyData.amenities, building),
+    businessNsecurity: filterItems(propertyData.amenities, businessNsecurity),
+    cleaningNMaintenance: filterItems(
+      propertyData.amenities,
+      cleaningNMaintenance,
+    ),
+    healthNfitness: filterItems(propertyData.amenities, healthNfitness),
+    laundryNkitchen: filterItems(propertyData.amenities, laundryNkitchen),
+    miscalleneous: filterItems(propertyData.amenities, miscalleneous),
+    more: filterItems(propertyData.amenities, advanced),
+    recreationNfamily: filterItems(propertyData.amenities, recreationNfamily),
+    technology: filterItems(propertyData.amenities, technology),
+  });
 
   useEffect(() => {
-    console.log("selectedPropertyTypes", propertyData);
+    console.log("Upcomming property information", propertyValues);
+  }, [propertyValues]);
+
+  useEffect(() => {
+    // console.log("selectedPropertyTypes", propertyData);
     const { typesAndPurpose } = propertyValues;
     setPropertyValues({
       ...propertyValues,
@@ -218,37 +221,36 @@ export default function CreateProperty({ navigation }) {
     });
   }, [selectedPropertyTypes]);
 
-  // useEffect(() => {
-  //   const combinedAminities = [
-  //     ...amenities.building,
-  //     ...amenities.businessNsecurity,
-  //     ...amenities.cleaningNMaintenance,
-  //     ...amenities.healthNfitness,
-  //     ...amenities.laundryNkitchen,
-  //     ...amenities.miscalleneous,
-  //     ...amenities.more,
-  //     ...amenities.recreationNfamily,
-  //     ...amenities.technology,
-  //   ];
-  //   setPropertyValues({
-  //     ...propertyValues,
-  //     amenities: combinedAminities,
-  //   });
-  //   console.log("combined array", propertyValues);
-  // }, [amenities]);
+  useEffect(() => {
+    // const combinedAminities = [
+    //   ...amenities.building,
+    //   ...amenities.businessNsecurity,
+    //   ...amenities.cleaningNMaintenance,
+    //   ...amenities.healthNfitness,
+    //   ...amenities.laundryNkitchen,
+    //   ...amenities.miscalleneous,
+    //   ...amenities.more,
+    //   ...amenities.recreationNfamily,
+    //   ...amenities.technology,
+    // ];
+    // setPropertyValues({
+    //   ...propertyValues,
+    //   amenities: combinedAminities,
+    // });
+    console.log("amenities array", amenities);
+  }, [amenities]);
 
   function filterItems(arr1, arr2) {
-    const namesArr2 = arr2.map(item => item.name);
+    const namesArr2 = arr2.map((item) => item.name);
 
-    // Filter items from arr1 that have a name present in arr2
-    return arr1.filter(item => namesArr2.includes(item.name));
+    if (namesArr2.length > 0) {
+      return arr1.filter((item) => namesArr2.includes(item.name));
+    }
+    return [];
   }
 
   const onAmeneitiesChange = (id, value) => {
     setAmenities({ ...amenities, [id]: value });
-    // console.log("booom", amenities);
-
-    //	setAmenities({...amenities, [id]:[...amenities[id], value[j]]})
   };
 
   // console.log("amenities", amenities);
@@ -286,12 +288,16 @@ export default function CreateProperty({ navigation }) {
         dispatch(setPropertyData(propertyValues));
       }
     } else if (steps === 2) {
-      const updatedImages = await Promise.all(
-        propertyValues?.upload?.images.map(async (imageUri) => {
-          return await handleImageUpload(imageUri);
-        }),
-      );
+      let updatedImages = null;
       let response = null;
+
+      if (propertyData._id === undefined) {
+        updatedImages = await Promise.all(
+          propertyValues?.upload?.images.map(async (imageUri) => {
+            return await handleImageUpload(imageUri);
+          }),
+        );
+      }
 
       const combinedAminities = [
         ...amenities.building,
@@ -304,7 +310,7 @@ export default function CreateProperty({ navigation }) {
         ...amenities.recreationNfamily,
         ...amenities.technology,
       ];
-      console.log("propertyValues", propertyValues);
+      console.log("propertyValues", combinedAminities, propertyValues);
 
       if (propertyValues._id) {
         response = await updateProperty({
@@ -312,7 +318,9 @@ export default function CreateProperty({ navigation }) {
           amenities: combinedAminities,
           upload: {
             ...propertyValues.upload,
-            images: updatedImages,
+            images: updatedImages
+              ? updatedImages
+              : propertyValues.upload.images,
           },
         });
       } else {
@@ -328,7 +336,7 @@ export default function CreateProperty({ navigation }) {
 
       console.log("Property added", response);
 
-      // dispatch(resetPropertyData(propertyValues));
+      dispatch(resetPropertyData(propertyValues));
 
       navigation.dispatch(
         CommonActions.reset({
@@ -346,7 +354,17 @@ export default function CreateProperty({ navigation }) {
 
   const handleBackPress = () => {
     if (steps === 1) {
-      navigation.goBack();
+      if (propertyData._id) {
+        dispatch(resetPropertyData(propertyValues));
+        navigation.dispatch(
+          CommonActions.reset({
+            index: 0,
+            routes: [{ name: "HomeStack" }],
+          }),
+        );
+      } else {
+        navigation.goBack();
+      }
     } else if (steps === 2) {
       setSteps(1);
     }
@@ -604,7 +622,6 @@ export default function CreateProperty({ navigation }) {
                 className="bg-[#e9e9e1] text-black p-1 my-1 px-4 rounded-md"
                 returnKeyType="next"
               />
-
             </View>
           </View>
         )}
@@ -619,7 +636,7 @@ export default function CreateProperty({ navigation }) {
                 selectedItems={amenities.recreationNfamily ?? []}
                 onChange={onAmeneitiesChange}
                 category={"recreationNfamily"}
-                editSelected={filterItems(propertyData.amenities, recreationNfamily)}
+                editSelected={amenities.recreationNfamily}
               />
             </View>
 
@@ -630,7 +647,7 @@ export default function CreateProperty({ navigation }) {
                 items={healthNfitness}
                 onChange={onAmeneitiesChange}
                 category={"healthNfitness"}
-                editSelected={filterItems(propertyData.amenities, healthNfitness)}
+                editSelected={amenities.healthNfitness}
               />
             </View>
 
@@ -641,7 +658,7 @@ export default function CreateProperty({ navigation }) {
                 items={laundryNkitchen}
                 onChange={onAmeneitiesChange}
                 category={"laundryNkitchen"}
-                editSelected={filterItems(propertyData.amenities, laundryNkitchen)}
+                editSelected={amenities.laundryNkitchen}
               />
             </View>
 
@@ -652,7 +669,7 @@ export default function CreateProperty({ navigation }) {
                 items={building}
                 onChange={onAmeneitiesChange}
                 category={"building"}
-                editSelected={filterItems(propertyData.amenities, building)}
+                editSelected={amenities.building}
               />
             </View>
 
@@ -663,7 +680,7 @@ export default function CreateProperty({ navigation }) {
                 items={businessNsecurity}
                 onChange={onAmeneitiesChange}
                 category={"businessNsecurity"}
-                editSelected={filterItems(propertyData.amenities, businessNsecurity)}
+                editSelected={amenities.businessNsecurity}
               />
             </View>
             <View className="mt-6">
@@ -673,7 +690,7 @@ export default function CreateProperty({ navigation }) {
                 items={miscalleneous}
                 onChange={onAmeneitiesChange}
                 category={"miscalleneous"}
-                editSelected={filterItems(propertyData.amenities, miscalleneous)}
+                editSelected={amenities.miscalleneous}
               />
 
               {/* 
@@ -761,7 +778,7 @@ export default function CreateProperty({ navigation }) {
                 items={technology}
                 onChange={onAmeneitiesChange}
                 category={"technology"}
-                editSelected={filterItems(propertyData.amenities, technology)}
+                editSelected={amenities.technology}
               />
             </View>
 
@@ -772,7 +789,7 @@ export default function CreateProperty({ navigation }) {
                 items={advanced}
                 onChange={onAmeneitiesChange}
                 category={"more"}
-                editSelected={filterItems(propertyData.amenities, advanced)}
+                editSelected={amenities.more}
               />
             </View>
 
@@ -783,7 +800,7 @@ export default function CreateProperty({ navigation }) {
                 items={cleaningNMaintenance}
                 onChange={onAmeneitiesChange}
                 category={"cleaningNMaintenance"}
-                editSelected={filterItems(propertyData.amenities, cleaningNMaintenance)}
+                editSelected={amenities.cleaningNMaintenance}
               />
             </View>
           </View>
@@ -816,10 +833,11 @@ const RenderSingleTag = ({
     >
       <View>
         <Text
-          className={`py-3 px-3 rounded-sm text-[10px] w-[83px] text-center bg-primary ${item?.keyword === selectedPropertyTypes
-            ? "bg-white text-primary border border-primary"
-            : "bg-primary text-white"
-            }`}
+          className={`py-3 px-3 rounded-sm text-[10px] w-[83px] text-center bg-primary ${
+            item?.keyword === selectedPropertyTypes
+              ? "bg-white text-primary border border-primary"
+              : "bg-primary text-white"
+          }`}
         >
           {item?.name}
         </Text>
