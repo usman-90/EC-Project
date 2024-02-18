@@ -111,10 +111,9 @@ const Listing = ({ navigation }) => {
                 image={item?.upload?.images}
                 price={item?.propertyDetails?.InclusivePrice}
                 location={item?.locationAndAddress?.location}
-                // bedrooms={
-                //   item?.amenities?.filter((item) => item.name == "bedRooms")[0]
-                //     .value
-                // }
+                bedrooms={
+                  item?.amenities?.filter((item) => item.name == "bedRooms")[0]?.value
+                }
                 area={item?.propertyDetails?.areaSquare}
                 beds={item?.propertyDetails?.bedRooms}
                 bathrooms={item?.propertyDetails?.bathRooms}

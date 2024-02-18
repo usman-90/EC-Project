@@ -250,6 +250,7 @@ export default function CreateProperty({ navigation }) {
   }
 
   const onAmeneitiesChange = (id, value) => {
+    console.log("amities value change", value);
     setAmenities({ ...amenities, [id]: value });
   };
 
@@ -368,6 +369,23 @@ export default function CreateProperty({ navigation }) {
     } else if (steps === 2) {
       setSteps(1);
     }
+  };
+
+  const handleRoomChanging = (property, value) => {
+    const miscalleneousAmenities = amenities.miscalleneous;
+    const propIndex = miscalleneousAmenities.findIndex(
+      (item) => item.name === property,
+    );
+    if (propIndex > -1) {
+      miscalleneousAmenities[propIndex].value = value;
+    } else {
+      miscalleneousAmenities.push({ name: property, value });
+    }
+
+    setAmenities({
+      ...amenities,
+      miscalleneous: miscalleneousAmenities,
+    });
   };
 
   const uploadImage = async (imageUri) => {
@@ -693,25 +711,42 @@ export default function CreateProperty({ navigation }) {
                 editSelected={amenities.miscalleneous}
               />
 
-              {/* 
               <TextInput
-                onChangeText={(value) =>
-                  handleDataChange(
-                    "propertyDetails",
-                    "InclusivePrice",
-                    parseInt(value),
-                  )
-                }
+                onChangeText={(value) => handleRoomChanging("bedRooms", value)}
                 value={
-                  propertyValues.propertyDetails.InclusivePrice !== 0
-                    ? propertyValues.propertyDetails.InclusivePrice.toString()
+                  amenities.miscalleneous.length > 0
+                    ? amenities.miscalleneous.filter(
+                        (item) => item.name === "bedRooms",
+                      )[0]?.value
                     : ""
                 }
-                placeholder="Inclusive price"
+                placeholder="No of Rooms"
                 keyboardType="number-pad"
-                className="bg-[#e9e9e1] text-black p-1 my-1 px-4 rounded-md"
+                className="bg-[#e9e9e1] text-black py-2 my-1 px-4 rounded-md"
                 returnKeyType="next"
+                maxLength={1}
+                inputMode="numeric"
+                defaultValue={""}
               />
+
+              <TextInput
+                onChangeText={(value) => handleRoomChanging("bathRooms", value)}
+                value={
+                  amenities.miscalleneous.length > 0
+                    ? amenities.miscalleneous.filter(
+                        (item) => item.name === "bathRooms",
+                      )[0]?.value
+                    : ""
+                }
+                placeholder="No of Bathrooms"
+                keyboardType="number-pad"
+                className="bg-[#e9e9e1] text-black py-2 my-1 px-4 rounded-md"
+                returnKeyType="next"
+                maxLength={1}
+                inputMode="numeric"
+                defaultValue={""}
+              />
+              {/* 
 
               <TextInput
                 onChangeText={(value) =>

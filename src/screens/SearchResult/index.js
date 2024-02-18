@@ -89,7 +89,7 @@ const SearchResult = ({ route, navigation }) => {
                   bedrooms={
                     item?.amenities?.filter(
                       (item) => item.name == "bedRooms",
-                    )[0].value
+                    )[0]?.value
                   }
                   area={item?.propertyDetails?.areaSquare}
                   beds={item?.propertyDetails?.bedRooms}
