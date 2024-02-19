@@ -48,7 +48,7 @@ const Search = ({ navigation }) => {
         {query ? (
           <FlatList
             data={data}
-            className="px-6"
+            className="px-6 grow-0"
             renderItem={({ item }) => (
               <TouchableOpacity
                 onPress={() => {
