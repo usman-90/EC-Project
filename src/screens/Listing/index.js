@@ -57,15 +57,15 @@ const Listing = ({ navigation }) => {
 
   const handleRefresh = useCallback(async () => {
     setIsRefreshing(true);
-    refetchSavedProperties();
-    setIsRefreshing(false);
+    refetchSavedProperties().finally(() => {
+      setIsRefreshing(false);
+    });
   });
 
   const handleBackPress = () => {
     navigation.goBack();
   };
 
-  
   console.log("user Listings", properties);
   return (
     <View className="flex-1  bg-[#f2f2f2]">
@@ -116,7 +116,9 @@ const Listing = ({ navigation }) => {
                 }
                 area={item?.propertyDetails?.areaSquare}
                 beds={item?.propertyDetails?.bedRooms}
-                bathrooms={item?.propertyDetails?.bathRooms}
+                bathrooms={
+                  item?.amenities?.filter((item) => item.name == "bathRooms")[0]?.value
+                }
               />
             </TouchableOpacity>
           );

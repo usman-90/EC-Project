@@ -126,7 +126,12 @@ const Loginpage = ({ navigation }) => {
           <TouchableOpacity
             onPress={() => {
               if (data.email === "" || data.password === "") {
-                console.log("noo");
+                // console.log("noo");
+                Toast.show({
+                  type: "error",
+                  text1: "Invalid Inputs !",
+                  text2: "Kindly add valid credentials",
+                });
                 return;
               }
               loginMutation.mutate(data);

@@ -108,7 +108,7 @@ const miscalleneous = [
   { name: "Freehold", value: "Freehold" },
   { name: "Maids Room", value: "Maids Room" },
   { name: "ATM Facility", value: "ATM Facility" },
-  { name: "24 Hours Challenge", value: "24 Hours Challenge" },
+  { name: "24 Hours Challenge", value: "24 Hours Challenge" }
 ];
 
 const technology = [
@@ -151,6 +151,10 @@ const cleaningNMaintenance = [
 
 const propertyTypes = [
   {
+    name: "Commercial",
+    keyword: "commercial",
+  },
+  {
     name: "Villa",
     keyword: "villa",
   },
@@ -161,10 +165,6 @@ const propertyTypes = [
   {
     name: "Townhouse",
     keyword: "townhouse",
-  },
-  {
-    name: "Commercial",
-    keyword: "commercial",
   },
   {
     name: "Residential",
@@ -204,6 +204,7 @@ export default function CreateProperty({ navigation }) {
     recreationNfamily: filterItems(propertyData.amenities, recreationNfamily),
     technology: filterItems(propertyData.amenities, technology),
   });
+  const [submitDone, setSubmitDone] = useState(false);
 
   useEffect(() => {
     console.log("Upcomming property information", propertyValues);
@@ -289,62 +290,70 @@ export default function CreateProperty({ navigation }) {
         dispatch(setPropertyData(propertyValues));
       }
     } else if (steps === 2) {
-      let updatedImages = null;
-      let response = null;
+      setSubmitDone(true);
+      try {
+        let updatedImages = null;
+        let response = null;
 
-      if (propertyData._id === undefined) {
-        updatedImages = await Promise.all(
-          propertyValues?.upload?.images.map(async (imageUri) => {
-            return await handleImageUpload(imageUri);
+        if (propertyData._id === undefined) {
+          updatedImages = await Promise.all(
+            propertyValues?.upload?.images.map(async (imageUri) => {
+              return await handleImageUpload(imageUri);
+            }),
+          );
+        }
+
+        const combinedAminities = [
+          ...amenities.building,
+          ...amenities.businessNsecurity,
+          ...amenities.cleaningNMaintenance,
+          ...amenities.healthNfitness,
+          ...amenities.laundryNkitchen,
+          ...amenities.miscalleneous,
+          ...amenities.more,
+          ...amenities.recreationNfamily,
+          ...amenities.technology,
+        ];
+        console.log("propertyValues", combinedAminities, propertyValues);
+
+        if (propertyValues._id) {
+          response = await updateProperty({
+            ...propertyValues,
+            amenities: combinedAminities,
+            upload: {
+              ...propertyValues.upload,
+              images: updatedImages
+                ? updatedImages
+                : propertyValues.upload.images,
+            },
+          });
+        } else {
+          response = await createProperty({
+            ...propertyValues,
+            amenities: combinedAminities,
+            upload: {
+              ...propertyValues.upload,
+              images: updatedImages,
+            },
+          });
+        }
+
+        console.log("Property added", response);
+
+        dispatch(resetPropertyData(propertyValues));
+
+        navigation.dispatch(
+          CommonActions.reset({
+            index: 0,
+            routes: [{ name: "HomeStack" }],
           }),
         );
+      } catch (error) {
+
+        setSubmitDone(false);
       }
 
-      const combinedAminities = [
-        ...amenities.building,
-        ...amenities.businessNsecurity,
-        ...amenities.cleaningNMaintenance,
-        ...amenities.healthNfitness,
-        ...amenities.laundryNkitchen,
-        ...amenities.miscalleneous,
-        ...amenities.more,
-        ...amenities.recreationNfamily,
-        ...amenities.technology,
-      ];
-      console.log("propertyValues", combinedAminities, propertyValues);
-
-      if (propertyValues._id) {
-        response = await updateProperty({
-          ...propertyValues,
-          amenities: combinedAminities,
-          upload: {
-            ...propertyValues.upload,
-            images: updatedImages
-              ? updatedImages
-              : propertyValues.upload.images,
-          },
-        });
-      } else {
-        response = await createProperty({
-          ...propertyValues,
-          amenities: combinedAminities,
-          upload: {
-            ...propertyValues.upload,
-            images: updatedImages,
-          },
-        });
-      }
-
-      console.log("Property added", response);
-
-      dispatch(resetPropertyData(propertyValues));
-
-      navigation.dispatch(
-        CommonActions.reset({
-          index: 0,
-          routes: [{ name: "HomeStack" }],
-        }),
-      );
+      setSubmitDone(false);
     }
   };
 
@@ -716,8 +725,8 @@ export default function CreateProperty({ navigation }) {
                 value={
                   amenities.miscalleneous.length > 0
                     ? amenities.miscalleneous.filter(
-                        (item) => item.name === "bedRooms",
-                      )[0]?.value
+                      (item) => item.name === "bedRooms",
+                    )[0]?.value
                     : ""
                 }
                 placeholder="No of Rooms"
@@ -726,7 +735,11 @@ export default function CreateProperty({ navigation }) {
                 returnKeyType="next"
                 maxLength={1}
                 inputMode="numeric"
-                defaultValue={""}
+                defaultValue={propertyValues.amenities.length > 0
+                  ? propertyValues.amenities.filter(
+                    (item) => item.name === "bedRooms",
+                  )[0]?.value
+                  : ""}
               />
 
               <TextInput
@@ -734,8 +747,8 @@ export default function CreateProperty({ navigation }) {
                 value={
                   amenities.miscalleneous.length > 0
                     ? amenities.miscalleneous.filter(
-                        (item) => item.name === "bathRooms",
-                      )[0]?.value
+                      (item) => item.name === "bathRooms",
+                    )[0]?.value
                     : ""
                 }
                 placeholder="No of Bathrooms"
@@ -744,66 +757,15 @@ export default function CreateProperty({ navigation }) {
                 returnKeyType="next"
                 maxLength={1}
                 inputMode="numeric"
-                defaultValue={""}
-              />
-              {/* 
-
-              <TextInput
-                onChangeText={(value) =>
-                  handleDataChange(
-                    "propertyDetails",
-                    "InclusivePrice",
-                    parseInt(value),
-                  )
-                }
-                value={
-                  propertyValues.propertyDetails.InclusivePrice !== 0
-                    ? propertyValues.propertyDetails.InclusivePrice.toString()
+                defaultValue={
+                  propertyValues.amenities.length > 0
+                    ? propertyValues.amenities.filter(
+                      (item) => item.name === "bathRooms",
+                    )[0]?.value
                     : ""
                 }
-                placeholder="Inclusive price"
-                keyboardType="number-pad"
-                className="bg-[#e9e9e1] text-black p-1 my-1 px-4 rounded-md"
-                returnKeyType="next"
               />
-
-              <TextInput
-                onChangeText={(value) =>
-                  handleDataChange(
-                    "propertyDetails",
-                    "InclusivePrice",
-                    parseInt(value),
-                  )
-                }
-                value={
-                  propertyValues.propertyDetails.InclusivePrice !== 0
-                    ? propertyValues.propertyDetails.InclusivePrice.toString()
-                    : ""
-                }
-                placeholder="Inclusive price"
-                keyboardType="number-pad"
-                className="bg-[#e9e9e1] text-black p-1 my-1 px-4 rounded-md"
-                returnKeyType="next"
-              />
-
-              <TextInput
-                onChangeText={(value) =>
-                  handleDataChange(
-                    "propertyDetails",
-                    "InclusivePrice",
-                    parseInt(value),
-                  )
-                }
-                value={
-                  propertyValues.propertyDetails.InclusivePrice !== 0
-                    ? propertyValues.propertyDetails.InclusivePrice.toString()
-                    : ""
-                }
-                placeholder="Inclusive price"
-                keyboardType="number-pad"
-                className="bg-[#e9e9e1] text-black p-1 my-1 px-4 rounded-md"
-                returnKeyType="next"
-              /> */}
+              
             </View>
 
             <View className="mt-6">
@@ -843,8 +805,10 @@ export default function CreateProperty({ navigation }) {
       </ScrollView>
 
       <View className="absolute p-6 bottom-0 w-screen">
-        <TouchableOpacity onPress={onDoneClicked}>
-          <Text className="bg-primary w-full text-center py-3 rounded-full text-white font-bold">
+        <TouchableOpacity
+          onPress={onDoneClicked}
+          disabled={submitDone}>
+          <Text className={`${submitDone ? "bg-gray-300" : "bg-primary"} w-full text-center py-3 rounded-full text-white font-bold`}>
             Done
           </Text>
         </TouchableOpacity>
@@ -868,11 +832,10 @@ const RenderSingleTag = ({
     >
       <View>
         <Text
-          className={`py-3 px-3 rounded-sm text-[10px] w-[83px] text-center bg-primary ${
-            item?.keyword === selectedPropertyTypes
-              ? "bg-white text-primary border border-primary"
-              : "bg-primary text-white"
-          }`}
+          className={`py-3 px-3 rounded-sm text-[10px] w-[83px] text-center bg-primary ${item?.keyword === selectedPropertyTypes
+            ? "bg-white text-primary border border-primary"
+            : "bg-primary text-white"
+            }`}
         >
           {item?.name}
         </Text>

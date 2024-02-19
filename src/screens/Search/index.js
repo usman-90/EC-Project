@@ -26,7 +26,7 @@ const Search = ({ navigation }) => {
   const propertiesResult = useQuery({
     queryKey: ["FetchPropertiesByFilter", filters],
     queryFn: fetchProperties,
-    enabled: false,
+    enabled: false
   });
   useEffect(() => {
     searchPropertiesMutation.mutate(query);
