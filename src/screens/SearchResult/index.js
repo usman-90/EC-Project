@@ -7,6 +7,7 @@ import {
   Text,
   FlatList,
   View,
+  RefreshControl,
 } from "react-native";
 import AntDesignIcon from "react-native-vector-icons/AntDesign";
 import SearchBar from "../../components/SearchBar";
@@ -17,32 +18,35 @@ import RecentPropertyItem from "../../components/RecentPropertyItem";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import DragableMenu from "../../components/DragableMenu";
 import FilterContext from "../../context/FilterContext";
-import { useContext, useEffect } from "react";
+import { useState, useCallback, useContext, useEffect } from "react";
 import { fetchProperties } from "../../apiFunctions/properties";
 import Loader from "../../components/Loader";
 import PropertyItem from "../../components/PropertyItem";
+import EmptyList from "../../components/NoItem";
 
 const SearchResult = ({ route, navigation }) => {
+  const [isRefreshing, setIsRefreshing] = useState(false);
   const [filters] = useContext(FilterContext);
   const propertiesResult = useQuery({
-    queryKey: ["FetchProperties", filters],
+    queryKey: ["FetchPropertiesByFilter", filters],
     queryFn: fetchProperties,
     enabled: false,
   });
   const refetchProperties = propertiesResult?.refetch;
   useEffect(() => {
+    console.log("ran", route.params.name);
     refetchProperties();
-  }, []);
-  console.log(refetchProperties);
-  if (propertiesResult?.isLoading) {
-    return <Loader />;
-  }
+  }, [route]);
+
+  const handleRefresh = useCallback(async () => {
+    setIsRefreshing(true);
+    refetchProperties();
+    setIsRefreshing(false);
+  });
 
   const { purpose, name } = route.params;
 
   const properties = propertiesResult?.data?.data?.data ?? [];
-  console.log(propertiesResult, "proppppppp");
-
   return (
     <View className="px-4">
       <View className="mb-3 flex flex-row pt-2 justify-between items-center">
@@ -60,6 +64,12 @@ const SearchResult = ({ route, navigation }) => {
       </View>
       <View>
         <FlatList
+          refreshControl={
+            <RefreshControl
+              refreshing={isRefreshing}
+              onRefresh={handleRefresh}
+            />
+          }
           className="grow-0 mb-52"
           data={properties}
           renderItem={({ item }) => {
@@ -79,7 +89,7 @@ const SearchResult = ({ route, navigation }) => {
                   bedrooms={
                     item?.amenities?.filter(
                       (item) => item.name == "bedRooms",
-                    )[0].value
+                    )[0]?.value
                   }
                   area={item?.propertyDetails?.areaSquare}
                   beds={item?.propertyDetails?.bedRooms}
@@ -89,6 +99,7 @@ const SearchResult = ({ route, navigation }) => {
             );
           }}
           keyExtractor={(item, idx) => idx}
+          ListEmptyComponent={<EmptyList />}
         />
       </View>
     </View>

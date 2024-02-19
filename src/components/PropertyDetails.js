@@ -1,13 +1,23 @@
 import {
   Image,
   ScrollView,
+  Alert,
   StyleSheet,
   Text,
   FlatList,
   View,
   TouchableOpacity,
 } from "react-native";
-
+import SimpleMenu from "./PopUpMenu";
+import {
+  getOneSavedProperties,
+  saveProperty,
+  deleteSavedProperties,
+  deleteProperty,
+  getPropertyByPropertyId,
+} from "../apiFunctions/properties";
+import { useDispatch, useSelector } from "react-redux";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import AntDesignIcon from "react-native-vector-icons/AntDesign";
 import { Linking } from "react-native";
 import { Marker } from "react-native-maps";
@@ -17,11 +27,13 @@ import FontAwesomeIcon from "react-native-vector-icons/FontAwesome5";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import CommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import Pin from "../../assets/Properties/location-pin.png";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Back from "../../assets/Search/Notification.png";
 import Like from "../../assets/Properties/Like.png";
 import MainIMG from "../../assets/Properties/IMG.png";
 import Star from "../../assets/Properties/star.png";
+import { setPropertyData } from "../features/property/propertySlice";
+import { CommonActions } from "@react-navigation/native";
 
 const detailsNames = [
   "Price",
@@ -34,6 +46,159 @@ const detailsNames = [
   "Property Status",
 ];
 const featureIcons = {
+  "CCTV security": (
+    <MaterialIcons
+      style={{
+        color: "#FFC70F",
+        fontSize: 20,
+      }}
+      name="videocam"
+    />
+  ),
+  "Conference Room": (
+    <MaterialIcons
+      style={{
+        color: "#FFC70F",
+        fontSize: 20,
+      }}
+      name="meeting-room"
+    />
+  ),
+  "Service Elevator": (
+    <MaterialIcons
+      style={{
+        color: "#FFC70F",
+        fontSize: 20,
+      }}
+      name="elevator"
+    />
+  ),
+  "Facilities for Disabled": (
+    <MaterialIcons
+      style={{
+        color: "#FFC70F",
+        fontSize: 20,
+      }}
+      name="wheelchair-pickup"
+    />
+  ),
+  "Shared Kitchen": (
+    <MaterialIcons
+      style={{
+        color: "#FFC70F",
+        fontSize: 20,
+      }}
+      name="kitchen"
+    />
+  ),
+  "ATM Facility": (
+    <MaterialIcons
+      style={{
+        color: "#FFC70F",
+        fontSize: 20,
+      }}
+      name="local-atm"
+    />
+  ),
+  "Centrally Air-Conditioned": (
+    <MaterialIcons
+      style={{
+        color: "#FFC70F",
+        fontSize: 20,
+      }}
+      name="ac-unit"
+    />
+  ),
+  "Study Room": (
+    <MaterialIcons
+      style={{
+        color: "#FFC70F",
+        fontSize: 20,
+      }}
+      name="menu-book"
+    />
+  ),
+  "Central Heating": (
+    <MaterialIcons
+      style={{
+        color: "#FFC70F",
+        fontSize: 20,
+      }}
+      name="microwave"
+    />
+  ),
+  "Barbeque": (
+    <MaterialIcons
+      style={{
+        color: "#FFC70F",
+        fontSize: 20,
+      }}
+      name="outdoor-grill"
+    />
+  ),
+  "Care": (
+    <MaterialIcons
+      style={{
+        color: "#FFC70F",
+        fontSize: 20,
+      }}
+      name="spa"
+    />
+  ),
+  "Satellite/Cable Tv": (
+    <MaterialIcons
+      style={{
+        color: "#FFC70F",
+        fontSize: 20,
+      }}
+      name="satellite"
+    />
+  ),
+  "Reception/Waiting room": (
+    <MaterialIcons
+      style={{
+        color: "#FFC70F",
+        fontSize: 20,
+      }}
+      name="airline-seat-recline-extra"
+    />
+  ),
+  "Lobby in Building": (
+    <MaterialIcons
+      style={{
+        color: "#FFC70F",
+        fontSize: 20,
+      }}
+      name="weekend"
+    />
+  ),
+  "Kids Play Area": (
+    <MaterialIcons
+      style={{
+        color: "#FFC70F",
+        fontSize: 20,
+      }}
+      name="child-care"
+    />
+  ),
+  "24 Hours Challenge": (
+    <MaterialIcons
+      style={{
+        color: "#FFC70F",
+        fontSize: 20,
+      }}
+      name="local-convenience-store"
+    />
+  ),
+  "Maids Room": (
+    <MaterialIcons
+      style={{
+        color: "#FFC70F",
+        fontSize: 20,
+      }}
+      name="face"
+    />
+  ),
   Garden: (
     <FontAwesomeIcon
       style={{
@@ -225,7 +390,7 @@ const featureIcons = {
     />
   ),
   "Lanudry Room": (
-    <FontAwesomeIcon
+    <MaterialIcons
       style={{
         color: "#FFC70F",
         fontSize: 20,
@@ -237,7 +402,7 @@ const featureIcons = {
     <FontAwesomeIcon
       style={{
         color: "#FFC70F",
-        fontSize: 20,
+        fontSize: 15,
       }}
       name="business-time"
     />
@@ -287,14 +452,28 @@ const featureIcons = {
       name="local-laundry-service"
     />
   ),
-  Sauna: <FontAwesomeIcon name="bath" />,
+  Sauna: <FontAwesomeIcon
+    style={{
+      color: "#FFC70F",
+      fontSize: 15,
+    }}
+    name="bath" />,
   "Balcony or Terrace": (
+    <AntDesingIcon
+      style={{
+        color: "#FFC70F",
+        fontSize: 20,
+      }}
+      name="windows"
+    />
+  ),
+  "Braodband Internet": (
     <MaterialIcons
       style={{
         color: "#FFC70F",
         fontSize: 20,
       }}
-      name="balcony"
+      name="public"
     />
   ),
 };
@@ -316,7 +495,77 @@ const PropertyDetails = ({
   navigateBack,
   phone,
   navigation,
+  propertyId,
+  ownerId,
 }) => {
+  const { userData } = useSelector((state) => state?.user.data);
+  const dispatch = useDispatch();
+  const isPropertySavedQuery = useQuery({
+    queryKey: ["fetchOnePropertySaved", { userId: userData?._id, propertyId }],
+    queryFn: getOneSavedProperties,
+    onSuccess: (data) => {
+      console.log("getOneSavedProperties", data);
+    },
+  });
+  const deletePropertyMutation = useMutation({
+    mutationFn: deleteProperty,
+    onSettled: (data, error) => {
+      console.log("deletePropertyMutation onSettled", data);
+      navigation.pop();
+      console.log(error);
+    },
+    onError: (error) => {
+      console.log(error);
+    }
+  });
+  const editPropertyMutation = useMutation({
+    mutationFn: getPropertyByPropertyId,
+    onSuccess: (res, error) => {
+      const { data } = res.data;
+      console.log("editPropertyMutation onSettled", data);
+      dispatch(setPropertyData(data));
+      // navigation.navigate("CreatePropertyStack", {
+      //   screen: "CreatePropertyScreen"
+      // });
+      navigation.dispatch(
+        CommonActions.reset({
+          index: 0,
+          routes: [
+            {
+              name: 'CreatePropertyStack', 
+            }
+          ],
+        }),
+      );
+
+      console.log(error);
+    },
+    onError: (error) => {
+      console.log(error);
+    }
+  });
+  const refetchIsPropertySaved = isPropertySavedQuery?.refetch;
+  const savePropertyMutation = useMutation({
+    mutationFn: saveProperty,
+    onSuccess: (data) => {
+      refetchIsPropertySaved();
+    },
+    onSettled: (data, error) => {
+      console.log(data);
+      console.log(error);
+    },
+  });
+
+  useEffect(() => {
+    console.log("User got", userData);
+  }, []);
+
+  const unSaveProperty = useMutation({
+    mutationFn: deleteSavedProperties,
+    onSuccess: (data) => {
+      refetchIsPropertySaved();
+    },
+  });
   const loc = location?.location?.split("-");
   const detailsVals = [
     price,
@@ -330,14 +579,14 @@ const PropertyDetails = ({
   ];
   const [isTextExpanded, setIsTextExpanded] = useState(false);
   const [currImage, setCurrImage] = useState(null);
-
   const openWhatsApp = () => {
-    const phoneNumber = phone;
+    const phoneNumber = +9290078601;
 
     const whatsappURI = `whatsapp://send?phone=${phoneNumber}`;
 
     Linking.canOpenURL(whatsappURI)
       .then((supported) => {
+        console.log(supported);
         if (supported) {
           return Linking.openURL(whatsappURI);
         } else {
@@ -348,6 +597,24 @@ const PropertyDetails = ({
         console.error("An error occurred while opening WhatsApp", error),
       );
   };
+  let isThisPropertySaved = isPropertySavedQuery?.data?.data?.result ?? null;
+
+  const createTwoButtonAlert = () =>
+    Alert.alert(
+      "Delete Property",
+      "Are you sure you want to delete this property permanently?",
+      [
+        {
+          text: "Cancel",
+          onPress: () => console.log("Cancel Pressed"),
+          style: "cancel",
+        },
+        {
+          text: "OK",
+          onPress: () => deletePropertyMutation.mutate(propertyId),
+        },
+      ],
+    );
 
   return (
     <View className="  basis-full">
@@ -357,8 +624,32 @@ const PropertyDetails = ({
             <AntDesingIcon name="left" />
           </View>
         </TouchableOpacity>
-        <Text className="text-lg font-bold">Property Detail</Text>
-        <Image source={0} className="w-10" />
+        <Text className="text-lg font-bold">Property Details</Text>
+
+        <TouchableOpacity
+          onPress={async () => {
+            console.log("invoked", isThisPropertySaved);
+            if (isThisPropertySaved) {
+              unSaveProperty?.mutate(
+                isPropertySavedQuery?.data?.data?.result?._id,
+              );
+            } else {
+              console.log("Mutation run with userId", userData?._id);
+              savePropertyMutation.mutate({
+                userId: userData?._id,
+                propertyId,
+              });
+            }
+          }}
+        >
+          <AntDesingIcon
+            name={`${isThisPropertySaved ? "heart" : "hearto"}`}
+            style={{
+              fontSize: 20,
+              color: !isThisPropertySaved ? "black" : "red",
+            }}
+          />
+        </TouchableOpacity>
       </View>
       <ScrollView className="px-6 mb-20">
         <View>
@@ -448,9 +739,10 @@ const PropertyDetails = ({
                   ? `${elem.name} : ${elem.value}`
                   : elem.name;
               return (
-                <View key={idx} className="my-1 w-[45%]" style={styles.me_2}>
-                  <Text>
-                    {Icon} {displayText}
+                <View key={idx} className="my-1 w-[45%] flex-row items-center" style={styles.me_2}>
+                  {Icon}
+                  <Text className="pl-1 w-32">
+                    {displayText}
                   </Text>
                 </View>
               );
@@ -508,11 +800,40 @@ const PropertyDetails = ({
           <Text className="text-sm text-gray-500 ">Total Price</Text>
           <Text className="text-lg font-bold ">AED {price}</Text>
         </View>
-        <TouchableOpacity onPress={openWhatsApp}>
-          <Text className="bg-primary text-white font-bold text-base py-2 px-4 rounded-xl">
-            Booking Now
-          </Text>
-        </TouchableOpacity>
+
+        {ownerId === userData?._id ?  (
+          <View className="flex flex-row">
+            <TouchableOpacity
+              onPress={() => {
+                editPropertyMutation.mutate(propertyId);
+              }}
+            >
+              <AntDesingIcon
+                style={{
+                  color: "#FFC70F",
+                  fontSize: 24,
+                  marginHorizontal: 16,
+                }}
+                name="edit"
+              />
+            </TouchableOpacity>
+            <TouchableOpacity onPress={createTwoButtonAlert}>
+              <AntDesingIcon
+                style={{
+                  color: "red",
+                  fontSize: 22,
+                }}
+                name="delete"
+              />
+            </TouchableOpacity>
+          </View>
+        ) : (
+          <TouchableOpacity onPress={openWhatsApp}>
+            <Text className="bg-primary text-white font-bold text-base py-2 px-4 rounded-xl">
+              Booking Now
+            </Text>
+          </TouchableOpacity>
+        )}
       </View>
     </View>
   );

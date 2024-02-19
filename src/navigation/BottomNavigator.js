@@ -7,6 +7,7 @@ import ProfileStack from "./ProfileStack";
 import SaveStack from "./SaveStack";
 import * as React from "react";
 import { View, Text, TouchableOpacity } from "react-native";
+import CreatePropertyStack from "./CreatePropertyStack";
 
 function MyTabBar({ state, descriptors, navigation }) {
   return (
@@ -42,6 +43,7 @@ function MyTabBar({ state, descriptors, navigation }) {
         console.log(label);
         return (
           <TouchableOpacity
+            key={index}
             accessibilityRole="button"
             accessibilityState={isFocused ? { selected: true } : {}}
             accessibilityLabel={options.tabBarAccessibilityLabel}
@@ -53,15 +55,24 @@ function MyTabBar({ state, descriptors, navigation }) {
           >
             <AntDesignIcon
               name={`${
-                label === "Home"
+                label === "HomeStack"
                   ? "home"
-                  : label === "Search"
+                  : label === "SearchStack"
                     ? "search1"
-                    : label === "Save"
+                    : label === "SaveStack"
                       ? "tago"
-                      : "profile"
+                      : label === "CreatePropertyStack"
+                        ? "plus"
+                        : "profile"
               }`}
-              style={{ fontSize: 22, color: isFocused ? "#FFC70F" : "black" }}
+              style={{
+                fontSize: 22,
+                color: isFocused ? "#FFC70F" : "black",
+                backgroundColor:
+                  label === "CreatePropertyStack" ? "#FFF5D3" : "transparent",
+                borderRadius: 20,
+                padding: 5,
+              }}
             />
           </TouchableOpacity>
         );
@@ -77,23 +88,33 @@ export default function BottomNavigator() {
     <BottomNavigation.Navigator tabBar={(props) => <MyTabBar {...props} />}>
       <BottomNavigation.Screen
         options={{ headerShown: false }}
-        name="Home"
+        name="HomeStack"
         component={HomeStack}
+        key={1111}
       />
       <BottomNavigation.Screen
-        name="Search"
+        name="SearchStack"
         component={SearchStack}
         options={{ headerShown: false }}
+        key={2222}
       />
       <BottomNavigation.Screen
-        name="Save"
+        name="CreatePropertyStack"
+        component={CreatePropertyStack}
+        options={{ headerShown: false }}
+        key={3333}
+      />
+      <BottomNavigation.Screen
+        name="SaveStack"
         component={SaveStack}
         options={{ headerShown: false }}
+        key={4444}
       />
       <BottomNavigation.Screen
-        name="Profile"
+        name="ProfileStack"
         component={ProfileStack}
         options={{ headerShown: false }}
+        key={5555}
       />
     </BottomNavigation.Navigator>
   );

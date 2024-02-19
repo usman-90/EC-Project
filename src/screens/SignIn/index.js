@@ -2,9 +2,14 @@ import { Image, TouchableOpacity, StyleSheet, Text, View } from "react-native";
 import AntDesignIcon from "react-native-vector-icons/AntDesign";
 import LoginBg from "../../../assets/LoginImages/LoginBg.png";
 import ContinueWithGoogle from "../../components/Login/ContinueWithGoogle";
+import { useSelector, useDispatch } from "react-redux";
 import { onGoogleButtonPress } from "../../apiFunctions/signInWithGoogle";
+import { onFacebookButtonPress } from "../../apiFunctions/signInWithFacebook";
 
 const SignIn = ({ navigation }) => {
+  let dispatch = useDispatch()
+  const propertyInformation = useSelector((state) => state?.property?.data);
+  
   return (
     <View className="bg-black" style={styles.container}>
       <Image source={LoginBg} style={{ flex: 1.8 }} />
@@ -33,7 +38,16 @@ const SignIn = ({ navigation }) => {
             imageHeight={25}
             text="Continue With Google"
             textColor="black"
-      onPress={() => onGoogleButtonPress(navigation).then(() => console.log('Signed in with Google!'))}
+            onPress={() => {
+              onGoogleButtonPress(dispatch, navigation, propertyInformation)
+              .then((e) => {
+                console.log("Signed in with Google!",e);
+              })
+              .catch(error => {
+                console.log("Error on Google sign in:", error);
+              });
+            }
+            }
           />
         </View>
         <View
@@ -44,7 +58,14 @@ const SignIn = ({ navigation }) => {
             alignItems: "center",
           }}
         >
-          <TouchableOpacity onPress={() => navigation.navigate("HomeStack")} className="flex-row items-center bg-gray-100 py-2 w-full justify-center rounded-lg">
+          <TouchableOpacity
+            onPress={() => {
+              onFacebookButtonPress(dispatch, navigation).then(() =>
+                console.log("Signed in with Facebook!"),
+              );
+            }}
+            className="flex-row items-center bg-gray-100 py-2 w-full justify-center rounded-lg"
+          >
             <AntDesignIcon
               name="facebook-square"
               style={{ marginHorizontal: 10, fontSize: 22, color: "#316FF6" }}

@@ -2,10 +2,10 @@ import PropertyDetails from "../../components/PropertyDetails";
 
 const PropertyDetailWrapper = ({ route, navigation }) => {
   const { item } = route?.params;
-
-  console.log(item?.propertyDetails?.InclusivePrice);
+  console.log("Selected Property", item);
   return (
     <PropertyDetails
+      propertyId={item?._id}
       title={item?.propertyDetails?.title}
       images={item?.upload?.images}
       price={item?.propertyDetails?.InclusivePrice}
@@ -26,6 +26,7 @@ const PropertyDetailWrapper = ({ route, navigation }) => {
       aracbiDescription={item?.propertyDetails?.descriptionArabic}
       navigateBack={navigation.goBack}
       navigation={navigation}
+      ownerId={item?.ownerId}
     />
   );
 };

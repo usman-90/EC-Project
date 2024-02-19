@@ -36,7 +36,7 @@ const LoginStack = () => {
         options={{ headerShown: false }}
       />
       <LoginNavigator.Screen
-        name="CreatePassword"
+        name="CreateNewPassword"
         component={CreatePassword}
         options={{ headerShown: false }}
       />

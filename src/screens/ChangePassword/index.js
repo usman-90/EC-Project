@@ -1,32 +1,39 @@
 import React, { useState } from "react";
-import {TouchableOpacity, StyleSheet, Text, View } from "react-native";
+import { TouchableOpacity, StyleSheet, Text, View } from "react-native";
 import Heading2 from "../../components/heading2";
 import EditPageInputField from "../../components/EditPageInputField";
 import CheckBox from "../../components/Login/checkbox";
 import { useSelector } from "react-redux";
 import { useMutation } from "@tanstack/react-query";
 import { updatePassword } from "../../apiFunctions/profileSettings";
+import { useNavigation } from "@react-navigation/native";
 
 const ChangePassword = () => {
-  const userData = useSelector((state) => state?.data);
+  const navigation = useNavigation();
+  const { userData } = useSelector((state) => state?.user?.data);
   const [data, setData] = useState({ oldPassword: "", newPassword: "" });
-    const changePasswordMutation = useMutation({
-        mutationFn: updatePassword,
-        onSuccess: (data) => {
-          console.log(data);
-        },
-        onError: (error) => {
-            console.log(error);
-        }
-    })
-    const handleUpdatePassword = () => {
-        const obj = {
-            password: data?.oldPassword,
-            newPassword: data?.newPassword,
-            id: userData?.userId
-        }
-        changePasswordMutation.mutate(obj)
-    }
+  const changePasswordMutation = useMutation({
+    mutationFn: updatePassword,
+    onSuccess: (data) => {
+      const { status } = data;
+      if (status === 200) {
+        console.log("password update success", data);
+
+        navigation.navigate("Profile");
+      }
+    },
+    onError: (error) => {
+      console.log(error);
+    },
+  });
+  const handleUpdatePassword = () => {
+    const obj = {
+      password: data?.oldPassword,
+      newPassword: data?.newPassword,
+      id: userData?._id,
+    };
+    changePasswordMutation.mutate(obj);
+  };
   const handleDataChange = (name, value) => {
     setData({ ...data, [name]: value });
   };
@@ -69,11 +76,12 @@ const ChangePassword = () => {
           }}
           keyboardType="default"
         />
-      <TouchableOpacity className="bg-primary items-center py-2 mt-10 rounded-lg mx-6" onPress={() => handleUpdatePassword()}>
-        <Text className="text-white text-lg">
-      Save
-        </Text>
-      </TouchableOpacity>
+        <TouchableOpacity
+          className="bg-primary items-center py-2 mt-10 rounded-lg mx-6"
+          onPress={() => handleUpdatePassword()}
+        >
+          <Text className="text-white text-lg">Save</Text>
+        </TouchableOpacity>
       </View>
     </>
   );

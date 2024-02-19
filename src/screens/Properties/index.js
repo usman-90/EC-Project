@@ -12,8 +12,8 @@ import {
 } from "react-native";
 import AntDesignIcon from "react-native-vector-icons/AntDesign";
 import React, { useContext } from "react";
-import { useQuery } from "@tanstack/react-query";
 import FilterContext from "../../context/FilterContext";
+import { useQuery } from "@tanstack/react-query";
 import Search from "../../../assets/Properties/search.png";
 import Pin from "../../../assets/Properties/pin.png";
 import Notification from "../../../assets/Properties/Notification.png";
@@ -28,14 +28,13 @@ const Properties = ({ navigation }) => {
     queryKey: ["allProperties"],
     queryFn: fetchAllProperties,
   });
-  const [filters, setFilters] = useContext(FilterContext);
 
+  const [filters, setFilters] = useContext(FilterContext);
   if (propertiesData?.isLoading) {
     return <Loader />;
   }
 
   const properties = propertiesData?.data?.data?.data ?? [];
-  console.log(properties, "preppppp");
   const handleFilterChange = (name, val) => {
     setFilters({
       ...filters,
@@ -49,7 +48,7 @@ const Properties = ({ navigation }) => {
     },
     {
       name: "Rent",
-      keyword: "rent",
+      keyword: "forRent",
     },
     {
       name: "Off-Plan",
@@ -69,7 +68,7 @@ const Properties = ({ navigation }) => {
         </View>
         <View className="flex-row">
           <Image className="mx-1" source={Notification} />
-          <TouchableOpacity onPress={() => navigation.navigate("Profile")}>
+          <TouchableOpacity onPress={() => navigation.navigate("ProfileStack")}>
             <Image className="mx-1" source={Profile} />
           </TouchableOpacity>
         </View>
@@ -149,8 +148,7 @@ const Properties = ({ navigation }) => {
                 price={item?.propertyDetails?.InclusivePrice}
                 location={item?.locationAndAddress?.location}
                 bedrooms={
-                  item?.amenities?.filter((item) => item.name == "bedRooms")[0]
-                    .value
+                  item?.amenities?.filter((item) => item.name == "bedRooms")[0]?.value
                 }
                 area={item?.propertyDetails?.areaSquare}
                 beds={item?.propertyDetails?.bedRooms}

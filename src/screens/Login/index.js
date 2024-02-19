@@ -1,31 +1,56 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import Heading from "../../components/Heading";
 import InputField from "../../components/InputField";
-import CheckBox from "../../components/Login/checkbox";
-import CustomButton from "../../components/Button";
+// import CheckBox from "../../components/Login/checkbox";
+// import CustomButton from "../../components/Button";
 import ContinueWithGoogle from "../../components/Login/ContinueWithGoogle";
 import { login } from "../../apiFunctions/register";
 import Toast from "react-native-toast-message";
 import { useMutation } from "@tanstack/react-query";
 import { useSelector, useDispatch } from "react-redux";
 import { onGoogleButtonPress } from "../../apiFunctions/signInWithGoogle";
+import store from "../../app/store";
+import { setUserData } from "../../features/user/userSlice";
+import { setPropertyData } from "../../features/property/propertySlice";
 
 const Loginpage = ({ navigation }) => {
-  const userData = useSelector((state) => state?.data);
+  const { userData } = useSelector((state) => state?.user?.data);
+  const propertyInformation = useSelector((state) => state?.property?.data);
+  const dispatch = useDispatch();
+
+  // useEffect(() => {
+  //   console.log("useData on login page", userData);
+  // }, []);
 
   const loginMutation = useMutation({
     mutationFn: login,
     onSuccess: (data) => {
+      const { userData } = data?.data.data;
+      // console.log("Success on login");
       Toast.show({
         type: "success",
         text1: "Success!",
         text2: "Logged In successfully! 👋",
       });
-      console.log(data);
-      navigation.navigate("HomeStack");
+      store.dispatch(setUserData(data?.data.data));
+      store.dispatch(
+        setPropertyData({
+          ...propertyInformation,
+          contactDetails: {
+            ListingOwner: userData.name,
+            contactPerson: userData.name,
+            email: userData.email,
+            phone: userData.phoneNumber,
+          },
+          ownerId: userData?._id
+        }),
+      );
+      console.log("Login user data", data?.data.data);
+      navigation.navigate("BottomTabStack");
     },
     onError: (error) => {
+      // console.log("Error on login");
       Toast.show({
         type: "error",
         text1: "Error !",
@@ -72,7 +97,7 @@ const Loginpage = ({ navigation }) => {
           >
             <TouchableOpacity
               onPress={() => {
-                if (!userData?.userId) {
+                if (!userData?._id) {
                   Toast.show({
                     type: "error",
                     text1: "Request Failed!",
@@ -80,7 +105,10 @@ const Loginpage = ({ navigation }) => {
                   });
                   return;
                 }
-                navigation.navigate("OTP");
+                navigation.navigate("OTP", {
+                  comingFrom: "NewUser",
+                  email: data.email,
+                });
               }}
             >
               <Text style={{ color: "#FFC70F", textDecorationLine: "none" }}>
@@ -121,7 +149,11 @@ const Loginpage = ({ navigation }) => {
               imageHeight={25}
               text="Continue With Google"
               textColor="black"
-      onPress={() => onGoogleButtonPress(navigation).then(() => console.log('Signed in with Google!'))}
+              onPress={() =>
+                onGoogleButtonPress(dispatch, navigation, propertyInformation).then(() =>
+                  console.log("Signed in with Google!"),
+                )
+              }
             />
           </View>
           <View
@@ -135,11 +167,11 @@ const Loginpage = ({ navigation }) => {
             <Text style={{ color: "#838383" }} className="text-base">
               Don't have an account?
             </Text>
-      <TouchableOpacity onPress={() => navigation.navigate("SignUp")}>
-            <Text className="ml-[4px] text-base" style={{ color: "#FFC70F" }}>
-              Register
-            </Text>
-      </TouchableOpacity>
+            <TouchableOpacity onPress={() => navigation.navigate("SignUp")}>
+              <Text className="ml-[4px] text-base" style={{ color: "#FFC70F" }}>
+                Register
+              </Text>
+            </TouchableOpacity>
           </View>
         </View>
       </View>

@@ -92,7 +92,6 @@ android {
     	multiDexEnabled true
         versionCode 1
         versionName "1.0"
-
         buildConfigField("boolean", "REACT_NATIVE_UNSTABLE_USE_RUNTIME_SCHEDULER_ALWAYS", (findProperty("reactNative.unstable_useRuntimeSchedulerAlways") ?: true).toString())
     }
     signingConfigs {
@@ -141,6 +140,7 @@ android {
 dependencies {
     // The version of react-native is set by the React Native Gradle Plugin
     implementation("com.facebook.react:react-android")
+    implementation 'com.facebook.android:facebook-android-sdk:latest.release'
 	    implementation 'com.google.android.gms:play-services-location:21.0.1'
 
     def isGifEnabled = (findProperty('expo.gif.enabled') ?: "") == "true";
@@ -175,7 +175,7 @@ dependencies {
     debugImplementation("com.facebook.flipper:flipper-fresco-plugin:${FLIPPER_VERSION}")
 
     if (hermesEnabled.toBoolean()) {
-        implementation("com.facebook.react:hermes-android")
+       implementation("com.facebook.react:hermes-android")
     } else {
         implementation jscFlavor
     }

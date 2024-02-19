@@ -1,37 +1,42 @@
 import axios from "axios";
 
+const isNumber = (n) => !isNaN(parseFloat(n));
+
+const API_URL_OLD =
+  "https://realestatebackend-m68pxvdwf-asadullahkhan19.vercel.app";
+const API_URL_NEW = "https://realestatebackend-woad.vercel.app";
+const Local_Host_URL = "http://192.168.1.103:4000";
 
 export function fetchSubCategories({ queryKey }) {
   const category = queryKey[1];
 
-  return axios.get(
-    `https://realestatebackend-m68pxvdwf-asadullahkhan19.vercel.app/lov/sub-category/${category}`,
-  );
+  return axios.get(`${API_URL_NEW}/lov/sub-category/${category}`);
 }
 
 export function fetchAllProperties() {
-  return axios.get(
-    `https://realestatebackend-m68pxvdwf-asadullahkhan19.vercel.app/property/get-property`,
-    {
-      params: {
-        category: "all",
-      },
+  return axios.get(`${API_URL_NEW}/property/get-property`, {
+    params: {
+      category: "all",
     },
-  );
+  });
 }
 
 export function fetchProperties({ queryKey }) {
   const data = queryKey[1];
-
+  console.log("fetchhhhhhhhhhh", data, "dasdasd");
   let params = {
     purpose: data?.purpose,
     category: data?.category,
     area: `${
-      data?.areaMin && data?.areaMax ? data?.areaMin | data?.areaMax : ""
+      isNumber(data?.areaMax) && isNumber(data?.areaMax)
+        ? data?.areaMin.toString() + "|" + data?.areaMax.toString()
+        : ""
     }`,
     bedRooms: data?.bedrooms,
     price: `${
-      data?.priceMin && data?.priceMax ? data?.priceMin | data?.priceMax : ""
+      isNumber(data?.priceMin) && isNumber(data?.priceMax)
+        ? data?.priceMin.toString() + "|" + data?.priceMax.toString()
+        : ""
     }`,
     subCategory: data?.subCategory,
     category: data?.category,
@@ -39,7 +44,7 @@ export function fetchProperties({ queryKey }) {
   };
 
   let rs = {};
-
+  console.log(params);
   for (let p in params) {
     if (
       params[p] !== "" &&
@@ -50,9 +55,7 @@ export function fetchProperties({ queryKey }) {
       rs[p] = params[p];
     }
   }
-
-  console.log(rs, "dataaaa");
-
+  console.log("rssssssssssssss", rs, "rssssssssssssss");
   return axios.get(
     `https://realestatebackend-m68pxvdwf-asadullahkhan19.vercel.app/property/get-property`,
     {
@@ -68,4 +71,63 @@ export function searchProperties(query) {
       value: query,
     },
   );
+}
+
+export function saveProperty(data) {
+  const { userId, propertyId } = data;
+  // console.log("Data got", userId, propertyId, "Request going on", `${API_URL_NEW}/users/save-property/${userId}/${propertyId}`);
+  return axios.post(
+    `${API_URL_NEW}/users/save-property/${userId}/${propertyId}`,
+  );
+}
+
+export function getOneSavedProperties({ queryKey }) {
+  const { userId, propertyId } = queryKey[1];
+  const endpoint = `${API_URL_NEW}/users/get-one-save-property/${userId}/${propertyId}`;
+  return axios.get(endpoint);
+}
+
+export function getSavedProperties({ queryKey }) {
+  const userId = queryKey[1];
+  console.log(userId, "idddddddd");
+  return axios.get(`${API_URL_NEW}/users/get-save-property/${userId}`);
+}
+
+export function createProperty(data) {
+  // console.log("data for upload", data);
+  return axios.post(`${API_URL_NEW}/property/upload`, data);
+}
+
+export function updateProperty(data) {
+  // console.log("data for upload", data);
+  return axios.post(`${API_URL_NEW}/property/update-property`, data);
+}
+
+export function deleteSavedProperties(saveId) {
+  return axios.delete(`${API_URL_NEW}/users/delete-save-property/${saveId}`);
+}
+
+export function getLocationSuggestions(data) {
+  console.log("Send the request", data);
+  return axios.post(`${API_URL_NEW}/property/location-suggestions`, data);
+}
+
+export function getListings({ queryKey }) {
+  const data = queryKey[1];
+  console.log("Send the Email", data);
+  return axios.get(`${API_URL_NEW}/property/property-list`, {
+    params: {
+      userEmail: data,
+    },
+  });
+}
+
+export function deleteProperty(propertyId) {
+  console.log("Send the propId", propertyId);
+  return axios.get(`${API_URL_NEW}/property/delete-property/${propertyId}`);
+}
+
+export function getPropertyByPropertyId(propertyId) {
+  console.log("Send the propId", propertyId);
+  return axios.get(`${API_URL_NEW}/property/property-detials/${propertyId}`);
 }

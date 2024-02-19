@@ -3,32 +3,40 @@ import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import Heading from "../../components/Heading";
 import InputField from "../../components/InputField";
 import CheckBox from "../../components/Login/checkbox";
-import CustomButton from "../../components/Button";
 import { useMutation } from "@tanstack/react-query";
 import ContinueWithGoogle from "../../components/Login/ContinueWithGoogle";
 import { register } from "../../apiFunctions/register";
 import Toast from "react-native-toast-message";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setUserData } from "../../features/user/userSlice";
 import { onGoogleButtonPress } from "../../apiFunctions/signInWithGoogle";
 
 const Register = ({ navigation }) => {
+  const propertyInformation = useSelector((state) => state?.property?.data);
   const dispatch = useDispatch();
+  const [data, setData] = useState({
+    name: "",
+    email: "",
+    password: "",
+    phoneNumber: null,
+  });
   const registerMutation = useMutation({
     mutationFn: register,
-    onSuccess: (data) => {
+    onSuccess: (resData) => {
       Toast.show({
         type: "info",
         text1: "OTP",
         text2: "Kindly provide OTP below",
       });
-      console.log(data?.data?.data);
+      console.log("New user creation response data", resData?.data?.data, data);
+      const dataToDispatch = data;
+      dataToDispatch._id = resData?.data?.data;
       dispatch(
         setUserData({
-          userId: data?.data?.data,
+          userData: dataToDispatch,
         }),
       );
-      navigation.navigate("OTP");
+      navigation.navigate("OTP", { comingFrom: "NewUser", email: data.email });
     },
     onError: (error) => {
       console.log(error?.response?.data?.message);
@@ -40,12 +48,6 @@ const Register = ({ navigation }) => {
     },
   });
 
-  const [data, setData] = useState({
-    name: "",
-    email: "",
-    password: "",
-    phoneNumber: null,
-  });
   const [isAgreed, setIsAgreed] = useState(false);
 
   const handleDataChange = (name, val) => {
@@ -125,7 +127,11 @@ const Register = ({ navigation }) => {
               imageHeight={25}
               text="Continue With Google"
               textColor="black"
-      onPress={() => onGoogleButtonPress(navigation).then(() => console.log('Signed in with Google!'))}
+              onPress={() =>
+                onGoogleButtonPress(dispatch, navigation, propertyInformation).then(() =>
+                  console.log("Signed in with Google!"),
+                )
+              }
             />
           </View>
           <View
@@ -139,14 +145,14 @@ const Register = ({ navigation }) => {
             <Text style={{ color: "#838383" }} className="text-base">
               Already have an account?
             </Text>
-      <TouchableOpacity onPress={() => navigation.navigate("Login")}>
-            <Text
-              className="ml-[4px] text-base"
-              style={{ color: "#FFC70F", marginLeft: 5 }}
-            >
-              Login
-            </Text>
-      </TouchableOpacity>
+            <TouchableOpacity onPress={() => navigation.navigate("Login")}>
+              <Text
+                className="ml-[4px] text-base"
+                style={{ color: "#FFC70F", marginLeft: 5 }}
+              >
+                Login
+              </Text>
+            </TouchableOpacity>
           </View>
         </View>
       </View>

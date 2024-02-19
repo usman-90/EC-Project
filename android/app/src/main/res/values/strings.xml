@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">RealEstate</string>
+    
+<string name="facebook_app_id">775156207843236</string>
+<string name="fb_login_protocol_scheme">fb1234</string>
+<string name="facebook_client_token">60e924683b09778da9c40c7d01dc579c</string>
+
+
 </resources>

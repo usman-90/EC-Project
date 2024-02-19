@@ -12,6 +12,7 @@ import PropBanner from "../../assets/Properties/PropBanner.png";
 import Like from "../../assets/Properties/Like.png";
 import Pin from "../../assets/Properties/pin.png";
 import Notification from "../../assets/Properties/Notification.png";
+import { useDispatch, useSelector } from "react-redux";
 import { useState } from "react";
 
 const PropertyItem = ({
@@ -23,9 +24,11 @@ const PropertyItem = ({
   area,
   beds,
   bathrooms,
+  id,
 }) => {
   const [currImage, setCurrImage] = useState(0);
-  console.log(image);
+  const { userData } = useSelector((state) => state?.user.data);
+
   return (
     <View className="bg-gray-100 my-3 flex justify-center rounded-lg h-100">
       <View className="flex justify-center rounded">
