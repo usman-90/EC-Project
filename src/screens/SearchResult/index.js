@@ -15,7 +15,7 @@ import SearchBar from "../../components/SearchBar";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import DragableMenu from "../../components/DragableMenu";
 import FilterContext from "../../context/FilterContext";
-import { useState, useCallback, useContext, useEffect } from "react";
+import React, { useState, useCallback, useContext, useEffect } from "react";
 import { fetchProperties } from "../../apiFunctions/properties";
 import PropertyItem from "../../components/PropertyItem";
 import EmptyList from "../../components/NoItem";
@@ -23,22 +23,19 @@ import { useSelector } from "react-redux";
 
 const SearchResult = ({ route, navigation }) => {
   const [isRefreshing, setIsRefreshing] = useState(false);
-  // const [filters] = useContext(FilterContext);
-  const { filter } = useSelector((state) => state?.search?.data);
+  const [filters] = useContext(FilterContext);
   const propertiesResult = useQuery({
-    queryKey: ["FetchPropertiesByFilter", filter],
+    queryKey: ["FetchPropertiesByFilter", filters],
     queryFn: fetchProperties,
     enabled: false,
   });
   const refetchProperties = propertiesResult?.refetch;
   useEffect(() => {
     setIsRefreshing(true);
-    console.log("ran", route.params.name);
+    // console.log("ran", route.params.name);
     refetchProperties().finally(() => {
       setIsRefreshing(false);
     });
-
-    console.log("FIltors", filter);
   }, [route]);
 
   const handleRefresh = useCallback(async () => {
@@ -50,6 +47,8 @@ const SearchResult = ({ route, navigation }) => {
   const { name } = route.params;
 
   const properties = propertiesResult?.data?.data?.data ?? [];
+
+  // console.log("properties", properties);
   return (
     <View className="px-4">
       <StatusBar backgroundColor={"#fff"} translucent={false} />
@@ -95,9 +94,13 @@ const SearchResult = ({ route, navigation }) => {
                       (item) => item.name == "bedRooms",
                     )[0]?.value
                   }
+                  bathrooms={
+                    item?.amenities?.filter(
+                      (item) => item.name == "bathRooms",
+                    )[0]?.value
+                  }
                   area={item?.propertyDetails?.areaSquare}
                   beds={item?.propertyDetails?.bedRooms}
-                  bathrooms={item?.propertyDetails?.bathRooms}
                 />
               </TouchableOpacity>
             );

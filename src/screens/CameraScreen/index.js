@@ -8,6 +8,8 @@ import {
   useWindowDimensions,
 } from "react-native";
 import sendImage from '../../../assets/CameraScreen/send.png'
+import ring from '../../../assets/CameraScreen/ring.png'
+import centerdot from '../../../assets/CameraScreen/centerdot.png'
 import Toast from "react-native-toast-message";
 import AntDesignIcon from "react-native-vector-icons/AntDesign";
 import { useDispatch, useSelector } from "react-redux";
@@ -162,7 +164,10 @@ export default function CameraScreen({ navigation }) {
             </TouchableOpacity>
 
             <TouchableOpacity onPress={takePicture}>
-              <View className="w-20 h-20 bg-slate-500 rounded-full border-solid border-8 border-gray-300"></View>
+              <View className="w-20 h-20 rounded-full items-center justify-center border-solid ">
+                <Image source={ring} />
+                <Image source={centerdot} className="absolute" />
+              </View>
             </TouchableOpacity>
 
             <TouchableOpacity

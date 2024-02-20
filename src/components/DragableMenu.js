@@ -297,10 +297,10 @@ const DragableMenu = ({ setData, query, refetchProperties }) => {
                   <MultiSlider
                     values={[filters?.priceMin, filters?.priceMax]}
                     sliderLength={300}
-                    onValuesChange={handleValuesChange}
+                    onValuesChangeFinish={handleValuesChange}
                     min={0}
                     max={5000}
-                    step={1}
+                    step={100}
                     allowOverlap={false}
                     containerStyle={{ height: 25 }}
                     selectedStyle={{ backgroundColor: "#FFC70F", height: 5 }}
@@ -321,7 +321,7 @@ const DragableMenu = ({ setData, query, refetchProperties }) => {
                     ${filters?.priceMin}
                   </Text>
                   <Text className="text-lg font-bold">
-                    ${filters?.priceMax}
+                    ${filters?.priceMax === "" ? 0 : filters?.priceMax}
                   </Text>
                 </View>
               </View>
@@ -332,7 +332,7 @@ const DragableMenu = ({ setData, query, refetchProperties }) => {
                   <MultiSlider
                     values={[filters?.areaMin, filters?.areaMax]}
                     sliderLength={300}
-                    onValuesChange={(newValues) => {
+                    onValuesChangeFinish={(newValues) => {
                       const [min, max] = newValues;
                       handleMultipleChanges({
                         areaMin: min,
@@ -341,7 +341,7 @@ const DragableMenu = ({ setData, query, refetchProperties }) => {
                     }}
                     min={0}
                     max={5000}
-                    step={1}
+                    step={100}
                     allowOverlap={false}
                     containerStyle={{ height: 25 }}
                     selectedStyle={{ backgroundColor: "#FFC70F", height: 5 }}
@@ -363,7 +363,7 @@ const DragableMenu = ({ setData, query, refetchProperties }) => {
                     <Text style={{ fontSize: 9 }}>SqFt</Text>
                   </Text>
                   <Text className="text-lg font-bold">
-                    {filters?.areaMax}
+                    {filters?.areaMax === "" ? 0 : filters?.areaMax}
                     <Text style={{ fontSize: 9 }}>SqFt</Text>
                   </Text>
                 </View>
