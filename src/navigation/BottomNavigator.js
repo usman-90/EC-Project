@@ -63,7 +63,7 @@ function MyTabBar({ state, descriptors, navigation }) {
                       ? "tago"
                       : label === "CreatePropertyStack"
                         ? "plus"
-                        : "profile"
+                        : "user"
               }`}
               style={{
                 fontSize: 22,

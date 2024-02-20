@@ -1,5 +1,5 @@
 import React from "react";
-import { Image, StatusBar, Text, TouchableOpacity, View } from "react-native";
+import { Dimensions, Image, StatusBar, Text, TouchableOpacity, View, useWindowDimensions } from "react-native";
 // import LogoSVG from "../../components/Logo.js"
 import topWave from "../../../assets/Home/topWave.png";
 import logo from "../../../assets/Home/logo.png";
@@ -120,14 +120,14 @@ export default function Home() {
           <StyledView className="flex-[.65] items-center relative">
             <AnimatedImage
               source={buildingIcon}
-              className={"sm:w-[203px] sm:h-[188px]"}
+              className={"sm:h-[188px] sm:w-[203px]"}
               style={{ opacity: opacity1 }}
             />
           </StyledView>
         </StyledView>
         <StyledImage
           source={bottomWave}
-          className="bottom-0 absolute sm:w-96"
+          className="bottom-0 absolute sm:w-96 md:w-[400px] lg:w-[410px]"
         />
       </StyledView>
       <StyledView className="flex-grow">

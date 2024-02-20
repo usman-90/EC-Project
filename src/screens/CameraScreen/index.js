@@ -27,6 +27,7 @@ export default function CameraScreen({ navigation }) {
 
   useEffect(() => {
     //this basically helps to initiate camera on screen
+    // navigation.setOptions({tabBarVisible: false});
     const unsubscribefocus = navigation.addListener("focus", () => {
       setShowCamera(true);
     });
