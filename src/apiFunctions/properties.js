@@ -5,7 +5,7 @@ const isNumber = (n) => !isNaN(parseFloat(n));
 const API_URL_OLD =
   "https://realestatebackend-m68pxvdwf-asadullahkhan19.vercel.app";
 const API_URL_NEW = "https://realestatebackend-woad.vercel.app";
-const Local_Host_URL = "http://192.168.1.103:4000";
+const Local_Host_URL = "http://192.168.100.13:4000";
 
 export function fetchSubCategories({ queryKey }) {
   const category = queryKey[1];
@@ -14,6 +14,7 @@ export function fetchSubCategories({ queryKey }) {
 }
 
 export function fetchAllProperties() {
+  console.log("Call happened");
   return axios.get(`${API_URL_NEW}/property/get-property`, {
     params: {
       category: "all",
@@ -130,4 +131,14 @@ export function deleteProperty(propertyId) {
 export function getPropertyByPropertyId(propertyId) {
   console.log("Send the propId", propertyId);
   return axios.get(`${API_URL_NEW}/property/property-detials/${propertyId}`);
+}
+
+export async function getPropertyCountForCategory({queryKey}) {
+  const category = queryKey[0];
+  const response = await axios.get(`${Local_Host_URL}/property/category-counts`, {timeout:5000});
+
+
+  console.log("Get property count for", category, `${Local_Host_URL}/property/category-counts`);
+  // return axios.get(`${Local_Host_URL}/property/category-counts`);
+  return response;
 }

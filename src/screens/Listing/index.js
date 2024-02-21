@@ -38,7 +38,7 @@ const data = [
   },
 ];
 
-const Listing = ({ navigation }) => {
+const Listing = ({ navigation, route }) => {
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [selected, setSelected] = useState("");
 
@@ -54,6 +54,14 @@ const Listing = ({ navigation }) => {
   if (properties.length) {
     properties = properties.filter((prop) => prop !== null);
   }
+
+  useEffect(() => {
+    setIsRefreshing(true);
+    // console.log("ran", route.params.name);
+    refetchSavedProperties().finally(() => {
+      setIsRefreshing(false);
+    });
+  }, [route]);
 
   const handleRefresh = useCallback(async () => {
     setIsRefreshing(true);

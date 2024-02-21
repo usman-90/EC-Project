@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Dimensions, Image, StatusBar, Text, TouchableOpacity, View, useWindowDimensions } from "react-native";
 // import LogoSVG from "../../components/Logo.js"
 import topWave from "../../../assets/Home/topWave.png";
@@ -7,6 +7,9 @@ import buildingIcon from "../../../assets/Home/buildingIcon.png";
 import bottomWave from "../../../assets/Home/bottomWave.png";
 import apart1 from "../../../assets/Home/Image1.png";
 import resi1 from "../../../assets/Home/Image2.png";
+import townhouse from "../../../assets/Home/3.png";
+import villa from "../../../assets/Home/5.png";
+import commercial from "../../../assets/Home/7.png";
 import { styled } from "nativewind";
 import Animated, {
   useAnimatedRef,
@@ -17,6 +20,9 @@ import ItemsList from "../../components/Home/ItemsList";
 import { useNavigation } from "@react-navigation/native";
 import { useContext } from "react";
 import FilterContext from "../../context/FilterContext";
+import { useQuery } from "@tanstack/react-query";
+import { getPropertyCountForCategory } from "../../apiFunctions/properties";
+import Loader from '../../components/Loader';
 
 const featuredItems = [
   {
@@ -31,16 +37,29 @@ const featuredItems = [
     value: "residentialBuilding",
     Image: resi1,
   },
+  {
+    propertiesNo: "1 Property",
+    rentType: "Commercial",
+    value: "commercial",
+    Image: commercial,
+  },
+  {
+    propertiesNo: "1 Property",
+    rentType: "Villa",
+    value: "villa",
+    Image: villa,
+  },
+  {
+    propertiesNo: "1 Property",
+    rentType: "Townhouse",
+    value: "townhouse",
+    Image: townhouse,
+  }
 ];
 
 export default function Home() {
+  const [propertyCategoriesList, setPropertyCategoriesList] = useState(featuredItems);
   const [filters, setFilters] = useContext(FilterContext);
-  const handleFilterChange = (name, val) => {
-    setFilters({
-      ...filters,
-      [name]: val,
-    });
-  };
   const navigation = useNavigation();
   const animatedRef = useAnimatedRef();
   const StyledView = styled(View);
@@ -50,7 +69,31 @@ export default function Home() {
   const StyledScrollView = styled(Animated.ScrollView);
   const opacity1 = useSharedValue(1);
   const AnimatedImage = Animated.createAnimatedComponent(Image);
+  const propertiesData = useQuery({
+    queryKey:["asd", "xyz"],
+    queryFn:getPropertyCountForCategory,
+  });
 
+  const handleFilterChange = (name, val) => {
+    setFilters({
+      ...filters,
+      [name]: val,
+    });
+  };
+
+  useEffect(() => {
+    //this basically helps to initiate camera on screen
+    // navigation.setOptions({tabBarVisible: false});
+    const unsubscribefocus = navigation.addListener("focus", async () => {
+    });
+    return unsubscribefocus;
+  }, []);
+
+  const propertiesLength = propertiesData?.data?.data ?? {};
+  
+  
+  console.log("Home opened",propertiesData, propertiesLength);
+  
   const scrollHandler = useAnimatedScrollHandler((event) => {
     const opaVal = 1.5 - 1 * 0.01 * event.contentOffset.y;
     opacity1.value = opaVal;
@@ -59,6 +102,11 @@ export default function Home() {
   // const openListing = () => {
   //   navigation.navigate("HouseShowcase");
   // };
+  
+
+  if (propertiesData?.isLoading) {
+    return <Loader />;
+  }
 
   return (
     <StyledScrollView
