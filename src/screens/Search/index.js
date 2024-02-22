@@ -3,7 +3,7 @@ import {
   View,
   TouchableOpacity,
   RefreshControl,
-  StatusBar,
+  StatusBar
 } from "react-native";
 import { useEffect, useState, useContext, useCallback } from "react";
 import {
@@ -22,21 +22,52 @@ const Search = ({ navigation }) => {
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [query, setQuery] = useState("");
   const [data, setData] = useState();
-  const [filters] = useContext(FilterContext);
+  const [filters, setFilters] = useContext(FilterContext);
   const propertiesResult = useQuery({
     queryKey: ["FetchPropertiesByFilter", filters],
     queryFn: fetchProperties,
     enabled: false
   });
+
   useEffect(() => {
     searchPropertiesMutation.mutate(query);
   }, [query]);
+
+  useEffect(() => {
+    //this basically helps to unsubscribe camera on screen
+    const unsubscribeblur = navigation.addListener("blur", () => {
+      setFilters({
+        category: "all",
+        subCategory: "",
+        priceMin: 0,
+        priceMax: "",
+        areaMin: 0,
+        areaMax: "",
+        bathrooms: "",
+        bedrooms: "",
+        purpose: "forSale"
+      })
+    });
+    return unsubscribeblur;
+  }, []);
+
+  useEffect(() => {
+    setIsRefreshing(true);
+    refetchProperties().then(_ =>{
+      setIsRefreshing(false);
+    });
+    // console.log("filter and searched items", data, properties);
+  }, [filters])
+  
+
   const searchPropertiesMutation = useMutation({
     mutationFn: searchProperties,
     onSuccess: (data) => {
+      setIsRefreshing(false);
       setData(data?.data?.data);
     },
     onError: (error) => {
+      setIsRefreshing(false);
       console.log(error);
     },
   });
@@ -49,13 +80,21 @@ const Search = ({ navigation }) => {
     if (query) {
       searchPropertiesMutation.mutate(query);
     } else {
-      refetchProperties();
+      refetchProperties().then(_ =>{
+        setIsRefreshing(false);
+      });
     }
-    setIsRefreshing(false);
   });
 
-  const renderData = data ? data : properties ? properties : [];
-  console.log("IN SEARCHHHHH", filters);
+  const renderData = query ? data : properties ? properties : [];
+  // console.log("IN SEARCHHHHH", filters);
+
+  console.log("filter and searched items", data, properties);
+  
+  if (propertiesResult?.isLoading) {
+    return <Loader />;
+  }
+  
   return (
     <View className="basis-full">
       <StatusBar backgroundColor={"#fff"} translucent={false} />

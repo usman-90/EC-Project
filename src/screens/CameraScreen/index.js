@@ -4,8 +4,7 @@ import {
   Image,
   StatusBar,
   TouchableOpacity,
-  View,
-  useWindowDimensions,
+  View
 } from "react-native";
 import sendImage from '../../../assets/CameraScreen/send.png'
 import ring from '../../../assets/CameraScreen/ring.png'
@@ -15,11 +14,13 @@ import AntDesignIcon from "react-native-vector-icons/AntDesign";
 import { useDispatch, useSelector } from "react-redux";
 import { setPropertyData } from "../../features/property/propertySlice";
 import { CommonActions } from "@react-navigation/native";
+import { launchImageLibrary } from 'react-native-image-picker';
 
 export default function CameraScreen({ navigation }) {
   const dispatch = useDispatch();
   const propertyInformation = useSelector((state) => state?.property.data);
   const [type, setType] = useState(CameraType.back);
+  
   const [permission, requestPermission] = Camera.useCameraPermissions();
   const [showCamera, setShowCamera] = useState(true);
   const [cameraRef, setCameraRef] = useState(null);
@@ -27,7 +28,7 @@ export default function CameraScreen({ navigation }) {
 
   useEffect(() => {
     //this basically helps to initiate camera on screen
-    // navigation.setOptions({tabBarVisible: false});
+    navigation.setOptions({ tabBarVisible: false });
     const unsubscribefocus = navigation.addListener("focus", () => {
       setShowCamera(true);
     });
@@ -61,19 +62,37 @@ export default function CameraScreen({ navigation }) {
           index: 0,
           routes: [
             {
-              name: 'CreatePropertyScreen', 
+              name: 'CreatePropertyScreen',
             }
           ],
         }),
       );
     }
   }, [])
-  
 
-  function toggleCameraType() {
-    setType((current) =>
-      current === CameraType.back ? CameraType.front : CameraType.back,
+
+  async function pickImagesFromGallery() {
+    // setType((current) =>
+    //   current === CameraType.back ? CameraType.front : CameraType.back,
+    // );
+    const options = { mediaType: 'mixed', quality: 1, selectionLimit: 4, assetRepresentationMode: "auto" };
+
+    // You can also use as a promise without 'callback':
+    const result = await launchImageLibrary(options);
+    const tempImgArr = [];
+    result.assets.map(e => {
+      tempImgArr.push(e.uri);
+    })
+    dispatch(
+      setPropertyData({
+        ...propertyInformation,
+        upload: {
+          images: [...upload.images, tempImgArr],
+          videos: upload.videos,
+        },
+      }),
     );
+    console.log("Gallery results", result);
   }
 
   if (!permission) {
@@ -150,10 +169,10 @@ export default function CameraScreen({ navigation }) {
             </View>
           </View>
           <View className="flex-row justify-around items-center h-32 absolute w-screen bottom-0">
-            <TouchableOpacity onPress={toggleCameraType}>
+            <TouchableOpacity onPress={pickImagesFromGallery}>
               <View className="w-20 h-20 items-center justify-center">
                 <AntDesignIcon
-                  name={`sync`}
+                  name={`picture`}
                   style={{
                     fontSize: 28,
                     color: "#FFC70F",

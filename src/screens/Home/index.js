@@ -34,7 +34,7 @@ const featuredItems = [
   {
     propertiesNo: "1 Property",
     rentType: "Residential",
-    value: "residentialBuilding",
+    value: "residential",
     Image: resi1,
   },
   {
@@ -58,7 +58,8 @@ const featuredItems = [
 ];
 
 export default function Home() {
-  const [propertyCategoriesList, setPropertyCategoriesList] = useState(featuredItems);
+  // const [propertyCategoriesList, setPropertyCategoriesList] = useState(featuredItems);
+  const [isRefreshing, setIsRefreshing] = useState(false);
   const [filters, setFilters] = useContext(FilterContext);
   const navigation = useNavigation();
   const animatedRef = useAnimatedRef();
@@ -70,8 +71,8 @@ export default function Home() {
   const opacity1 = useSharedValue(1);
   const AnimatedImage = Animated.createAnimatedComponent(Image);
   const propertiesData = useQuery({
-    queryKey:["asd", "xyz"],
-    queryFn:getPropertyCountForCategory,
+    queryKey: ["catCounts"],
+    queryFn: getPropertyCountForCategory,
   });
 
   const handleFilterChange = (name, val) => {
@@ -85,15 +86,25 @@ export default function Home() {
     //this basically helps to initiate camera on screen
     // navigation.setOptions({tabBarVisible: false});
     const unsubscribefocus = navigation.addListener("focus", async () => {
+      setIsRefreshing(true);
+      propertiesData.refetch().then(_ => {
+        setIsRefreshing(false);
+        opacity1.value = 1;
+      });
     });
     return unsubscribefocus;
   }, []);
 
-  const propertiesLength = propertiesData?.data?.data ?? {};
-  
-  
-  console.log("Home opened",propertiesData, propertiesLength);
-  
+  const propertiesLength = propertiesData?.data?.data?.data ?? {};
+
+  if (propertiesLength) {
+    featuredItems[0].propertiesNo = propertiesLength.apartment + (propertiesLength.apartment > 1 ? " Properties" : " Property");
+    featuredItems[1].propertiesNo = propertiesLength.residential + (propertiesLength.residential > 1 ? " Properties" : " Property");
+    featuredItems[2].propertiesNo = propertiesLength.commercial + (propertiesLength.commercial > 1 ? " Properties" : " Property");
+    featuredItems[3].propertiesNo = propertiesLength.villa + (propertiesLength.villa > 1 ? " Properties" : " Property");
+    featuredItems[4].propertiesNo = propertiesLength.townhouse + (propertiesLength.townhouse > 1 ? " Properties" : " Property");
+  }
+
   const scrollHandler = useAnimatedScrollHandler((event) => {
     const opaVal = 1.5 - 1 * 0.01 * event.contentOffset.y;
     opacity1.value = opaVal;
@@ -102,9 +113,8 @@ export default function Home() {
   // const openListing = () => {
   //   navigation.navigate("HouseShowcase");
   // };
-  
 
-  if (propertiesData?.isLoading) {
+  if (propertiesData?.isLoading || isRefreshing) {
     return <Loader />;
   }
 

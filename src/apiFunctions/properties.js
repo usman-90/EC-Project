@@ -58,7 +58,7 @@ export function fetchProperties({ queryKey }) {
   }
   console.log("rssssssssssssss", rs, "rssssssssssssss");
   return axios.get(
-    `https://realestatebackend-m68pxvdwf-asadullahkhan19.vercel.app/property/get-property`,
+    `${API_URL_NEW}/property/get-property`,
     {
       params: rs,
     },
@@ -67,7 +67,7 @@ export function fetchProperties({ queryKey }) {
 
 export function searchProperties(query) {
   return axios.post(
-    "https://realestatebackend-woad.vercel.app/property/serach-property-by-searchbar",
+    `${API_URL_NEW}/property/serach-property-by-searchbar`,
     {
       value: query,
     },
@@ -134,11 +134,9 @@ export function getPropertyByPropertyId(propertyId) {
 }
 
 export async function getPropertyCountForCategory({queryKey}) {
-  const category = queryKey[0];
-  const response = await axios.get(`${Local_Host_URL}/property/category-counts`, {timeout:5000});
-
-
-  console.log("Get property count for", category, `${Local_Host_URL}/property/category-counts`);
+  // const category = queryKey[0];
+  const response = await axios.get(`${API_URL_NEW}/property/category-counts`, {timeout:5000});
+  console.log("Get property count for", `${API_URL_NEW}/property/category-counts`);
   // return axios.get(`${Local_Host_URL}/property/category-counts`);
   return response;
 }

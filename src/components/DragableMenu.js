@@ -184,12 +184,13 @@ const DragableMenu = ({ setData, query, refetchProperties }) => {
 
               <View className="px-6">
                 <View className="flex-row">
-                  {categories.map((item) => (
+                  {categories.map((item, i) => (
                     <TouchableOpacity
                       onPress={() => {
                         handleFilterChange("category", item?.keyword);
                       }}
                       className="w-fit"
+                      key={i}
                     >
                       <View style={styles.me_2} className="me-3 mr-5">
                         <Text
@@ -210,13 +211,14 @@ const DragableMenu = ({ setData, query, refetchProperties }) => {
               </Text>
 
               <View className="px-6 flex-row flex-wrap">
-                {subCategories?.map((cat) => {
+                {subCategories?.map((cat, i) => {
                   return (
                     <TouchableOpacity
                       className="my-1"
                       onPress={() => {
                         handleFilterChange("subCategory", cat?.key);
                       }}
+                      key={i}
                     >
                       <View style={styles.me_2} className="me-3 mr-5 mb-3">
                         <Text
