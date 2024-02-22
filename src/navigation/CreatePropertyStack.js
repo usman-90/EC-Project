@@ -11,7 +11,7 @@ export default function CreatePropertyStack() {
       <CreatePropertyNavigation.Screen
         name="CreatePropertyCameraScreen"
         component={CameraScreen}
-        options={{ headerShown: false }}
+        options={{ headerShown: false, tabBarStyle:{display:'none'} }}
       />
       <CreatePropertyNavigation.Screen
         name="CreatePropertyScreen"

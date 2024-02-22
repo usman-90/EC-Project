@@ -440,6 +440,10 @@ export default function CreateProperty({ navigation }) {
     }
   };
 
+  if (submitDone) {
+    return <Loader />;
+  }
+
   return (
     <View className="flex-1 p-6 bg-[#f2f2f2]">
       <StatusBar translucent={false} />

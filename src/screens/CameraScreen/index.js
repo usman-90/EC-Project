@@ -1,8 +1,9 @@
 import { Camera, CameraType } from "expo-camera";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useLayoutEffect, useState } from "react";
 import {
   Image,
   StatusBar,
+  Text,
   TouchableOpacity,
   View
 } from "react-native";
@@ -13,14 +14,15 @@ import Toast from "react-native-toast-message";
 import AntDesignIcon from "react-native-vector-icons/AntDesign";
 import { useDispatch, useSelector } from "react-redux";
 import { setPropertyData } from "../../features/property/propertySlice";
-import { CommonActions } from "@react-navigation/native";
+import { CommonActions, useNavigation } from "@react-navigation/native";
 import { launchImageLibrary } from 'react-native-image-picker';
 
-export default function CameraScreen({ navigation }) {
+export default function CameraScreen() {
+  const navigation = useNavigation();
   const dispatch = useDispatch();
   const propertyInformation = useSelector((state) => state?.property.data);
   const [type, setType] = useState(CameraType.back);
-  
+  const [gallarySelectedPics, setGallarySelectedPics] = useState(0);
   const [permission, requestPermission] = Camera.useCameraPermissions();
   const [showCamera, setShowCamera] = useState(true);
   const [cameraRef, setCameraRef] = useState(null);
@@ -28,12 +30,20 @@ export default function CameraScreen({ navigation }) {
 
   useEffect(() => {
     //this basically helps to initiate camera on screen
-    navigation.setOptions({ tabBarVisible: false });
     const unsubscribefocus = navigation.addListener("focus", () => {
       setShowCamera(true);
+      const parentNav = navigation.getParent();
+      parentNav.setOptions({
+        
+        tabBarStyle: { display: 'none' },
+      });
     });
     return unsubscribefocus;
   }, []);
+
+  useLayoutEffect(() => {
+    navigation.setParams({ disableTabBar: true })
+  }, [navigation]);
 
   useEffect(() => {
     //this basically helps to unsubscribe camera on screen
@@ -75,6 +85,7 @@ export default function CameraScreen({ navigation }) {
     // setType((current) =>
     //   current === CameraType.back ? CameraType.front : CameraType.back,
     // );
+    const { upload } = propertyInformation;
     const options = { mediaType: 'mixed', quality: 1, selectionLimit: 4, assetRepresentationMode: "auto" };
 
     // You can also use as a promise without 'callback':
@@ -87,11 +98,12 @@ export default function CameraScreen({ navigation }) {
       setPropertyData({
         ...propertyInformation,
         upload: {
-          images: [...upload.images, tempImgArr],
+          images: [...upload.images, ...tempImgArr],
           videos: upload.videos,
         },
       }),
     );
+    setGallarySelectedPics(gallarySelectedPics + tempImgArr.length)
     console.log("Gallery results", result);
   }
 
@@ -180,6 +192,7 @@ export default function CameraScreen({ navigation }) {
                     padding: 5,
                   }}
                 />
+                  {gallarySelectedPics > 0 && <Text className="text-white bg-red-600 w-4 right-5 top-5 text-center absolute rounded-full">{gallarySelectedPics}</Text>}
               </View>
             </TouchableOpacity>
 

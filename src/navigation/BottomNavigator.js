@@ -9,9 +9,22 @@ import * as React from "react";
 import { View, Text, TouchableOpacity } from "react-native";
 import CreatePropertyStack from "./CreatePropertyStack";
 
-function MyTabBar({ state, descriptors, navigation }) {
+
+function MyTabBar(props) {
+  const { state, descriptors, navigation } = props
+  let hideTabBar = false;
+  if (state?.history) {
+    for (const obj of state?.history) {
+      const key = obj.key; // Assuming the property name is "key"
+      if (typeof key === 'string' && key.includes("CreatePropertyStack")) {
+        hideTabBar = true;
+        break;
+      }
+    }
+  }
+  console.log("hide tabBar", hideTabBar);
   return (
-    <View style={{ flexDirection: "row" }}>
+    <View style={{ flexDirection: "row", display: hideTabBar? 'none': 'flex' }}>
       {state.routes.map((route, index) => {
         const { options } = descriptors[route.key];
         const label =
@@ -40,6 +53,7 @@ function MyTabBar({ state, descriptors, navigation }) {
             target: route.key,
           });
         };
+
         console.log(label);
         return (
           <TouchableOpacity
