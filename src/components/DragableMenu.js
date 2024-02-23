@@ -31,7 +31,6 @@ const DragableMenu = ({ setData, query, refetchProperties }) => {
     { value: "All", key: "" },
     ...(subCategoriesResult?.data?.data?.data ?? []),
   ];
-  // const [values, setValues] = useState([0, 50]);
   console.log("DragableMenu", filters);
 
   const handleFilterChange = (name, val) => {

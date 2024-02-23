@@ -13,6 +13,7 @@ import {
 import AntDesignIcon from "react-native-vector-icons/AntDesign";
 import {
   createProperty,
+  fetchSubCategories,
   getLocationSuggestions,
   updateProperty,
 } from "../../apiFunctions/properties";
@@ -24,6 +25,9 @@ import {
   setPropertyData,
 } from "../../features/property/propertySlice";
 import { CommonActions } from "@react-navigation/native";
+import Loader from "../../components/Loader";
+import Toast from "react-native-toast-message";
+import { useQuery } from "@tanstack/react-query";
 
 const recreationNfamily = [
   {
@@ -155,6 +159,13 @@ const propertyTypes = [
     keyword: "commercial",
   },
   {
+    name: "Residential",
+    keyword: "residential",
+  },
+];
+
+const propertySubTypes = [
+  {
     name: "Villa",
     keyword: "villa",
   },
@@ -165,25 +176,27 @@ const propertyTypes = [
   {
     name: "Townhouse",
     keyword: "townhouse",
-  },
-  {
-    name: "Residential",
-    keyword: "residential",
-  },
+  }
+];
+
+const purposeTypes = [
   {
     name: "Sale",
-    keyword: "sale",
+    keyword: "forSale",
   },
   {
     name: "Rent",
-    keyword: "rent",
+    keyword: "forRent",
   },
-];
+]
 
 export default function CreateProperty({ navigation }) {
   const propertyData = useSelector((state) => state?.property?.data);
   const [selectedPropertyTypes, setSelectedPropertyTypes] = useState(
     propertyData.typesAndPurpose.category,
+  );
+  const [selectedPropertySubTypes, setSelectedPropertySubTypes] = useState(
+    propertyData.typesAndPurpose.subCategory,
   );
   const [locationSelected, setLocationSelected] = useState("");
   const [propertyValues, setPropertyValues] = useState(propertyData);
@@ -204,10 +217,19 @@ export default function CreateProperty({ navigation }) {
     recreationNfamily: filterItems(propertyData.amenities, recreationNfamily),
     technology: filterItems(propertyData.amenities, technology),
   });
+  const subCategoriesResult = useQuery({
+    queryKey: ["SubCategories", selectedPropertyTypes],
+    queryFn: fetchSubCategories,
+  });
   const [submitDone, setSubmitDone] = useState(false);
 
+  const subCategories = [
+    { value: "All", key: "" },
+    ...(subCategoriesResult?.data?.data?.data ?? []),
+  ];
+
   useEffect(() => {
-    console.log("Upcomming property information", propertyValues);
+    console.log("Upcomming property information", subCategories);
   }, [propertyValues]);
 
   useEffect(() => {
@@ -223,21 +245,18 @@ export default function CreateProperty({ navigation }) {
   }, [selectedPropertyTypes]);
 
   useEffect(() => {
-    // const combinedAminities = [
-    //   ...amenities.building,
-    //   ...amenities.businessNsecurity,
-    //   ...amenities.cleaningNMaintenance,
-    //   ...amenities.healthNfitness,
-    //   ...amenities.laundryNkitchen,
-    //   ...amenities.miscalleneous,
-    //   ...amenities.more,
-    //   ...amenities.recreationNfamily,
-    //   ...amenities.technology,
-    // ];
-    // setPropertyValues({
-    //   ...propertyValues,
-    //   amenities: combinedAminities,
-    // });
+    // console.log("selectedPropertyTypes", propertyData);
+    const { typesAndPurpose } = propertyValues;
+    setPropertyValues({
+      ...propertyValues,
+      typesAndPurpose: {
+        ...typesAndPurpose,
+        subCategory: selectedPropertySubTypes,
+      },
+    });
+  }, [selectedPropertySubTypes]);
+
+  useEffect(() => {
     console.log("amenities array", amenities);
   }, [amenities]);
 
@@ -342,6 +361,12 @@ export default function CreateProperty({ navigation }) {
 
         dispatch(resetPropertyData(propertyValues));
 
+        Toast.show({
+          type: "success",
+          text1: "Complete !",
+          text2: "Your property was successfully listed",
+        });
+
         navigation.dispatch(
           CommonActions.reset({
             index: 0,
@@ -349,10 +374,8 @@ export default function CreateProperty({ navigation }) {
           }),
         );
       } catch (error) {
-
         setSubmitDone(false);
       }
-
       setSubmitDone(false);
     }
   };
@@ -471,22 +494,19 @@ export default function CreateProperty({ navigation }) {
             <View className="top-1">
               <Text className="font-bold">Property Type</Text>
 
-              <FlatList
-                className={"mt-4"}
-                data={propertyTypes}
-                // horizontal={true}
-                numColumns={3}
-                scrollEnabled={false}
-                renderItem={({ item }) => {
-                  return (
-                    <RenderSingleTag
-                      item={item}
-                      selectedPropertyTypes={selectedPropertyTypes}
-                      handleCategoryChange={handleCategoryChange}
-                    />
-                  );
-                }}
-              />
+              <TypeTagsRenderer selectType={selectedPropertyTypes} selectTypeHandler={handleCategoryChange} types={propertyTypes} />
+            </View>
+            
+            <View className="top-1">
+              <Text className="font-bold">Sub Property Type</Text>
+
+              <TypeTagsRenderer selectType={selectedPropertyTypes} selectTypeHandler={handleCategoryChange} types={propertySubTypes} />
+            </View>
+            
+            <View className="top-1">
+              <Text className="font-bold">Purpose</Text>
+
+              <TypeTagsRenderer selectType={selectedPropertyTypes} selectTypeHandler={handleCategoryChange} types={purposeTypes} />
             </View>
 
             <View className="mt-6">
@@ -769,7 +789,7 @@ export default function CreateProperty({ navigation }) {
                     : ""
                 }
               />
-              
+
             </View>
 
             <View className="mt-6">
@@ -868,3 +888,24 @@ const LocationSuggestion = ({ item, onLocationSelected }) => {
     </TouchableOpacity>
   );
 };
+
+const TypeTagsRenderer = ({types, selectType, selectTypeHandler}) => {
+  return (
+    <FlatList
+      className={"mt-4"}
+      data={types}
+      // horizontal={true}
+      numColumns={3}
+      scrollEnabled={false}
+      renderItem={({ item }) => {
+        return (
+          <RenderSingleTag
+            item={item}
+            selectedPropertyTypes={selectType}
+            handleCategoryChange={selectTypeHandler}
+          />
+        );
+      }}
+    />
+  );
+}

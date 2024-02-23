@@ -34,7 +34,7 @@ export default function CameraScreen() {
       setShowCamera(true);
       const parentNav = navigation.getParent();
       parentNav.setOptions({
-        
+
         tabBarStyle: { display: 'none' },
       });
     });
@@ -59,6 +59,7 @@ export default function CameraScreen() {
       //   }),
       // );
       // setImagesData([]);
+      // setGallarySelectedPics(0);
     });
     return unsubscribeblur;
   }, []);
@@ -82,29 +83,50 @@ export default function CameraScreen() {
 
 
   async function pickImagesFromGallery() {
-    // setType((current) =>
-    //   current === CameraType.back ? CameraType.front : CameraType.back,
-    // );
-    const { upload } = propertyInformation;
-    const options = { mediaType: 'mixed', quality: 1, selectionLimit: 4, assetRepresentationMode: "auto" };
-
-    // You can also use as a promise without 'callback':
-    const result = await launchImageLibrary(options);
-    const tempImgArr = [];
-    result.assets.map(e => {
-      tempImgArr.push(e.uri);
-    })
-    dispatch(
-      setPropertyData({
-        ...propertyInformation,
-        upload: {
-          images: [...upload.images, ...tempImgArr],
-          videos: upload.videos,
-        },
-      }),
-    );
-    setGallarySelectedPics(gallarySelectedPics + tempImgArr.length)
-    console.log("Gallery results", result);
+    try {
+      const { upload } = propertyInformation;
+      const options = { mediaType: 'photo', quality: 1, selectionLimit: 4 };
+      if (gallarySelectedPics > 3) {
+        Toast.show({
+          type: "info",
+          text1: "Warning !",
+          text2: "Max amount of images selected",
+        });
+        return;
+      }
+      // You can also use as a promise without 'callback':
+      const result = await launchImageLibrary(options);
+      if (result.didCancel || gallarySelectedPics > 3) {
+        return;
+      }
+      const tempImgArr = [];
+      console.log("pick image result", result);
+      result.assets.map((e, i) => {
+        if (i < 4) {
+          tempImgArr.push(e.uri);
+        }
+      })
+      if (result.assets.length > 4) {
+        Toast.show({
+          type: "info",
+          text1: "Warning !",
+          text2: "Only 4 pictures are allowed only top 4 will be selected",
+        });
+      }
+      dispatch(
+        setPropertyData({
+          ...propertyInformation,
+          upload: {
+            images: [...upload.images, ...tempImgArr],
+            videos: upload.videos,
+          },
+        }),
+      );
+      setGallarySelectedPics(gallarySelectedPics + tempImgArr.length)
+      console.log("Gallery results", result);
+    } catch (error) {
+      console.log("Error", error);
+    }
   }
 
   if (!permission) {
@@ -117,25 +139,29 @@ export default function CameraScreen() {
 
   const takePicture = async () => {
     const { upload } = propertyInformation;
-    if (cameraRef && imagesData.length < 4) {
-      const data = await cameraRef.takePictureAsync(null);
-      console.log("Image uri", data);
-      setImagesData([...imagesData, data.uri]);
-      dispatch(
-        setPropertyData({
-          ...propertyInformation,
-          upload: {
-            images: [...upload.images, data.uri],
-            videos: upload.videos,
-          },
-        }),
-      );
-    } else if (imagesData.length > 3) {
-      Toast.show({
-        type: "info",
-        text1: "Warning !",
-        text2: "Only 4 pictures are allowed",
-      });
+    try {
+      if (cameraRef && imagesData.length < 4) {
+        const data = await cameraRef.takePictureAsync(null);
+        console.log("Image uri", data);
+        setImagesData([...imagesData, data.uri]);
+        dispatch(
+          setPropertyData({
+            ...propertyInformation,
+            upload: {
+              images: [...upload.images, data.uri],
+              videos: upload.videos,
+            },
+          }),
+        );
+      } else if (imagesData.length > 3) {
+        Toast.show({
+          type: "info",
+          text1: "Warning !",
+          text2: "Only 4 pictures are allowed",
+        });
+      }
+    } catch (error) {
+      console.log("Error", error);
     }
   };
 
@@ -192,7 +218,7 @@ export default function CameraScreen() {
                     padding: 5,
                   }}
                 />
-                  {gallarySelectedPics > 0 && <Text className="text-white bg-red-600 w-4 right-5 top-5 text-center absolute rounded-full">{gallarySelectedPics}</Text>}
+                {gallarySelectedPics > 0 && <Text className="text-white bg-red-600 w-4 right-5 top-5 text-center absolute rounded-full">{gallarySelectedPics}</Text>}
               </View>
             </TouchableOpacity>
 
