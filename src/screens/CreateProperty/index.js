@@ -135,6 +135,7 @@ const advanced = [
   { name: "Central Heating", value: "Central Heating" },
   { name: "parkingSpaces", value: "2" },
 ];
+
 const cleaningNMaintenance = [
   {
     name: "Waste Disposal",
@@ -155,38 +156,23 @@ const cleaningNMaintenance = [
 
 const propertyTypes = [
   {
-    name: "Commercial",
-    keyword: "commercial",
+    key: "commercial",
+    value: "Commercial",
   },
   {
-    name: "Residential",
-    keyword: "residential",
+    key: "residential",
+    value: "Residential",
   },
-];
-
-const propertySubTypes = [
-  {
-    name: "Villa",
-    keyword: "villa",
-  },
-  {
-    name: "Apartment",
-    keyword: "apartment",
-  },
-  {
-    name: "Townhouse",
-    keyword: "townhouse",
-  }
 ];
 
 const purposeTypes = [
   {
-    name: "Sale",
-    keyword: "forSale",
+    key: "forSale",
+    value: "Sale",
   },
   {
-    name: "Rent",
-    keyword: "forRent",
+    key: "forRent",
+    value: "Rent",
   },
 ]
 
@@ -197,6 +183,9 @@ export default function CreateProperty({ navigation }) {
   );
   const [selectedPropertySubTypes, setSelectedPropertySubTypes] = useState(
     propertyData.typesAndPurpose.subCategory,
+  );
+  const [selectedPurpose, setSelectedPurpose] = useState(
+    propertyData.typesAndPurpose.purpose,
   );
   const [locationSelected, setLocationSelected] = useState("");
   const [propertyValues, setPropertyValues] = useState(propertyData);
@@ -229,7 +218,7 @@ export default function CreateProperty({ navigation }) {
   ];
 
   useEffect(() => {
-    console.log("Upcomming property information", subCategories);
+    console.log("Upcomming property information", propertyValues);
   }, [propertyValues]);
 
   useEffect(() => {
@@ -385,6 +374,16 @@ export default function CreateProperty({ navigation }) {
     handleDataChange("typesAndPurpose", "category", value);
   };
 
+  const handleSubCategoryChange = (value) => {
+    setSelectedPropertySubTypes(value);
+    handleDataChange("typesAndPurpose", "subCategory", value);
+  };
+
+  const handlePurposeChange = (value) => {
+    setSelectedPurpose(value);
+    handleDataChange("typesAndPurpose", "purpose", value);
+  };
+
   const handleBackPress = () => {
     if (steps === 1) {
       if (propertyData._id) {
@@ -409,6 +408,7 @@ export default function CreateProperty({ navigation }) {
       (item) => item.name === property,
     );
     if (propIndex > -1) {
+      console.log("Value before edit", miscalleneousAmenities[propIndex]);
       miscalleneousAmenities[propIndex].value = value;
     } else {
       miscalleneousAmenities.push({ name: property, value });
@@ -500,13 +500,13 @@ export default function CreateProperty({ navigation }) {
             <View className="top-1">
               <Text className="font-bold">Sub Property Type</Text>
 
-              <TypeTagsRenderer selectType={selectedPropertyTypes} selectTypeHandler={handleCategoryChange} types={propertySubTypes} />
+              <TypeTagsRenderer selectType={selectedPropertySubTypes} selectTypeHandler={handleSubCategoryChange} types={subCategories} />
             </View>
             
             <View className="top-1">
               <Text className="font-bold">Purpose</Text>
 
-              <TypeTagsRenderer selectType={selectedPropertyTypes} selectTypeHandler={handleCategoryChange} types={purposeTypes} />
+              <TypeTagsRenderer selectType={selectedPurpose} selectTypeHandler={handlePurposeChange} types={purposeTypes} />
             </View>
 
             <View className="mt-6">
@@ -849,19 +849,20 @@ const RenderSingleTag = ({
   return (
     <TouchableOpacity
       onPress={() => {
-        handleCategoryChange(item?.keyword);
+        handleCategoryChange(item?.key);
       }}
-      key={`key-${item?.keyword}`}
+      key={`key-${item?.key}`}
       className={"mr-8 mb-4"}
     >
       <View>
         <Text
-          className={`py-3 px-3 rounded-sm text-[10px] w-[83px] text-center bg-primary ${item?.keyword === selectedPropertyTypes
+          style={{textAlignVertical:'center'}}
+          className={`py-3 px-3 rounded-sm text-[10px] w-[83px] h-12 text-center justify-center flex-row items-center bg-primary ${item?.key === selectedPropertyTypes
             ? "bg-white text-primary border border-primary"
             : "bg-primary text-white"
             }`}
         >
-          {item?.name}
+          {item?.value}
         </Text>
       </View>
     </TouchableOpacity>

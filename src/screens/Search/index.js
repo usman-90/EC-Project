@@ -86,10 +86,10 @@ const Search = ({ navigation }) => {
     }
   });
 
-  const renderData = query ? data : properties ? properties : [];
+  const renderData = data ? data : properties ? properties : [];
   // console.log("IN SEARCHHHHH", filters);
 
-  console.log("filter and searched items", data, properties);
+  console.log("Query", query);
   
   if (propertiesResult?.isLoading) {
     return <Loader />;
@@ -143,9 +143,11 @@ const SearchedItem = ({ navigation, item }) => {
         bedrooms={
           item?.amenities?.filter((item) => item.name == "bedRooms")[0]?.value
         }
+        bathrooms={
+          item?.amenities?.filter((item) => item.name == "bathRooms")[0]?.value
+        }
         area={item?.propertyDetails?.areaSquare}
         beds={item?.propertyDetails?.bedRooms}
-        bathrooms={item?.propertyDetails?.bathRooms}
       />
     </TouchableOpacity>
   );

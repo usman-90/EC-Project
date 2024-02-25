@@ -5,7 +5,7 @@ const propertyPayload = {
   typesAndPurpose: {
     category: "commercial",
     subCategory: "",
-    purpose: "forRent",
+    purpose: "",
   },
   locationAndAddress: {
     location: "",

@@ -79,7 +79,7 @@ export default function CameraScreen() {
         }),
       );
     }
-  }, [])
+  }, []);
 
 
   async function pickImagesFromGallery() {
