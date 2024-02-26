@@ -56,7 +56,7 @@ export function fetchProperties({ queryKey }) {
       rs[p] = params[p];
     }
   }
-  console.log("rssssssssssssss", rs, "rssssssssssssss");
+  console.log("api call for fetchProperties", rs, "requesting API", `${API_URL_NEW}/property/get-property`);
   return axios.get(
     `${API_URL_NEW}/property/get-property`,
     {
@@ -66,6 +66,7 @@ export function fetchProperties({ queryKey }) {
 }
 
 export function searchProperties(query) {
+  console.log("api call for searchProperties", query, "requesting API", `${API_URL_NEW}/property/serach-property-by-searchbar`);
   return axios.post(
     `${API_URL_NEW}/property/serach-property-by-searchbar`,
     {
@@ -135,8 +136,8 @@ export function getPropertyByPropertyId(propertyId) {
 
 export async function getPropertyCountForCategory({queryKey}) {
   // const category = queryKey[0];
-  const response = await axios.get(`${API_URL_NEW}/property/category-counts`, {timeout:5000});
+  // const response = await axios.get(`${API_URL_NEW}/property/category-counts`, {timeout:5000});
   console.log("Get property count for", `${API_URL_NEW}/property/category-counts`);
-  // return axios.get(`${Local_Host_URL}/property/category-counts`);
-  return response;
+  return axios.get(`${API_URL_NEW}/property/category-counts`);
+  // return response;
 }

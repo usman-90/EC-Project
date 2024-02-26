@@ -5,9 +5,9 @@ import topWave from "../../../assets/Home/topWave.png";
 import logo from "../../../assets/Home/logo.png";
 import buildingIcon from "../../../assets/Home/buildingIcon.png";
 import bottomWave from "../../../assets/Home/bottomWave.png";
-import apart1 from "../../../assets/Home/Image1.png";
+import apart1 from "../../../assets/Home/4.png";
 import resi1 from "../../../assets/Home/Image2.png";
-import townhouse from "../../../assets/Home/3.png";
+import townhouse from "../../../assets/Home/Image1.png";
 import villa from "../../../assets/Home/5.png";
 import commercial from "../../../assets/Home/7.png";
 import { styled } from "nativewind";
@@ -29,30 +29,35 @@ const featuredItems = [
     propertiesNo: "3 Properties",
     rentType: "Apartment",
     value: "apartment",
+    catType: "subCategory",
     Image: apart1,
   },
   {
     propertiesNo: "1 Property",
     rentType: "Residential",
     value: "residential",
+    catType: "category",
     Image: resi1,
   },
   {
     propertiesNo: "1 Property",
     rentType: "Commercial",
     value: "commercial",
+    catType: "category",
     Image: commercial,
   },
   {
     propertiesNo: "1 Property",
     rentType: "Villa",
     value: "villa",
+    catType: "subCategory",
     Image: villa,
   },
   {
     propertiesNo: "1 Property",
     rentType: "Townhouse",
     value: "townhouse",
+    catType: "subCategory",
     Image: townhouse,
   }
 ];
@@ -83,13 +88,12 @@ export default function Home() {
   };
 
   useEffect(() => {
-    //this basically helps to initiate camera on screen
-    // navigation.setOptions({tabBarVisible: false});
+    //this basically helps to refresh the counts of the home categories
     const unsubscribefocus = navigation.addListener("focus", async () => {
+      opacity1.value = 1;
       setIsRefreshing(true);
       propertiesData.refetch().then(_ => {
         setIsRefreshing(false);
-        opacity1.value = 1;
       });
     });
     return unsubscribefocus;

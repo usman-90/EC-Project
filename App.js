@@ -20,10 +20,10 @@ export default function App() {
 		priceMin: 0,
 		priceMax: "",
 		areaMin: 0,
+		purpose: "",
 		areaMax: "",
 		bathrooms: "",
 		bedrooms: "",
-		purpose: "forSale"
 	});
 	const queryClient = new QueryClient({
 		defaultOptions: {

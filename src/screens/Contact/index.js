@@ -10,7 +10,7 @@ import {
 import topWave from "../../../assets/Home/topWave.png";
 import LogoSVG from "../../components/Logo.js";
 import logo from "../../../assets/Home/logo.png";
-import buildingIcon from "../../../assets/Home/Buildings.png";
+import buildingIcon from "../../../assets/Home/buildingIcon.png";
 import bottomWave from "../../../assets/Home/bottomWave.png";
 import { styled } from "nativewind";
 import Animated, {
@@ -68,7 +68,7 @@ export default function Contact() {
               style={{ backgroundColor: "#FFF5D3" }}
             >
               <View className="px-1 py-1">
-                <Text className=" bg-primary rounded-full px-3 py-1">
+                <Text className=" bg-primary rounded-full px-5 py-2 font-bold">
                   Contact Us
                 </Text>
               </View>

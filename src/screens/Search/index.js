@@ -18,6 +18,36 @@ import PropertyItem from "../../components/PropertyItem";
 import Loader from "../../components/Loader";
 import EmptyList from "../../components/NoItem";
 
+const defaultFilter = {
+  category: "all",
+  subCategory: "",
+  priceMin: 0,
+  priceMax: "",
+  areaMin: 0,
+  purpose: "",
+  areaMax: "",
+  bathrooms: "",
+  bedrooms: "",
+}
+
+function areObjectsDifferent(originalObj, newObj) {
+  // console.log("Objects recieved", originalObj, newObj);
+  let found = false;
+  // Get the keys of the original object
+  const keys = Object.keys(originalObj);
+
+  // Iterate through the keys
+  for (let key of keys) {
+    // Check if the values are different and not empty strings
+    if (originalObj[key] !== newObj[key] && (originalObj[key] || newObj[key])) {
+      // console.log("Is different");
+      found = true;
+    }
+  }
+  // All values are the same or empty strings
+  return found;
+}
+
 const Search = ({ navigation }) => {
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [query, setQuery] = useState("");
@@ -28,6 +58,7 @@ const Search = ({ navigation }) => {
     queryFn: fetchProperties,
     enabled: false
   });
+  const [filterApplied, setFilterApplied] = useState(areObjectsDifferent(defaultFilter, filters));
 
   useEffect(() => {
     searchPropertiesMutation.mutate(query);
@@ -45,7 +76,7 @@ const Search = ({ navigation }) => {
         areaMax: "",
         bathrooms: "",
         bedrooms: "",
-        purpose: "forSale"
+        purpose: ""
       })
     });
     return unsubscribeblur;
@@ -53,16 +84,18 @@ const Search = ({ navigation }) => {
 
   useEffect(() => {
     setIsRefreshing(true);
-    refetchProperties().then(_ =>{
+    refetchProperties().then(_ => {
       setIsRefreshing(false);
     });
+    setFilterApplied(areObjectsDifferent(defaultFilter, filters));
     // console.log("filter and searched items", data, properties);
   }, [filters])
-  
+
 
   const searchPropertiesMutation = useMutation({
     mutationFn: searchProperties,
     onSuccess: (data) => {
+      // console.log("searched data", data);
       setIsRefreshing(false);
       setData(data?.data?.data);
     },
@@ -80,21 +113,21 @@ const Search = ({ navigation }) => {
     if (query) {
       searchPropertiesMutation.mutate(query);
     } else {
-      refetchProperties().then(_ =>{
+      refetchProperties().then(_ => {
         setIsRefreshing(false);
       });
     }
   });
 
-  const renderData = data ? data : properties ? properties : [];
+  const renderData = filterApplied ? (properties ? properties : []) : data;
   // console.log("IN SEARCHHHHH", filters);
 
-  console.log("Query", query);
-  
+  // console.log("Rendered", renderData);
+
   if (propertiesResult?.isLoading) {
     return <Loader />;
   }
-  
+
   return (
     <View className="basis-full">
       <StatusBar backgroundColor={"#fff"} translucent={false} />
