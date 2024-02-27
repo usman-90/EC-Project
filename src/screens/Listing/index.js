@@ -3,21 +3,13 @@ import PropertyItem from "../../components/PropertyItem";
 import {
   FlatList,
   RefreshControl,
-  Switch,
-  ScrollView,
   StatusBar,
   Text,
-  TextInput,
   TouchableOpacity,
   View,
 } from "react-native";
 import AntDesignIcon from "react-native-vector-icons/AntDesign";
-import { createProperty } from "../../apiFunctions/properties";
 import { useDispatch, useSelector } from "react-redux";
-import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
-import { storage } from "../../../firebaseConfig";
-import { setPropertyData } from "../../features/property/propertySlice";
-import { CommonActions } from "@react-navigation/native";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import EmptyList from "../../components/NoItem";
 import { getListings } from "../../apiFunctions/properties";
@@ -41,10 +33,10 @@ const data = [
 const Listing = ({ navigation, route }) => {
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [selected, setSelected] = useState("");
-
+  const [selectedCategory, setSelectedCategory] = useState("");
   const { userData } = useSelector((state) => state?.user.data);
   const propertiesResult = useQuery({
-    queryKey: ["FetchListings", userData?.email],
+    queryKey: ["FetchListings", userData?.email, selected, selectedCategory],
     queryFn: getListings,
   });
 
@@ -56,11 +48,22 @@ const Listing = ({ navigation, route }) => {
   }
 
   useEffect(() => {
+    console.log("Selected Purpose", selected);
+  }, [selected])
+  
+  useEffect(() => {
+    console.log("Selected Category", selectedCategory);
+  }, [selectedCategory])
+  
+
+  useEffect(() => {
     setIsRefreshing(true);
     // console.log("ran", route.params.name);
     refetchSavedProperties().finally(() => {
       setIsRefreshing(false);
     });
+    
+    console.log("user Listings", properties);
   }, [route]);
 
   const handleRefresh = useCallback(async () => {
@@ -74,7 +77,6 @@ const Listing = ({ navigation, route }) => {
     navigation.goBack();
   };
 
-  console.log("user Listings", properties);
   return (
     <View className="flex-1  bg-[#f2f2f2]">
       <StatusBar translucent={false} />
@@ -103,7 +105,7 @@ const Listing = ({ navigation, route }) => {
         data={properties}
         className="px-6"
         ListHeaderComponent={
-          <ListHeader setSelected={setSelected} data={data} />
+          <ListHeader setSelectedPurpose={setSelected} data={data} setSelectedCategory={setSelectedCategory} />
         }
         renderItem={({ item }) => {
           return (
@@ -119,14 +121,10 @@ const Listing = ({ navigation, route }) => {
                 image={item?.upload?.images}
                 price={item?.propertyDetails?.InclusivePrice}
                 location={item?.locationAndAddress?.location}
-                bedrooms={
-                  item?.amenities?.filter((item) => item.name == "bedRooms")[0]?.value
-                }
+                bedrooms={item?.amenities?.filter((item) => item.name == "bedRooms")[0]?.value}
+                bathrooms={item?.amenities?.filter((item) => item.name == "bathRooms")[0]?.value}
                 area={item?.propertyDetails?.areaSquare}
                 beds={item?.propertyDetails?.bedRooms}
-                bathrooms={
-                  item?.amenities?.filter((item) => item.name == "bathRooms")[0]?.value
-                }
               />
             </TouchableOpacity>
           );
@@ -139,25 +137,25 @@ const Listing = ({ navigation, route }) => {
 };
 export default Listing;
 
-const ListHeader = ({ setSelected, data }) => {
+const ListHeader = ({ setSelectedPurpose, setSelectedCategory, data }) => {
   return (
     <>
-      <View className="flex flex-row items-center justify-center">
-        <TouchableOpacity className="bg-primary mx-2 px-4 py-3 rounded-lg">
+      <View className="flex flex-row items-center justify-evenly">
+        <TouchableOpacity className="bg-primary mx-2 px-4 py-3 rounded-lg" onPress={() => setSelectedPurpose("forRent")}>
           <Text className="text-white">For Rent</Text>
         </TouchableOpacity>
-        <TouchableOpacity className="bg-primary mx-2 px-4 py-3 rounded-lg">
+        <TouchableOpacity className="bg-primary mx-2 px-4 py-3 rounded-lg" onPress={() => setSelectedPurpose("forSale")}>
           <Text className="text-white">For Sale</Text>
         </TouchableOpacity>
-        <TouchableOpacity className="bg-primary mx-2 px-4 py-3 rounded-lg">
+        <TouchableOpacity className="bg-primary mx-2 px-4 py-3 rounded-lg" onPress={() => setSelectedPurpose("offPlan")}>
           <Text className="text-white">Off-Plan</Text>
         </TouchableOpacity>
       </View>
       <View className="mt-4">
         <SelectList
-          setSelected={(val) => setSelected(val)}
+          setSelected={(val) => setSelectedCategory(val)}
           data={data}
-          save="value"
+          save="key"
           placeholder="Category"
         />
       </View>

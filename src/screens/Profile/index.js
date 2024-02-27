@@ -17,6 +17,7 @@ import { useSelector, useDispatch } from "react-redux";
 import store from "../../app/store";
 import { setUserData } from "../../features/user/userSlice";
 import { resetPropertyData } from "../../features/property/propertySlice";
+import ProfileDragableMenu from "../../components/Profile/ProfileDragableMenu";
 
 //const data = { name: "Hellooo", email: "hello@gmail.com" };
 
@@ -30,7 +31,7 @@ const Profile = ({ navigation }) => {
         token: "",
         userData: {},
       }),
-    store.dispatch(resetPropertyData(propertyInformation))
+      store.dispatch(resetPropertyData(propertyInformation))
     );
     navigation.navigate("LoginStack");
   };
@@ -48,10 +49,9 @@ const Profile = ({ navigation }) => {
           className="w-[45%] h-[22%] flex justify-end items-end"
           imageStyle={styles.roundedFull}
         >
-          <View className="w-[40%] h-[40%] bg-[#FFC70F] rounded-full items-center justify-center border-4 border-white">
-            <TouchableOpacity>
-              <Image source={EditIcon} />
-            </TouchableOpacity>
+
+          <View className="w-[40%] h-12 bg-[#FFC70F] rounded-full items-center justify-center border-4 border-white">
+            <ProfileDragableMenu />
           </View>
         </ImageBackground>
 
@@ -130,6 +130,7 @@ const Profile = ({ navigation }) => {
             </TouchableOpacity>
           </TouchableOpacity>
         </View>
+
       </View>
     </>
   );

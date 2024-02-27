@@ -115,12 +115,15 @@ export function getLocationSuggestions(data) {
 }
 
 export function getListings({ queryKey }) {
-  const data = queryKey[1];
-  console.log("Send the Email", data);
-  return axios.get(`${API_URL_NEW}/property/property-list`, {
+  const email = queryKey[1];
+  const purpose = queryKey[2];
+  const category = queryKey[3];
+  console.log("Send the Email", email, queryKey);
+  return axios.get(`${Local_Host_URL}/property/property-list`, {
     params: {
-      userEmail: data,
+      userEmail: email,
     },
+    timeout: 8000
   });
 }
 

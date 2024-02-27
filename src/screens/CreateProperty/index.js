@@ -174,10 +174,16 @@ const purposeTypes = [
     key: "forRent",
     value: "Rent",
   },
+  {
+    key: "offPlan",
+    value: "Off Plan"
+  }
 ]
 
 export default function CreateProperty({ navigation }) {
   const propertyData = useSelector((state) => state?.property?.data);
+  const [insertingMessage, setInsertingMessage] = useState("Starting");
+  const [totalUploadPercent, setTotalUploadPercent] = useState(0);
   const [selectedPropertyTypes, setSelectedPropertyTypes] = useState(
     propertyData.typesAndPurpose.category,
   );
@@ -290,8 +296,90 @@ export default function CreateProperty({ navigation }) {
     handleDataChange("locationAndAddress", "location", value);
   };
 
+  const checkAllFieldNotEmpty = () => {
+    let fieldsAreFilled = true;
+
+    if (!propertyValues.locationAndAddress.location) {
+      Toast.show({
+        type: "info",
+        text1: "Warning !",
+        text2: "Kindly insert Location",
+      });
+      fieldsAreFilled = false;
+    }
+    else if (!propertyValues.locationAndAddress.address) {
+      Toast.show({
+        type: "info",
+        text1: "Warning !",
+        text2: "Kindly insert Address",
+      });
+      fieldsAreFilled = false;
+    }
+    else if (!propertyValues.propertyDetails.refNo) {
+      Toast.show({
+        type: "info",
+        text1: "Warning !",
+        text2: "Kindly insert reference number",
+      });
+      fieldsAreFilled = false;
+    }
+    else if (!propertyValues.propertyDetails.areaSquare) {
+      Toast.show({
+        type: "info",
+        text1: "Warning !",
+        text2: "Kindly insert area square",
+      });
+      fieldsAreFilled = false;
+    }
+    else if (!propertyValues.propertyDetails.InclusivePrice) {
+      Toast.show({
+        type: "info",
+        text1: "Warning !",
+        text2: "Kindly insert Price",
+      });
+      fieldsAreFilled = false;
+    }
+    else if (!propertyValues.propertyDetails.title) {
+      Toast.show({
+        type: "info",
+        text1: "Warning !",
+        text2: "Kindly insert title",
+      });
+      fieldsAreFilled = false;
+    }
+    else if (!propertyValues.propertyDetails.description) {
+      Toast.show({
+        type: "info",
+        text1: "Warning !",
+        text2: "Kindly insert description",
+      });
+      fieldsAreFilled = false;
+    }
+    else if (!propertyValues.propertyDetails.PermitNumber) {
+      Toast.show({
+        type: "info",
+        text1: "Warning !",
+        text2: "Kindly insert Permit number",
+      });
+      fieldsAreFilled = false;
+    }
+    else if (!propertyValues.propertyDetails.ownerShipStatus) {
+      Toast.show({
+        type: "info",
+        text1: "Warning !",
+        text2: "Kindly insert Owner ship status",
+      });
+      fieldsAreFilled = false;
+    }
+
+    return fieldsAreFilled;
+  }
+
   const onDoneClicked = async () => {
     if (steps === 1) {
+      if (!checkAllFieldNotEmpty()) {
+        return;
+      }
       setSteps(2);
       console.log("propertyValues on step 1", propertyValues);
       if (propertyData._id === undefined) {
@@ -310,6 +398,8 @@ export default function CreateProperty({ navigation }) {
             }),
           );
         }
+
+        setInsertingMessage("Inserting information");
 
         const combinedAminities = [
           ...amenities.building,
@@ -355,6 +445,8 @@ export default function CreateProperty({ navigation }) {
           text1: "Complete !",
           text2: "Your property was successfully listed",
         });
+
+        setInsertingMessage("Completed")
 
         navigation.dispatch(
           CommonActions.reset({
@@ -426,6 +518,7 @@ export default function CreateProperty({ navigation }) {
         return null;
       }
       const response = await fetch(imageUri);
+      setInsertingMessage("Uploading Images");
       const blob = await response.blob();
       const storageRef = ref(
         storage,
@@ -439,19 +532,23 @@ export default function CreateProperty({ navigation }) {
           (snapshot) => {
             const progress =
               (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-            console.log("Uploaded progress", progress.toFixed());
+            setTotalUploadPercent(progress.toFixed());
+            // console.log("Uploaded progress", progress.toFixed());
           },
           (error) => {
             console.log("Error uploading image. Reason:", error);
+            setInsertingMessage("Error uploading image. Reason: " + error);
             reject(error);
           },
           async () => {
             try {
               const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
               console.log("File available at", downloadURL);
+              setInsertingMessage("Upload complete");
               resolve(downloadURL);
             } catch (error) {
               console.log("Error getting download URL. Reason:", error);
+              setInsertingMessage("Error getting download URL. Reason: " + error);
               reject(error);
             }
           },
@@ -459,12 +556,13 @@ export default function CreateProperty({ navigation }) {
       });
     } catch (error) {
       console.log("Error in image upload", error);
+      setInsertingMessage("Error in image upload. Reason: " + error);
       throw error;
     }
   };
 
   if (submitDone) {
-    return <Loader />;
+    return <Loader message={insertingMessage} percent={totalUploadPercent} />;
   }
 
   return (
@@ -496,13 +594,13 @@ export default function CreateProperty({ navigation }) {
 
               <TypeTagsRenderer selectType={selectedPropertyTypes} selectTypeHandler={handleCategoryChange} types={propertyTypes} />
             </View>
-            
+
             <View className="top-1">
               <Text className="font-bold">Sub Property Type</Text>
 
               <TypeTagsRenderer selectType={selectedPropertySubTypes} selectTypeHandler={handleSubCategoryChange} types={subCategories} />
             </View>
-            
+
             <View className="top-1">
               <Text className="font-bold">Purpose</Text>
 
@@ -856,7 +954,7 @@ const RenderSingleTag = ({
     >
       <View>
         <Text
-          style={{textAlignVertical:'center'}}
+          style={{ textAlignVertical: 'center' }}
           className={`py-3 px-3 rounded-sm text-[10px] w-[83px] h-12 text-center justify-center flex-row items-center bg-primary ${item?.key === selectedPropertyTypes
             ? "bg-white text-primary border border-primary"
             : "bg-primary text-white"
@@ -890,7 +988,7 @@ const LocationSuggestion = ({ item, onLocationSelected }) => {
   );
 };
 
-const TypeTagsRenderer = ({types, selectType, selectTypeHandler}) => {
+const TypeTagsRenderer = ({ types, selectType, selectTypeHandler }) => {
   return (
     <FlatList
       className={"mt-4"}

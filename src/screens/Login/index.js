@@ -32,6 +32,7 @@ const Loginpage = ({ navigation }) => {
         type: "success",
         text1: "Success!",
         text2: "Logged In successfully! 👋",
+        autoHide: true
       });
       store.dispatch(setUserData(data?.data.data));
       store.dispatch(
@@ -155,9 +156,16 @@ const Loginpage = ({ navigation }) => {
               text="Continue With Google"
               textColor="black"
               onPress={() =>
-                onGoogleButtonPress(dispatch, navigation, propertyInformation).then(() =>
-                  console.log("Signed in with Google!"),
-                )
+                onGoogleButtonPress(dispatch, navigation, propertyInformation).then(() => {
+                  console.log("Signed in with Google!");
+
+                  Toast.show({
+                    type: "success",
+                    text1: "Success!",
+                    text2: "Logged In successfully! 👋",
+                    autoHide: true
+                  });
+                })
               }
             />
           </View>
