@@ -12,9 +12,13 @@ import {
 } from "react-native";
 import BottomSheet from "react-native-gesture-bottom-sheet";
 import EditIcon from "../../../Asset/Images/Profile/edit-line.png";
+import { launchImageLibrary } from "react-native-image-picker";
+import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
+import { storage } from "../../../firebaseConfig";
 
 const ProfileDragableMenu = ({ setData, query, refetchProperties }) => {
   const bottomSheet = useRef();
+  const [insertingMessage, setInsertingMessage] = useState("");
 
   useEffect(() => {
     console.log("DragableMenu");
@@ -23,7 +27,69 @@ const ProfileDragableMenu = ({ setData, query, refetchProperties }) => {
   const closePanel = () => {
     bottomSheet.current.close();
   }
-  
+
+  const uploadImageAndGetUrl = (uploadTask) => {
+    return new Promise((resolve, reject) => {
+      uploadTask.on(
+        "state_changed",
+        (snapshot) => {
+          const progress =
+            (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          // setTotalUploadPercent(progress.toFixed());
+          console.log("Uploaded progress", progress.toFixed());
+        },
+        (error) => {
+          console.log("Error uploading image. Reason:", error);
+          setInsertingMessage("Error uploading image. Reason: " + error);
+          reject(error);
+        },
+        async () => {
+          try {
+            const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+            console.log("File available at", downloadURL);
+            setInsertingMessage("Upload complete");
+            resolve(downloadURL);
+          } catch (error) {
+            console.log("Error getting download URL. Reason:", error);
+            setInsertingMessage("Error getting download URL. Reason: " + error);
+            reject(error);
+          }
+        },
+      );
+    });
+  }
+
+  const selectFromAlbums = async () => {
+    try {
+      let tempImg = "";
+    const result = await launchImageLibrary({mediaType:'photo', quality:1, selectionLimit:1, maxHeight: 500, maxWidth:500});
+    if (result.didCancel) {
+      return;
+    }
+    console.log("photo selected", result);
+    result.assets.map((e, i) => {
+      if (i < 1) {
+        tempImg = (e.uri);
+      }
+    });
+    if (!tempImg) {
+      return null;
+    }
+    const response = await fetch(tempImg);
+    setInsertingMessage("Uploading Images");
+    const blob = await response.blob();
+    const storageRef = ref(
+      storage,
+      "Profile/" + new Date().getTime() + ".jpeg",
+    );
+    const uploadTask = uploadBytesResumable(storageRef, blob);
+    const imageUrl = await uploadImageAndGetUrl(uploadTask);
+    console.log("Image Url", imageUrl);
+    } catch (error) {
+      console.log("Error while picking profile photo", error);
+    }
+  }
+
   return (
     <SafeAreaView style={styles.container}>
       <BottomSheet ref={bottomSheet} height={300} >
@@ -45,7 +111,7 @@ const ProfileDragableMenu = ({ setData, query, refetchProperties }) => {
             </TouchableOpacity>
           </View>
           <View className="p-4 w-60 items-center">
-            <TouchableOpacity>
+            <TouchableOpacity onPress={selectFromAlbums}>
               <Text className="text-primary">Select from albums</Text>
             </TouchableOpacity>
           </View>
