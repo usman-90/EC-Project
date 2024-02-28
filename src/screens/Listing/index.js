@@ -37,7 +37,7 @@ const Listing = ({ navigation, route }) => {
   const { userData } = useSelector((state) => state?.user.data);
   const propertiesResult = useQuery({
     queryKey: ["FetchListings", userData?.email, selected, selectedCategory],
-    queryFn: getListings,
+    queryFn: getListings
   });
 
   const refetchSavedProperties = propertiesResult?.refetch;
@@ -47,23 +47,30 @@ const Listing = ({ navigation, route }) => {
     properties = properties.filter((prop) => prop !== null);
   }
 
-  useEffect(() => {
-    console.log("Selected Purpose", selected);
-  }, [selected])
-  
-  useEffect(() => {
-    console.log("Selected Category", selectedCategory);
-  }, [selectedCategory])
-  
+  // useEffect(() => {
+  //   console.log("Selected Purpose", selected);
+  // }, [selected]);
+
+  // useEffect(() => {
+  //   console.log("Selected Category", selectedCategory);
+  // }, [selectedCategory])
 
   useEffect(() => {
-    setIsRefreshing(true);
-    // console.log("ran", route.params.name);
-    refetchSavedProperties().finally(() => {
-      setIsRefreshing(false);
+    const runonfocus = navigation.addListener("focus", () => {
+      setSelected("");
+      setSelectedCategory("");
     });
-    
+
+    return runonfocus;
+  }, []);
+
+  useEffect(() => {
+    setIsRefreshing(propertiesResult.isLoading);
     console.log("user Listings", properties);
+  }, [propertiesResult.isLoading]);
+
+  useEffect(() => {
+    refetchSavedProperties();
   }, [route]);
 
   const handleRefresh = useCallback(async () => {
@@ -105,7 +112,7 @@ const Listing = ({ navigation, route }) => {
         data={properties}
         className="px-6"
         ListHeaderComponent={
-          <ListHeader setSelectedPurpose={setSelected} data={data} setSelectedCategory={setSelectedCategory} />
+          <ListHeader setSelectedPurpose={setSelected} selectedPurpose={selected} data={data} setSelectedCategory={setSelectedCategory} />
         }
         renderItem={({ item }) => {
           return (
@@ -137,18 +144,27 @@ const Listing = ({ navigation, route }) => {
 };
 export default Listing;
 
-const ListHeader = ({ setSelectedPurpose, setSelectedCategory, data }) => {
+const ListHeader = ({ setSelectedPurpose, selectedPurpose, setSelectedCategory, data }) => {
   return (
     <>
       <View className="flex flex-row items-center justify-evenly">
-        <TouchableOpacity className="bg-primary mx-2 px-4 py-3 rounded-lg" onPress={() => setSelectedPurpose("forRent")}>
-          <Text className="text-white">For Rent</Text>
+        <TouchableOpacity className={`mx-2 px-4 py-3 rounded-lg ${"forRent" === selectedPurpose
+          ? "bg-white border border-primary"
+          : "bg-primary"
+          }`} onPress={() => setSelectedPurpose("forRent")}>
+          <Text className={`${"forRent" === selectedPurpose ? "text-primary" : "text-white"}`}>For Rent</Text>
         </TouchableOpacity>
-        <TouchableOpacity className="bg-primary mx-2 px-4 py-3 rounded-lg" onPress={() => setSelectedPurpose("forSale")}>
-          <Text className="text-white">For Sale</Text>
+        <TouchableOpacity className={`mx-2 px-4 py-3 rounded-lg ${"forSale" === selectedPurpose
+          ? "bg-white text-primary border border-primary"
+          : "bg-primary text-white"
+          }`} onPress={() => setSelectedPurpose("forSale")}>
+          <Text className={`${"forSale" === selectedPurpose ? "text-primary" : "text-white"}`}>For Sale</Text>
         </TouchableOpacity>
-        <TouchableOpacity className="bg-primary mx-2 px-4 py-3 rounded-lg" onPress={() => setSelectedPurpose("offPlan")}>
-          <Text className="text-white">Off-Plan</Text>
+        <TouchableOpacity className={`mx-2 px-4 py-3 rounded-lg ${"offPlan" === selectedPurpose
+          ? "bg-white text-primary border border-primary"
+          : "bg-primary text-white"
+          }`} onPress={() => setSelectedPurpose("offPlan")}>
+          <Text className={`${"offPlan" === selectedPurpose ? "text-primary" : "text-white"}`}>Off-Plan</Text>
         </TouchableOpacity>
       </View>
       <View className="mt-4">

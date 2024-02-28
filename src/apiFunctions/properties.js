@@ -118,10 +118,11 @@ export function getListings({ queryKey }) {
   const email = queryKey[1];
   const purpose = queryKey[2];
   const category = queryKey[3];
-  console.log("Send the Email", email, queryKey);
-  return axios.get(`${Local_Host_URL}/property/property-list`, {
+  return axios.get(`${API_URL_NEW}/property/property-list`, {
     params: {
       userEmail: email,
+      purpose,
+      category
     },
     timeout: 8000
   });

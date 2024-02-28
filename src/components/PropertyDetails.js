@@ -802,7 +802,7 @@ const PropertyDetails = ({
 
         <View className="rounded-lg bg-gray-200 py-1 pb-3 px-3 mt-2">
           {detailsNames?.map((item, index) => {
-            console.log("Rendering values", detailsVals[index]);
+            // console.log("Rendering values", detailsVals[index]);
             return (
               <View
                 key={index}
