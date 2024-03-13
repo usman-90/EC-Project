@@ -675,11 +675,11 @@ const PropertyDetails = ({
     Linking.canOpenURL(whatsappURI)
       .then((supported) => {
         console.log(supported);
-        if (supported) {
-          return Linking.openURL(whatsappURI);
-        } else {
-          console.log("WhatsApp is not installed on the device");
-        }
+        return Linking.openURL(whatsappURI);
+        // if (supported) {
+        // } else {
+        //   console.log("WhatsApp is not installed on the device");
+        // }
       })
       .catch((error) =>
         console.error("An error occurred while opening WhatsApp", error),
