@@ -21,7 +21,7 @@ export default function CameraScreen() {
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const propertyInformation = useSelector((state) => state?.property.data);
-  const [type, setType] = useState(CameraType.back);
+  const [type] = useState(CameraType.back);
   const [gallarySelectedPics, setGallarySelectedPics] = useState(0);
   const [permission, requestPermission] = Camera.useCameraPermissions();
   const [showCamera, setShowCamera] = useState(true);

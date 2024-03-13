@@ -12,23 +12,59 @@ import {
 } from "react-native";
 import BottomSheet from "react-native-gesture-bottom-sheet";
 import EditIcon from "../../../Asset/Images/Profile/edit-line.png";
-import { launchImageLibrary } from "react-native-image-picker";
-import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
+import { launchCamera, launchImageLibrary } from "react-native-image-picker";
+import { deleteObject, getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import { storage } from "../../../firebaseConfig";
+import { useMutation } from "@tanstack/react-query";
+import { editProfile } from "../../apiFunctions/profileSettings";
+import { useDispatch, useSelector } from "react-redux";
+import { setUserData } from "../../features/user/userSlice";
+import Toast from "react-native-toast-message";
 
-const ProfileDragableMenu = ({ setData, query, refetchProperties }) => {
+const ProfileDragableMenu = () => {
+  const { userData, token } = useSelector(state => state?.user?.data);
+  const dispatch = useDispatch();
   const bottomSheet = useRef();
   const [insertingMessage, setInsertingMessage] = useState("");
+  const addProfilePhotoMutation = useMutation({
+    mutationFn: editProfile,
+    onSuccess: (data) => {
+      console.log("Data on edit Profile photo", data);
+      bottomSheet.current.close();
+    }
+  })
 
   useEffect(() => {
-    console.log("DragableMenu");
+    console.log("ProfileDragableMenu");
   }, [])
 
   const closePanel = () => {
     bottomSheet.current.close();
   }
 
-  const uploadImageAndGetUrl = (uploadTask) => {
+  const uploadImageAndGetUrl = async (result, imgName) => {
+    let tempImg = "";
+    result.assets.map((e, i) => {
+      if (i < 1) {
+        tempImg = (e.uri);
+      }
+    });
+    if (!tempImg) {
+      Toast.show({
+        type: "error",
+        text1: "Image Not Selected!",
+        autoHide: true
+      });
+      return null;
+    }
+    const response = await fetch(tempImg);
+    setInsertingMessage("Uploading Images");
+    const blob = await response.blob();
+    const storageRef = ref(
+      storage,
+      "Profile/" + imgName,
+    );
+    const uploadTask = uploadBytesResumable(storageRef, blob);
     return new Promise((resolve, reject) => {
       uploadTask.on(
         "state_changed",
@@ -46,7 +82,7 @@ const ProfileDragableMenu = ({ setData, query, refetchProperties }) => {
         async () => {
           try {
             const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
-            console.log("File available at", downloadURL);
+            // console.log("File available at", downloadURL);
             setInsertingMessage("Upload complete");
             resolve(downloadURL);
           } catch (error) {
@@ -61,33 +97,107 @@ const ProfileDragableMenu = ({ setData, query, refetchProperties }) => {
 
   const selectFromAlbums = async () => {
     try {
-      let tempImg = "";
-    const result = await launchImageLibrary({mediaType:'photo', quality:1, selectionLimit:1, maxHeight: 500, maxWidth:500});
-    if (result.didCancel) {
-      return;
-    }
-    console.log("photo selected", result);
-    result.assets.map((e, i) => {
-      if (i < 1) {
-        tempImg = (e.uri);
+      const result = await launchImageLibrary({ mediaType: 'photo', quality: 1, selectionLimit: 1, maxHeight: 500, maxWidth: 500 });
+      if (result.didCancel) {
+        return;
       }
-    });
-    if (!tempImg) {
-      return null;
-    }
-    const response = await fetch(tempImg);
-    setInsertingMessage("Uploading Images");
-    const blob = await response.blob();
-    const storageRef = ref(
-      storage,
-      "Profile/" + new Date().getTime() + ".jpeg",
-    );
-    const uploadTask = uploadBytesResumable(storageRef, blob);
-    const imageUrl = await uploadImageAndGetUrl(uploadTask);
-    console.log("Image Url", imageUrl);
+      console.log("photo selected", result);
+
+      const imageName = new Date().getTime() + ".jpeg";
+      const imageUrl = await uploadImageAndGetUrl(result, imageName);
+
+      const profileData = {
+        id: userData._id,
+        name: userData.name,
+        email: userData.email,
+        photo: imageUrl
+      }
+
+      addProfilePhotoMutation.mutate(profileData);
+
+      dispatch(setUserData({
+        token,
+        userData: {
+          ...userData,
+          photo: imageUrl,
+          photoName: imageName
+        }
+      }))
+      console.log("Image Url", imageUrl);
     } catch (error) {
       console.log("Error while picking profile photo", error);
     }
+  }
+
+  const captureImage = async () => {
+    try {
+      const result = await launchCamera({ cameraType: 'front', quality: 1, mediaType: 'photo' })
+      if (result.didCancel) {
+        return;
+      }
+      console.log("Image captured", result);
+
+      const imageName = new Date().getTime() + ".jpeg";
+      const imageUrl = await uploadImageAndGetUrl(result, imageName);
+
+      const profileData = {
+        id: userData._id,
+        name: userData.name,
+        email: userData.email,
+        photo: imageUrl
+      }
+
+      addProfilePhotoMutation.mutate(profileData);
+
+      dispatch(setUserData({
+        token,
+        userData: {
+          ...userData,
+          photo: imageUrl,
+          photoName: imageName
+        }
+      }))
+      console.log("Image Url", imageUrl);
+    } catch (error) {
+      Toast.show({
+        type: "error",
+        text1: "Image upload got into an issue!",
+        autoHide: true
+      });
+    }
+  }
+
+  const deleteUserPhoto = () => {
+    const { photoName } = userData;
+    let imageRef = ref(
+      storage,
+      "Profile/" + photoName,
+    );
+    deleteObject(imageRef).then(_ => {
+      console.log(`${photoName} has been deleted successfully.`);
+
+      const profileData = {
+        id: userData._id,
+        name: userData.name,
+        email: userData.email,
+        photo: undefined,
+        photoName: undefined
+      }
+
+      addProfilePhotoMutation.mutate(profileData);
+
+      dispatch(setUserData({
+        token,
+        userData: {
+          ...userData,
+          photo: undefined,
+          photoName: undefined
+        }
+      }));
+      bottomSheet.current.close();
+    }).catch(e => {
+      console.log('error on image deletion => ', e);
+    });
   }
 
   return (
@@ -101,12 +211,12 @@ const ProfileDragableMenu = ({ setData, query, refetchProperties }) => {
             <Text className="text-lg font-bold">Change photo profile</Text>
           </View>
           <View className="p-4 border-b-[1px] border-gray-300 w-60 items-center">
-            <TouchableOpacity>
+            <TouchableOpacity onPress={deleteUserPhoto}>
               <Text className="text-primary">Delete</Text>
             </TouchableOpacity>
           </View>
           <View className="p-4 border-b-[1px] border-gray-300 w-60 items-center">
-            <TouchableOpacity>
+            <TouchableOpacity onPress={captureImage}>
               <Text className="text-primary">Take A photo</Text>
             </TouchableOpacity>
           </View>

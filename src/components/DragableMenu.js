@@ -16,7 +16,7 @@ import BottomSheet from "react-native-gesture-bottom-sheet";
 import { fetchProperties } from "../apiFunctions/properties";
 import FilterButton from "./FilterButton";
 import { fetchSubCategories } from "../apiFunctions/properties";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { useSelector } from "react-redux";
 
 const DragableMenu = ({ setData, query, refetchProperties }) => {

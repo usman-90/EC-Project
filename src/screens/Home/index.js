@@ -56,7 +56,7 @@ const featuredItems = [
   {
     propertiesNo: "1 Property",
     rentType: "Townhouse",
-    value: "townhouse",
+    value: "townHouse",
     catType: "subCategory",
     Image: townhouse,
   }
