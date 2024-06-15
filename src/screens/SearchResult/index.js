@@ -8,21 +8,18 @@ import {
   FlatList,
   View,
   RefreshControl,
+  StatusBar,
 } from "react-native";
 import AntDesignIcon from "react-native-vector-icons/AntDesign";
 import SearchBar from "../../components/SearchBar";
-import Menu from "../../../assets/Search/Menu.png";
-import Back from "../../../assets/Search/Notification.png";
-import FilterButton from "../../components/FilterButton";
-import RecentPropertyItem from "../../components/RecentPropertyItem";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import DragableMenu from "../../components/DragableMenu";
 import FilterContext from "../../context/FilterContext";
-import { useState, useCallback, useContext, useEffect } from "react";
+import React, { useState, useCallback, useContext, useEffect } from "react";
 import { fetchProperties } from "../../apiFunctions/properties";
-import Loader from "../../components/Loader";
 import PropertyItem from "../../components/PropertyItem";
 import EmptyList from "../../components/NoItem";
+import { useSelector } from "react-redux";
 
 const SearchResult = ({ route, navigation }) => {
   const [isRefreshing, setIsRefreshing] = useState(false);
@@ -34,8 +31,11 @@ const SearchResult = ({ route, navigation }) => {
   });
   const refetchProperties = propertiesResult?.refetch;
   useEffect(() => {
-    console.log("ran", route.params.name);
-    refetchProperties();
+    setIsRefreshing(true);
+    // console.log("ran", route.params.name);
+    refetchProperties().finally(() => {
+      setIsRefreshing(false);
+    });
   }, [route]);
 
   const handleRefresh = useCallback(async () => {
@@ -43,12 +43,15 @@ const SearchResult = ({ route, navigation }) => {
     refetchProperties();
     setIsRefreshing(false);
   });
-
-  const { purpose, name } = route.params;
+  
+  const { name } = route.params;
 
   const properties = propertiesResult?.data?.data?.data ?? [];
+
+  // console.log("properties", properties);
   return (
     <View className="px-4">
+      <StatusBar backgroundColor={"#fff"} translucent={false} />
       <View className="mb-3 flex flex-row pt-2 justify-between items-center">
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <View className="rounded-full border p-3 border-gray-300">
@@ -91,9 +94,13 @@ const SearchResult = ({ route, navigation }) => {
                       (item) => item.name == "bedRooms",
                     )[0]?.value
                   }
+                  bathrooms={
+                    item?.amenities?.filter(
+                      (item) => item.name == "bathRooms",
+                    )[0]?.value
+                  }
                   area={item?.propertyDetails?.areaSquare}
                   beds={item?.propertyDetails?.bedRooms}
-                  bathrooms={item?.propertyDetails?.bathRooms}
                 />
               </TouchableOpacity>
             );

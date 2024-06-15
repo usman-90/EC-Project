@@ -16,11 +16,30 @@ export default function Item(props) {
   const StyledButton = styled(TouchableOpacity);
   // console.log("Item got", props);
   const handleFilterChange = (name, val) => {
-    setFilters({
-      ...filters,
-      [name]: val,
-    });
+    if (name === "category") {
+      setFilters({
+        ...filters,
+        category: val,
+        subCategory: "",
+        purpose: ""
+      });      
+    }else{
+      setFilters({
+        ...filters,
+        category: "all",
+        subCategory: val,
+        purpose: ""
+      });
+    }
   };
+
+  const moreDetailsHandler = () => {
+    console.log(item?.value, "lol");
+    handleFilterChange(item.catType, item.value);
+    navigation.navigate("SearchStack");
+    console.log(filters, "after change");
+  }
+
   console.log(filters, "from home", setFilters);
   return (
     <StyledView className="bg-zinc-400 w-64 h-64 m-4">
@@ -31,16 +50,10 @@ export default function Item(props) {
         {item.rentType}
       </StyledText>
       <StyledImage source={item.Image} className="h-full w-full" />
-      <StyledButton>
-        <StyledText
-          className="absolute z-10 bottom-9 left-6 text-white text-sm"
-          onPress={() => {
-            console.log(item?.value, "lol");
-            handleFilterChange("subCategory", item.value);
-            navigation.navigate("SearchStack");
-            console.log(filters, "after change");
-          }}
-        >
+      <StyledButton
+        onPress={moreDetailsHandler}
+      >
+        <StyledText className="absolute z-10 bottom-9 left-6 text-white text-sm">
           MORE DETAILS
         </StyledText>
       </StyledButton>

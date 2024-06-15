@@ -1,9 +1,12 @@
-import { View, ActivityIndicator, StyleSheet } from "react-native";
+import { View, ActivityIndicator, StyleSheet, Text } from "react-native";
 
-const Loader = () => {
+const Loader = ({ message, percent }) => {
+  console.log("Message", message);
   return (
     <View className="" style={styles.loader}>
       <ActivityIndicator size="large" color={"#FFC70F"} />
+      {message && <Text>{message}...</Text>}
+      {percent > 0 && <Text>{percent}% completed</Text>}
     </View>
   );
 };

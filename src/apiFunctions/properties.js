@@ -5,7 +5,7 @@ const isNumber = (n) => !isNaN(parseFloat(n));
 const API_URL_OLD =
   "https://realestatebackend-m68pxvdwf-asadullahkhan19.vercel.app";
 const API_URL_NEW = "https://realestatebackend-woad.vercel.app";
-const Local_Host_URL = "http://192.168.1.103:4000";
+const Local_Host_URL = "http://192.168.100.13:4000";
 
 export function fetchSubCategories({ queryKey }) {
   const category = queryKey[1];
@@ -14,6 +14,7 @@ export function fetchSubCategories({ queryKey }) {
 }
 
 export function fetchAllProperties() {
+  console.log("Call happened");
   return axios.get(`${API_URL_NEW}/property/get-property`, {
     params: {
       category: "all",
@@ -55,9 +56,9 @@ export function fetchProperties({ queryKey }) {
       rs[p] = params[p];
     }
   }
-  console.log("rssssssssssssss", rs, "rssssssssssssss");
+  console.log("api call for fetchProperties", rs, "requesting API", `${API_URL_NEW}/property/get-property`);
   return axios.get(
-    `https://realestatebackend-m68pxvdwf-asadullahkhan19.vercel.app/property/get-property`,
+    `${API_URL_NEW}/property/get-property`,
     {
       params: rs,
     },
@@ -65,8 +66,9 @@ export function fetchProperties({ queryKey }) {
 }
 
 export function searchProperties(query) {
+  console.log("api call for searchProperties", query, "requesting API", `${API_URL_NEW}/property/serach-property-by-searchbar`);
   return axios.post(
-    "https://realestatebackend-woad.vercel.app/property/serach-property-by-searchbar",
+    `${API_URL_NEW}/property/serach-property-by-searchbar`,
     {
       value: query,
     },
@@ -113,12 +115,16 @@ export function getLocationSuggestions(data) {
 }
 
 export function getListings({ queryKey }) {
-  const data = queryKey[1];
-  console.log("Send the Email", data);
+  const email = queryKey[1];
+  const purpose = queryKey[2];
+  const category = queryKey[3];
   return axios.get(`${API_URL_NEW}/property/property-list`, {
     params: {
-      userEmail: data,
+      userEmail: email,
+      purpose,
+      category
     },
+    timeout: 8000
   });
 }
 
@@ -130,4 +136,12 @@ export function deleteProperty(propertyId) {
 export function getPropertyByPropertyId(propertyId) {
   console.log("Send the propId", propertyId);
   return axios.get(`${API_URL_NEW}/property/property-detials/${propertyId}`);
+}
+
+export async function getPropertyCountForCategory({queryKey}) {
+  // const category = queryKey[0];
+  // const response = await axios.get(`${API_URL_NEW}/property/category-counts`, {timeout:5000});
+  console.log("Get property count for", `${API_URL_NEW}/property/category-counts`);
+  return axios.get(`${API_URL_NEW}/property/category-counts`);
+  // return response;
 }

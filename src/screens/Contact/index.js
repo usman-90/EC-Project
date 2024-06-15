@@ -10,7 +10,7 @@ import {
 import topWave from "../../../assets/Home/topWave.png";
 import LogoSVG from "../../components/Logo.js";
 import logo from "../../../assets/Home/logo.png";
-import buildingIcon from "../../../assets/Home/Buildings.png";
+import buildingIcon from "../../../assets/Home/buildingIcon.png";
 import bottomWave from "../../../assets/Home/bottomWave.png";
 import { styled } from "nativewind";
 import Animated, {
@@ -18,7 +18,8 @@ import Animated, {
   useAnimatedScrollHandler,
   useSharedValue,
 } from "react-native-reanimated";
-import { useNavigation } from "@react-navigation/native";
+import { CommonActions, useNavigation } from "@react-navigation/native";
+import Toast from "react-native-toast-message";
 
 export default function Contact() {
   const navigation = useNavigation();
@@ -39,6 +40,23 @@ export default function Contact() {
   // const openListing = () => {
   //   navigation.navigate("HouseShowcase");
   // };
+
+  const submitContactForm = () => {
+    Toast.show({
+      type: "success",
+      text1: "Request Submitted!",
+      text2: "Your request was sent to our team you will soon get a response",
+      visibilityTime: 6000,
+      autoHide: true
+    });
+
+    navigation.dispatch(
+      CommonActions.reset({
+        index: 0,
+        routes: [{ name: "HomeStack" }],
+      }),
+    );
+  }
 
   return (
     <StyledScrollView
@@ -68,7 +86,7 @@ export default function Contact() {
               style={{ backgroundColor: "#FFF5D3" }}
             >
               <View className="px-1 py-1">
-                <Text className=" bg-primary rounded-full px-3 py-1">
+                <Text className=" bg-primary rounded-full px-5 py-2 font-bold">
                   Contact Us
                 </Text>
               </View>
@@ -148,7 +166,7 @@ export default function Contact() {
             />
           </View>
 
-          <TouchableOpacity className="bg-primary justify-center items-center py-2 mx-4 rounded-lg my-3">
+          <TouchableOpacity className="bg-primary justify-center items-center py-2 mx-4 rounded-lg my-3" onPress={submitContactForm}>
             <Text className="text-white ">Submit</Text>
           </TouchableOpacity>
         </View>

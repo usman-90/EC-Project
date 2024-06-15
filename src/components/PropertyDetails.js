@@ -41,11 +41,97 @@ const detailsNames = [
   "Bedrooms",
   "Parking Size",
   "Bathrooms",
-  "Garage",
   "Property Type",
   "Property Status",
 ];
 const featureIcons = {
+  "Electricity Backup": (
+    <FontAwesomeIcon
+      style={{
+        color: "#FFC70F",
+        fontSize: 17,
+        width: 20
+      }}
+      name="bolt"
+    />
+  ),
+  "Maintenance Staff": (
+    <MaterialIcons
+      style={{
+        color: "#FFC70F",
+        fontSize: 20,
+      }}
+      name="group"
+    />
+  ),
+  "Double Glazed Windows": (
+    <MaterialIcons
+      style={{
+        color: "#FFC70F",
+        fontSize: 20,
+        width: 20
+      }}
+      name="drag-handle"
+    />
+  ),
+  "Freehold": (
+    <FontAwesomeIcon
+      style={{
+        color: "#FFC70F",
+        fontSize: 17,
+        width: 20
+      }}
+      name="palette"
+    />
+  ),
+  "Waste Disposal": (
+    <FontAwesomeIcon
+      style={{
+        color: "#FFC70F",
+        fontSize: 17,
+        width: 20
+      }}
+      name="trash"
+    />
+  ),
+  "Security Staff": (
+    <FontAwesomeIcon
+      style={{
+        color: "#FFC70F",
+        fontSize: 17,
+        width: 20
+      }}
+      name="user-secret"
+    />
+  ),
+  "Swimming Pool": (
+    <MaterialIcons
+      style={{
+        color: "#FFC70F",
+        fontSize: 20,
+        width: 20
+      }}
+      name="pool"
+    />
+  ),
+  "Steam Room": (
+    <MaterialIcons
+      style={{
+        color: "#FFC70F",
+        fontSize: 20,
+      }}
+      name="hot-tub"
+    />
+  ),
+  "First Aid Medical Center": (
+    <MaterialIcons
+      style={{
+        color: "#FFC70F",
+        fontSize: 20,
+      }}
+      name="medical-services"
+    />
+  ),
   "CCTV security": (
     <MaterialIcons
       style={{
@@ -203,7 +289,8 @@ const featureIcons = {
     <FontAwesomeIcon
       style={{
         color: "#FFC70F",
-        fontSize: 20,
+        fontSize: 15,
+        width: 20
       }}
       name="swimming-pool"
     />
@@ -375,7 +462,8 @@ const featureIcons = {
     <FontAwesomeIcon
       style={{
         color: "#FFC70F",
-        fontSize: 20,
+        fontSize: 17,
+        width: 20
       }}
       name="parking"
     />
@@ -456,15 +544,17 @@ const featureIcons = {
     style={{
       color: "#FFC70F",
       fontSize: 15,
+      width: 20
     }}
     name="bath" />,
   "Balcony or Terrace": (
-    <AntDesingIcon
+    <FontAwesomeIcon
       style={{
         color: "#FFC70F",
-        fontSize: 20,
+        fontSize: 16,
+        width: 20
       }}
-      name="windows"
+      name="dungeon"
     />
   ),
   "Braodband Internet": (
@@ -489,7 +579,6 @@ const PropertyDetails = ({
   bedrooms,
   parkingSpace,
   bathrooms,
-  garage,
   category,
   status,
   navigateBack,
@@ -532,7 +621,7 @@ const PropertyDetails = ({
           index: 0,
           routes: [
             {
-              name: 'CreatePropertyStack', 
+              name: 'CreatePropertyStack',
             }
           ],
         }),
@@ -573,7 +662,6 @@ const PropertyDetails = ({
     bedrooms,
     parkingSpace,
     bathrooms,
-    garage,
     category,
     status,
   ];
@@ -587,11 +675,11 @@ const PropertyDetails = ({
     Linking.canOpenURL(whatsappURI)
       .then((supported) => {
         console.log(supported);
-        if (supported) {
-          return Linking.openURL(whatsappURI);
-        } else {
-          console.log("WhatsApp is not installed on the device");
-        }
+        return Linking.openURL(whatsappURI);
+        // if (supported) {
+        // } else {
+        //   console.log("WhatsApp is not installed on the device");
+        // }
       })
       .catch((error) =>
         console.error("An error occurred while opening WhatsApp", error),
@@ -662,11 +750,11 @@ const PropertyDetails = ({
         <View>
           <Text className="text-3xl font-bold mt-3">{title}</Text>
         </View>
-        <View className="flex-row items-center">
+        {/* <View className="flex-row items-center">
           <Image source={Star} />
           <Text className="text-base font-bold mx-1 ">4.8</Text>
           <Text className="text-base text-gray-500">(335) | 212 reviews</Text>
-        </View>
+        </View> */}
         {text && (
           <View>
             <Text
@@ -678,7 +766,7 @@ const PropertyDetails = ({
                 onPress={() => setIsTextExpanded(true)}
                 className="text-black font-bold"
               >
-                {!isTextExpanded ? `...Read more` : null}
+                {!isTextExpanded && text.length > 110 ? ` ...Read more` : null}
               </Text>
             </Text>
           </View>
@@ -714,6 +802,7 @@ const PropertyDetails = ({
 
         <View className="rounded-lg bg-gray-200 py-1 pb-3 px-3 mt-2">
           {detailsNames?.map((item, index) => {
+            // console.log("Rendering values", detailsVals[index]);
             return (
               <View
                 key={index}
@@ -801,7 +890,7 @@ const PropertyDetails = ({
           <Text className="text-lg font-bold ">AED {price}</Text>
         </View>
 
-        {ownerId === userData?._id ?  (
+        {ownerId === userData?._id ? (
           <View className="flex flex-row">
             <TouchableOpacity
               onPress={() => {

@@ -13,6 +13,7 @@ import {
 import AntDesignIcon from "react-native-vector-icons/AntDesign";
 import {
   createProperty,
+  fetchSubCategories,
   getLocationSuggestions,
   updateProperty,
 } from "../../apiFunctions/properties";
@@ -24,6 +25,9 @@ import {
   setPropertyData,
 } from "../../features/property/propertySlice";
 import { CommonActions } from "@react-navigation/native";
+import Loader from "../../components/Loader";
+import Toast from "react-native-toast-message";
+import { useQuery } from "@tanstack/react-query";
 
 const recreationNfamily = [
   {
@@ -108,7 +112,7 @@ const miscalleneous = [
   { name: "Freehold", value: "Freehold" },
   { name: "Maids Room", value: "Maids Room" },
   { name: "ATM Facility", value: "ATM Facility" },
-  { name: "24 Hours Challenge", value: "24 Hours Challenge" },
+  { name: "24 Hours Challenge", value: "24 Hours Challenge" }
 ];
 
 const technology = [
@@ -131,6 +135,7 @@ const advanced = [
   { name: "Central Heating", value: "Central Heating" },
   { name: "parkingSpaces", value: "2" },
 ];
+
 const cleaningNMaintenance = [
   {
     name: "Waste Disposal",
@@ -151,39 +156,42 @@ const cleaningNMaintenance = [
 
 const propertyTypes = [
   {
-    name: "Villa",
-    keyword: "villa",
+    key: "commercial",
+    value: "Commercial",
   },
   {
-    name: "Apartment",
-    keyword: "apartment",
-  },
-  {
-    name: "Townhouse",
-    keyword: "townhouse",
-  },
-  {
-    name: "Commercial",
-    keyword: "commercial",
-  },
-  {
-    name: "Residential",
-    keyword: "residential",
-  },
-  {
-    name: "Sale",
-    keyword: "sale",
-  },
-  {
-    name: "Rent",
-    keyword: "rent",
+    key: "residential",
+    value: "Residential",
   },
 ];
 
+const purposeTypes = [
+  {
+    key: "forSale",
+    value: "Sale",
+  },
+  {
+    key: "forRent",
+    value: "Rent",
+  },
+  {
+    key: "offPlan",
+    value: "Off Plan"
+  }
+]
+
 export default function CreateProperty({ navigation }) {
   const propertyData = useSelector((state) => state?.property?.data);
+  const [insertingMessage, setInsertingMessage] = useState("Starting");
+  const [totalUploadPercent, setTotalUploadPercent] = useState(0);
   const [selectedPropertyTypes, setSelectedPropertyTypes] = useState(
     propertyData.typesAndPurpose.category,
+  );
+  const [selectedPropertySubTypes, setSelectedPropertySubTypes] = useState(
+    propertyData.typesAndPurpose.subCategory,
+  );
+  const [selectedPurpose, setSelectedPurpose] = useState(
+    propertyData.typesAndPurpose.purpose,
   );
   const [locationSelected, setLocationSelected] = useState("");
   const [propertyValues, setPropertyValues] = useState(propertyData);
@@ -204,6 +212,16 @@ export default function CreateProperty({ navigation }) {
     recreationNfamily: filterItems(propertyData.amenities, recreationNfamily),
     technology: filterItems(propertyData.amenities, technology),
   });
+  const subCategoriesResult = useQuery({
+    queryKey: ["SubCategories", selectedPropertyTypes],
+    queryFn: fetchSubCategories,
+  });
+  const [submitDone, setSubmitDone] = useState(false);
+
+  const subCategories = [
+    { value: "All", key: "" },
+    ...(subCategoriesResult?.data?.data?.data ?? []),
+  ];
 
   useEffect(() => {
     console.log("Upcomming property information", propertyValues);
@@ -222,21 +240,18 @@ export default function CreateProperty({ navigation }) {
   }, [selectedPropertyTypes]);
 
   useEffect(() => {
-    // const combinedAminities = [
-    //   ...amenities.building,
-    //   ...amenities.businessNsecurity,
-    //   ...amenities.cleaningNMaintenance,
-    //   ...amenities.healthNfitness,
-    //   ...amenities.laundryNkitchen,
-    //   ...amenities.miscalleneous,
-    //   ...amenities.more,
-    //   ...amenities.recreationNfamily,
-    //   ...amenities.technology,
-    // ];
-    // setPropertyValues({
-    //   ...propertyValues,
-    //   amenities: combinedAminities,
-    // });
+    // console.log("selectedPropertyTypes", propertyData);
+    const { typesAndPurpose } = propertyValues;
+    setPropertyValues({
+      ...propertyValues,
+      typesAndPurpose: {
+        ...typesAndPurpose,
+        subCategory: selectedPropertySubTypes,
+      },
+    });
+  }, [selectedPropertySubTypes]);
+
+  useEffect(() => {
     console.log("amenities array", amenities);
   }, [amenities]);
 
@@ -281,76 +296,184 @@ export default function CreateProperty({ navigation }) {
     handleDataChange("locationAndAddress", "location", value);
   };
 
+  const checkAllFieldNotEmpty = () => {
+    let fieldsAreFilled = true;
+
+    if (!propertyValues.locationAndAddress.location) {
+      Toast.show({
+        type: "info",
+        text1: "Warning !",
+        text2: "Kindly insert Location",
+      });
+      fieldsAreFilled = false;
+    }
+    else if (!propertyValues.locationAndAddress.address) {
+      Toast.show({
+        type: "info",
+        text1: "Warning !",
+        text2: "Kindly insert Address",
+      });
+      fieldsAreFilled = false;
+    }
+    else if (!propertyValues.propertyDetails.refNo) {
+      Toast.show({
+        type: "info",
+        text1: "Warning !",
+        text2: "Kindly insert reference number",
+      });
+      fieldsAreFilled = false;
+    }
+    else if (!propertyValues.propertyDetails.areaSquare) {
+      Toast.show({
+        type: "info",
+        text1: "Warning !",
+        text2: "Kindly insert area square",
+      });
+      fieldsAreFilled = false;
+    }
+    else if (!propertyValues.propertyDetails.InclusivePrice) {
+      Toast.show({
+        type: "info",
+        text1: "Warning !",
+        text2: "Kindly insert Price",
+      });
+      fieldsAreFilled = false;
+    }
+    else if (!propertyValues.propertyDetails.title) {
+      Toast.show({
+        type: "info",
+        text1: "Warning !",
+        text2: "Kindly insert title",
+      });
+      fieldsAreFilled = false;
+    }
+    else if (!propertyValues.propertyDetails.description) {
+      Toast.show({
+        type: "info",
+        text1: "Warning !",
+        text2: "Kindly insert description",
+      });
+      fieldsAreFilled = false;
+    }
+    else if (!propertyValues.propertyDetails.PermitNumber) {
+      Toast.show({
+        type: "info",
+        text1: "Warning !",
+        text2: "Kindly insert Permit number",
+      });
+      fieldsAreFilled = false;
+    }
+    else if (!propertyValues.propertyDetails.ownerShipStatus) {
+      Toast.show({
+        type: "info",
+        text1: "Warning !",
+        text2: "Kindly insert Owner ship status",
+      });
+      fieldsAreFilled = false;
+    }
+
+    return fieldsAreFilled;
+  }
+
   const onDoneClicked = async () => {
     if (steps === 1) {
+      if (!checkAllFieldNotEmpty()) {
+        return;
+      }
       setSteps(2);
       console.log("propertyValues on step 1", propertyValues);
       if (propertyData._id === undefined) {
         dispatch(setPropertyData(propertyValues));
       }
     } else if (steps === 2) {
-      let updatedImages = null;
-      let response = null;
+      setSubmitDone(true);
+      try {
+        let updatedImages = null;
+        let response = null;
 
-      if (propertyData._id === undefined) {
-        updatedImages = await Promise.all(
-          propertyValues?.upload?.images.map(async (imageUri) => {
-            return await handleImageUpload(imageUri);
+        if (propertyData._id === undefined) {
+          updatedImages = await Promise.all(
+            propertyValues?.upload?.images.map(async (imageUri) => {
+              return await handleImageUpload(imageUri);
+            }),
+          );
+        }
+
+        setInsertingMessage("Inserting information");
+
+        const combinedAminities = [
+          ...amenities.building,
+          ...amenities.businessNsecurity,
+          ...amenities.cleaningNMaintenance,
+          ...amenities.healthNfitness,
+          ...amenities.laundryNkitchen,
+          ...amenities.miscalleneous,
+          ...amenities.more,
+          ...amenities.recreationNfamily,
+          ...amenities.technology,
+        ];
+        console.log("propertyValues", combinedAminities, propertyValues);
+
+        if (propertyValues._id) {
+          response = await updateProperty({
+            ...propertyValues,
+            amenities: combinedAminities,
+            upload: {
+              ...propertyValues.upload,
+              images: updatedImages
+                ? updatedImages
+                : propertyValues.upload.images,
+            },
+          });
+        } else {
+          response = await createProperty({
+            ...propertyValues,
+            amenities: combinedAminities,
+            upload: {
+              ...propertyValues.upload,
+              images: updatedImages,
+            },
+          });
+        }
+
+        console.log("Property added", response);
+
+        dispatch(resetPropertyData(propertyValues));
+
+        Toast.show({
+          type: "success",
+          text1: "Complete !",
+          text2: "Your property was successfully listed",
+        });
+
+        setInsertingMessage("Completed")
+
+        navigation.dispatch(
+          CommonActions.reset({
+            index: 0,
+            routes: [{ name: "HomeStack" }],
           }),
         );
+      } catch (error) {
+        setSubmitDone(false);
       }
-
-      const combinedAminities = [
-        ...amenities.building,
-        ...amenities.businessNsecurity,
-        ...amenities.cleaningNMaintenance,
-        ...amenities.healthNfitness,
-        ...amenities.laundryNkitchen,
-        ...amenities.miscalleneous,
-        ...amenities.more,
-        ...amenities.recreationNfamily,
-        ...amenities.technology,
-      ];
-      console.log("propertyValues", combinedAminities, propertyValues);
-
-      if (propertyValues._id) {
-        response = await updateProperty({
-          ...propertyValues,
-          amenities: combinedAminities,
-          upload: {
-            ...propertyValues.upload,
-            images: updatedImages
-              ? updatedImages
-              : propertyValues.upload.images,
-          },
-        });
-      } else {
-        response = await createProperty({
-          ...propertyValues,
-          amenities: combinedAminities,
-          upload: {
-            ...propertyValues.upload,
-            images: updatedImages,
-          },
-        });
-      }
-
-      console.log("Property added", response);
-
-      dispatch(resetPropertyData(propertyValues));
-
-      navigation.dispatch(
-        CommonActions.reset({
-          index: 0,
-          routes: [{ name: "HomeStack" }],
-        }),
-      );
+      setSubmitDone(false);
     }
   };
 
   const handleCategoryChange = (value) => {
     setSelectedPropertyTypes(value);
     handleDataChange("typesAndPurpose", "category", value);
+  };
+
+  const handleSubCategoryChange = (value) => {
+    setSelectedPropertySubTypes(value);
+    handleDataChange("typesAndPurpose", "subCategory", value);
+  };
+
+  const handlePurposeChange = (value) => {
+    setSelectedPurpose(value);
+    handleDataChange("typesAndPurpose", "purpose", value);
   };
 
   const handleBackPress = () => {
@@ -377,6 +500,7 @@ export default function CreateProperty({ navigation }) {
       (item) => item.name === property,
     );
     if (propIndex > -1) {
+      console.log("Value before edit", miscalleneousAmenities[propIndex]);
       miscalleneousAmenities[propIndex].value = value;
     } else {
       miscalleneousAmenities.push({ name: property, value });
@@ -394,6 +518,7 @@ export default function CreateProperty({ navigation }) {
         return null;
       }
       const response = await fetch(imageUri);
+      setInsertingMessage("Uploading Images");
       const blob = await response.blob();
       const storageRef = ref(
         storage,
@@ -407,19 +532,23 @@ export default function CreateProperty({ navigation }) {
           (snapshot) => {
             const progress =
               (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-            console.log("Uploaded progress", progress.toFixed());
+            setTotalUploadPercent(progress.toFixed());
+            // console.log("Uploaded progress", progress.toFixed());
           },
           (error) => {
             console.log("Error uploading image. Reason:", error);
+            setInsertingMessage("Error uploading image. Reason: " + error);
             reject(error);
           },
           async () => {
             try {
               const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
               console.log("File available at", downloadURL);
+              setInsertingMessage("Upload complete");
               resolve(downloadURL);
             } catch (error) {
               console.log("Error getting download URL. Reason:", error);
+              setInsertingMessage("Error getting download URL. Reason: " + error);
               reject(error);
             }
           },
@@ -427,9 +556,14 @@ export default function CreateProperty({ navigation }) {
       });
     } catch (error) {
       console.log("Error in image upload", error);
+      setInsertingMessage("Error in image upload. Reason: " + error);
       throw error;
     }
   };
+
+  if (submitDone) {
+    return <Loader message={insertingMessage} percent={totalUploadPercent} />;
+  }
 
   return (
     <View className="flex-1 p-6 bg-[#f2f2f2]">
@@ -458,22 +592,19 @@ export default function CreateProperty({ navigation }) {
             <View className="top-1">
               <Text className="font-bold">Property Type</Text>
 
-              <FlatList
-                className={"mt-4"}
-                data={propertyTypes}
-                // horizontal={true}
-                numColumns={3}
-                scrollEnabled={false}
-                renderItem={({ item }) => {
-                  return (
-                    <RenderSingleTag
-                      item={item}
-                      selectedPropertyTypes={selectedPropertyTypes}
-                      handleCategoryChange={handleCategoryChange}
-                    />
-                  );
-                }}
-              />
+              <TypeTagsRenderer selectType={selectedPropertyTypes} selectTypeHandler={handleCategoryChange} types={propertyTypes} />
+            </View>
+
+            <View className="top-1">
+              <Text className="font-bold">Sub Property Type</Text>
+
+              <TypeTagsRenderer selectType={selectedPropertySubTypes} selectTypeHandler={handleSubCategoryChange} types={subCategories} />
+            </View>
+
+            <View className="top-1">
+              <Text className="font-bold">Purpose</Text>
+
+              <TypeTagsRenderer selectType={selectedPurpose} selectTypeHandler={handlePurposeChange} types={purposeTypes} />
             </View>
 
             <View className="mt-6">
@@ -716,8 +847,8 @@ export default function CreateProperty({ navigation }) {
                 value={
                   amenities.miscalleneous.length > 0
                     ? amenities.miscalleneous.filter(
-                        (item) => item.name === "bedRooms",
-                      )[0]?.value
+                      (item) => item.name === "bedRooms",
+                    )[0]?.value
                     : ""
                 }
                 placeholder="No of Rooms"
@@ -726,7 +857,11 @@ export default function CreateProperty({ navigation }) {
                 returnKeyType="next"
                 maxLength={1}
                 inputMode="numeric"
-                defaultValue={""}
+                defaultValue={propertyValues.amenities.length > 0
+                  ? propertyValues.amenities.filter(
+                    (item) => item.name === "bedRooms",
+                  )[0]?.value
+                  : ""}
               />
 
               <TextInput
@@ -734,8 +869,8 @@ export default function CreateProperty({ navigation }) {
                 value={
                   amenities.miscalleneous.length > 0
                     ? amenities.miscalleneous.filter(
-                        (item) => item.name === "bathRooms",
-                      )[0]?.value
+                      (item) => item.name === "bathRooms",
+                    )[0]?.value
                     : ""
                 }
                 placeholder="No of Bathrooms"
@@ -744,66 +879,15 @@ export default function CreateProperty({ navigation }) {
                 returnKeyType="next"
                 maxLength={1}
                 inputMode="numeric"
-                defaultValue={""}
-              />
-              {/* 
-
-              <TextInput
-                onChangeText={(value) =>
-                  handleDataChange(
-                    "propertyDetails",
-                    "InclusivePrice",
-                    parseInt(value),
-                  )
-                }
-                value={
-                  propertyValues.propertyDetails.InclusivePrice !== 0
-                    ? propertyValues.propertyDetails.InclusivePrice.toString()
+                defaultValue={
+                  propertyValues.amenities.length > 0
+                    ? propertyValues.amenities.filter(
+                      (item) => item.name === "bathRooms",
+                    )[0]?.value
                     : ""
                 }
-                placeholder="Inclusive price"
-                keyboardType="number-pad"
-                className="bg-[#e9e9e1] text-black p-1 my-1 px-4 rounded-md"
-                returnKeyType="next"
               />
 
-              <TextInput
-                onChangeText={(value) =>
-                  handleDataChange(
-                    "propertyDetails",
-                    "InclusivePrice",
-                    parseInt(value),
-                  )
-                }
-                value={
-                  propertyValues.propertyDetails.InclusivePrice !== 0
-                    ? propertyValues.propertyDetails.InclusivePrice.toString()
-                    : ""
-                }
-                placeholder="Inclusive price"
-                keyboardType="number-pad"
-                className="bg-[#e9e9e1] text-black p-1 my-1 px-4 rounded-md"
-                returnKeyType="next"
-              />
-
-              <TextInput
-                onChangeText={(value) =>
-                  handleDataChange(
-                    "propertyDetails",
-                    "InclusivePrice",
-                    parseInt(value),
-                  )
-                }
-                value={
-                  propertyValues.propertyDetails.InclusivePrice !== 0
-                    ? propertyValues.propertyDetails.InclusivePrice.toString()
-                    : ""
-                }
-                placeholder="Inclusive price"
-                keyboardType="number-pad"
-                className="bg-[#e9e9e1] text-black p-1 my-1 px-4 rounded-md"
-                returnKeyType="next"
-              /> */}
             </View>
 
             <View className="mt-6">
@@ -843,8 +927,10 @@ export default function CreateProperty({ navigation }) {
       </ScrollView>
 
       <View className="absolute p-6 bottom-0 w-screen">
-        <TouchableOpacity onPress={onDoneClicked}>
-          <Text className="bg-primary w-full text-center py-3 rounded-full text-white font-bold">
+        <TouchableOpacity
+          onPress={onDoneClicked}
+          disabled={submitDone}>
+          <Text className={`${submitDone ? "bg-gray-300" : "bg-primary"} w-full text-center py-3 rounded-full text-white font-bold`}>
             Done
           </Text>
         </TouchableOpacity>
@@ -861,20 +947,20 @@ const RenderSingleTag = ({
   return (
     <TouchableOpacity
       onPress={() => {
-        handleCategoryChange(item?.keyword);
+        handleCategoryChange(item?.key);
       }}
-      key={`key-${item?.keyword}`}
+      key={`key-${item?.key}`}
       className={"mr-8 mb-4"}
     >
       <View>
         <Text
-          className={`py-3 px-3 rounded-sm text-[10px] w-[83px] text-center bg-primary ${
-            item?.keyword === selectedPropertyTypes
-              ? "bg-white text-primary border border-primary"
-              : "bg-primary text-white"
-          }`}
+          style={{ textAlignVertical: 'center' }}
+          className={`py-3 px-3 rounded-sm text-[10px] w-[83px] h-12 text-center justify-center flex-row items-center bg-primary ${item?.key === selectedPropertyTypes
+            ? "bg-white text-primary border border-primary"
+            : "bg-primary text-white"
+            }`}
         >
-          {item?.name}
+          {item?.value}
         </Text>
       </View>
     </TouchableOpacity>
@@ -901,3 +987,24 @@ const LocationSuggestion = ({ item, onLocationSelected }) => {
     </TouchableOpacity>
   );
 };
+
+const TypeTagsRenderer = ({ types, selectType, selectTypeHandler }) => {
+  return (
+    <FlatList
+      className={"mt-4"}
+      data={types}
+      // horizontal={true}
+      numColumns={3}
+      scrollEnabled={false}
+      renderItem={({ item }) => {
+        return (
+          <RenderSingleTag
+            item={item}
+            selectedPropertyTypes={selectType}
+            handleCategoryChange={selectTypeHandler}
+          />
+        );
+      }}
+    />
+  );
+}

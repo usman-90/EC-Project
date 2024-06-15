@@ -12,7 +12,7 @@ export const searchSlice = createSlice({
         category: "all",
         priceMax: 5000,
         priceMin: 0,
-        subCategory: "",
+        subCategory: "all",
       },
       lastSearched: [],
     },

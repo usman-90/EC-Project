@@ -3,21 +3,13 @@ import PropertyItem from "../../components/PropertyItem";
 import {
   FlatList,
   RefreshControl,
-  Switch,
-  ScrollView,
   StatusBar,
   Text,
-  TextInput,
   TouchableOpacity,
   View,
 } from "react-native";
 import AntDesignIcon from "react-native-vector-icons/AntDesign";
-import { createProperty } from "../../apiFunctions/properties";
 import { useDispatch, useSelector } from "react-redux";
-import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
-import { storage } from "../../../firebaseConfig";
-import { setPropertyData } from "../../features/property/propertySlice";
-import { CommonActions } from "@react-navigation/native";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import EmptyList from "../../components/NoItem";
 import { getListings } from "../../apiFunctions/properties";
@@ -38,14 +30,14 @@ const data = [
   },
 ];
 
-const Listing = ({ navigation }) => {
+const Listing = ({ navigation, route }) => {
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [selected, setSelected] = useState("");
-
+  const [selectedCategory, setSelectedCategory] = useState("");
   const { userData } = useSelector((state) => state?.user.data);
   const propertiesResult = useQuery({
-    queryKey: ["FetchListings", userData?.email],
-    queryFn: getListings,
+    queryKey: ["FetchListings", userData?.email, selected, selectedCategory],
+    queryFn: getListings
   });
 
   const refetchSavedProperties = propertiesResult?.refetch;
@@ -55,18 +47,43 @@ const Listing = ({ navigation }) => {
     properties = properties.filter((prop) => prop !== null);
   }
 
+  // useEffect(() => {
+  //   console.log("Selected Purpose", selected);
+  // }, [selected]);
+
+  // useEffect(() => {
+  //   console.log("Selected Category", selectedCategory);
+  // }, [selectedCategory])
+
+  useEffect(() => {
+    const runonfocus = navigation.addListener("focus", () => {
+      setSelected("");
+      setSelectedCategory("");
+    });
+
+    return runonfocus;
+  }, []);
+
+  useEffect(() => {
+    setIsRefreshing(propertiesResult.isLoading);
+    console.log("user Listings", properties);
+  }, [propertiesResult.isLoading]);
+
+  useEffect(() => {
+    refetchSavedProperties();
+  }, [route]);
+
   const handleRefresh = useCallback(async () => {
     setIsRefreshing(true);
-    refetchSavedProperties();
-    setIsRefreshing(false);
+    refetchSavedProperties().finally(() => {
+      setIsRefreshing(false);
+    });
   });
 
   const handleBackPress = () => {
     navigation.goBack();
   };
 
-  
-  console.log("user Listings", properties);
   return (
     <View className="flex-1  bg-[#f2f2f2]">
       <StatusBar translucent={false} />
@@ -95,7 +112,7 @@ const Listing = ({ navigation }) => {
         data={properties}
         className="px-6"
         ListHeaderComponent={
-          <ListHeader setSelected={setSelected} data={data} />
+          <ListHeader setSelectedPurpose={setSelected} selectedPurpose={selected} data={data} setSelectedCategory={setSelectedCategory} />
         }
         renderItem={({ item }) => {
           return (
@@ -111,12 +128,10 @@ const Listing = ({ navigation }) => {
                 image={item?.upload?.images}
                 price={item?.propertyDetails?.InclusivePrice}
                 location={item?.locationAndAddress?.location}
-                bedrooms={
-                  item?.amenities?.filter((item) => item.name == "bedRooms")[0]?.value
-                }
+                bedrooms={item?.amenities?.filter((item) => item.name == "bedRooms")[0]?.value}
+                bathrooms={item?.amenities?.filter((item) => item.name == "bathRooms")[0]?.value}
                 area={item?.propertyDetails?.areaSquare}
                 beds={item?.propertyDetails?.bedRooms}
-                bathrooms={item?.propertyDetails?.bathRooms}
               />
             </TouchableOpacity>
           );
@@ -129,25 +144,34 @@ const Listing = ({ navigation }) => {
 };
 export default Listing;
 
-const ListHeader = ({ setSelected, data }) => {
+const ListHeader = ({ setSelectedPurpose, selectedPurpose, setSelectedCategory, data }) => {
   return (
     <>
-      <View className="flex flex-row items-center justify-center">
-        <TouchableOpacity className="bg-primary mx-2 px-4 py-3 rounded-lg">
-          <Text className="text-white">For Rent</Text>
+      <View className="flex flex-row items-center justify-evenly">
+        <TouchableOpacity className={`mx-2 px-4 py-3 rounded-lg ${"forRent" === selectedPurpose
+          ? "bg-white border border-primary"
+          : "bg-primary"
+          }`} onPress={() => setSelectedPurpose("forRent")}>
+          <Text className={`${"forRent" === selectedPurpose ? "text-primary" : "text-white"}`}>For Rent</Text>
         </TouchableOpacity>
-        <TouchableOpacity className="bg-primary mx-2 px-4 py-3 rounded-lg">
-          <Text className="text-white">For Sale</Text>
+        <TouchableOpacity className={`mx-2 px-4 py-3 rounded-lg ${"forSale" === selectedPurpose
+          ? "bg-white text-primary border border-primary"
+          : "bg-primary text-white"
+          }`} onPress={() => setSelectedPurpose("forSale")}>
+          <Text className={`${"forSale" === selectedPurpose ? "text-primary" : "text-white"}`}>For Sale</Text>
         </TouchableOpacity>
-        <TouchableOpacity className="bg-primary mx-2 px-4 py-3 rounded-lg">
-          <Text className="text-white">Off-Plan</Text>
+        <TouchableOpacity className={`mx-2 px-4 py-3 rounded-lg ${"offPlan" === selectedPurpose
+          ? "bg-white text-primary border border-primary"
+          : "bg-primary text-white"
+          }`} onPress={() => setSelectedPurpose("offPlan")}>
+          <Text className={`${"offPlan" === selectedPurpose ? "text-primary" : "text-white"}`}>Off-Plan</Text>
         </TouchableOpacity>
       </View>
       <View className="mt-4">
         <SelectList
-          setSelected={(val) => setSelected(val)}
+          setSelected={(val) => setSelectedCategory(val)}
           data={data}
-          save="value"
+          save="key"
           placeholder="Category"
         />
       </View>

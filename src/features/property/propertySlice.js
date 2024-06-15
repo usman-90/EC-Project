@@ -5,7 +5,7 @@ const propertyPayload = {
   typesAndPurpose: {
     category: "commercial",
     subCategory: "",
-    purpose: "forRent",
+    purpose: "forSale",
   },
   locationAndAddress: {
     location: "",
@@ -32,13 +32,13 @@ const propertyPayload = {
     minimumContractPeriod: "1",
     noticePeriod: "1",
     maintainanceFee: "200",
-    paidBy: "tenant",
+    paidBy: "tenant"
   },
   contactDetails: {
     ListingOwner: "",
     contactPerson: "",
     email: "",
-    phone: "",
+    phone: ""
   },
   amenities: [],
   upload: {

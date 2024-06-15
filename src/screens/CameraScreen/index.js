@@ -1,23 +1,28 @@
 import { Camera, CameraType } from "expo-camera";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useLayoutEffect, useState } from "react";
 import {
   Image,
   StatusBar,
+  Text,
   TouchableOpacity,
-  View,
-  useWindowDimensions,
+  View
 } from "react-native";
 import sendImage from '../../../assets/CameraScreen/send.png'
+import ring from '../../../assets/CameraScreen/ring.png'
+import centerdot from '../../../assets/CameraScreen/centerdot.png'
 import Toast from "react-native-toast-message";
 import AntDesignIcon from "react-native-vector-icons/AntDesign";
 import { useDispatch, useSelector } from "react-redux";
 import { setPropertyData } from "../../features/property/propertySlice";
-import { CommonActions } from "@react-navigation/native";
+import { CommonActions, useNavigation } from "@react-navigation/native";
+import { launchImageLibrary } from 'react-native-image-picker';
 
-export default function CameraScreen({ navigation }) {
+export default function CameraScreen() {
+  const navigation = useNavigation();
   const dispatch = useDispatch();
   const propertyInformation = useSelector((state) => state?.property.data);
-  const [type, setType] = useState(CameraType.back);
+  const [type] = useState(CameraType.back);
+  const [gallarySelectedPics, setGallarySelectedPics] = useState(0);
   const [permission, requestPermission] = Camera.useCameraPermissions();
   const [showCamera, setShowCamera] = useState(true);
   const [cameraRef, setCameraRef] = useState(null);
@@ -27,9 +32,18 @@ export default function CameraScreen({ navigation }) {
     //this basically helps to initiate camera on screen
     const unsubscribefocus = navigation.addListener("focus", () => {
       setShowCamera(true);
+      const parentNav = navigation.getParent();
+      parentNav.setOptions({
+
+        tabBarStyle: { display: 'none' },
+      });
     });
     return unsubscribefocus;
   }, []);
+
+  useLayoutEffect(() => {
+    navigation.setParams({ disableTabBar: true })
+  }, [navigation]);
 
   useEffect(() => {
     //this basically helps to unsubscribe camera on screen
@@ -45,6 +59,7 @@ export default function CameraScreen({ navigation }) {
       //   }),
       // );
       // setImagesData([]);
+      // setGallarySelectedPics(0);
     });
     return unsubscribeblur;
   }, []);
@@ -58,19 +73,60 @@ export default function CameraScreen({ navigation }) {
           index: 0,
           routes: [
             {
-              name: 'CreatePropertyScreen', 
+              name: 'CreatePropertyScreen',
             }
           ],
         }),
       );
     }
-  }, [])
-  
+  }, []);
 
-  function toggleCameraType() {
-    setType((current) =>
-      current === CameraType.back ? CameraType.front : CameraType.back,
-    );
+
+  async function pickImagesFromGallery() {
+    try {
+      const { upload } = propertyInformation;
+      const options = { mediaType: 'photo', quality: 1, selectionLimit: 4 };
+      if (gallarySelectedPics > 3) {
+        Toast.show({
+          type: "info",
+          text1: "Warning !",
+          text2: "Max amount of images selected",
+        });
+        return;
+      }
+      // You can also use as a promise without 'callback':
+      const result = await launchImageLibrary(options);
+      if (result.didCancel || gallarySelectedPics > 3) {
+        return;
+      }
+      const tempImgArr = [];
+      console.log("pick image result", result);
+      result.assets.map((e, i) => {
+        if (i < 4) {
+          tempImgArr.push(e.uri);
+        }
+      })
+      if (result.assets.length > 4) {
+        Toast.show({
+          type: "info",
+          text1: "Warning !",
+          text2: "Only 4 pictures are allowed only top 4 will be selected",
+        });
+      }
+      dispatch(
+        setPropertyData({
+          ...propertyInformation,
+          upload: {
+            images: [...upload.images, ...tempImgArr],
+            videos: upload.videos,
+          },
+        }),
+      );
+      setGallarySelectedPics(gallarySelectedPics + tempImgArr.length)
+      console.log("Gallery results", result);
+    } catch (error) {
+      console.log("Error", error);
+    }
   }
 
   if (!permission) {
@@ -83,25 +139,29 @@ export default function CameraScreen({ navigation }) {
 
   const takePicture = async () => {
     const { upload } = propertyInformation;
-    if (cameraRef && imagesData.length < 4) {
-      const data = await cameraRef.takePictureAsync(null);
-      console.log("Image uri", data);
-      setImagesData([...imagesData, data.uri]);
-      dispatch(
-        setPropertyData({
-          ...propertyInformation,
-          upload: {
-            images: [...upload.images, data.uri],
-            videos: upload.videos,
-          },
-        }),
-      );
-    } else if (imagesData.length > 3) {
-      Toast.show({
-        type: "info",
-        text1: "Warning !",
-        text2: "Only 4 pictures are allowed",
-      });
+    try {
+      if (cameraRef && imagesData.length < 4) {
+        const data = await cameraRef.takePictureAsync(null);
+        console.log("Image uri", data);
+        setImagesData([...imagesData, data.uri]);
+        dispatch(
+          setPropertyData({
+            ...propertyInformation,
+            upload: {
+              images: [...upload.images, data.uri],
+              videos: upload.videos,
+            },
+          }),
+        );
+      } else if (imagesData.length > 3) {
+        Toast.show({
+          type: "info",
+          text1: "Warning !",
+          text2: "Only 4 pictures are allowed",
+        });
+      }
+    } catch (error) {
+      console.log("Error", error);
     }
   };
 
@@ -147,10 +207,10 @@ export default function CameraScreen({ navigation }) {
             </View>
           </View>
           <View className="flex-row justify-around items-center h-32 absolute w-screen bottom-0">
-            <TouchableOpacity onPress={toggleCameraType}>
+            <TouchableOpacity onPress={pickImagesFromGallery}>
               <View className="w-20 h-20 items-center justify-center">
                 <AntDesignIcon
-                  name={`sync`}
+                  name={`picture`}
                   style={{
                     fontSize: 28,
                     color: "#FFC70F",
@@ -158,11 +218,15 @@ export default function CameraScreen({ navigation }) {
                     padding: 5,
                   }}
                 />
+                {gallarySelectedPics > 0 && <Text className="text-white bg-red-600 w-4 right-5 top-5 text-center absolute rounded-full">{gallarySelectedPics}</Text>}
               </View>
             </TouchableOpacity>
 
             <TouchableOpacity onPress={takePicture}>
-              <View className="w-20 h-20 bg-slate-500 rounded-full border-solid border-8 border-gray-300"></View>
+              <View className="w-20 h-20 rounded-full items-center justify-center border-solid ">
+                <Image source={ring} />
+                <Image source={centerdot} className="absolute" />
+              </View>
             </TouchableOpacity>
 
             <TouchableOpacity

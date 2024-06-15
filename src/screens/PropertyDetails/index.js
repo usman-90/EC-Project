@@ -10,7 +10,9 @@ const PropertyDetailWrapper = ({ route, navigation }) => {
       images={item?.upload?.images}
       price={item?.propertyDetails?.InclusivePrice}
       location={item?.locationAndAddress}
-      bedrooms={item?.propertyDetails?.bedRooms}
+      bathrooms={
+        item?.amenities?.filter((item) => item.name == "bathRooms")[0]?.value
+      }
       text={item?.propertyDetails?.description ?? ""}
       features={item?.amenities}
       listingOwner={item?.contactDetails?.ListingOwner}
@@ -18,8 +20,8 @@ const PropertyDetailWrapper = ({ route, navigation }) => {
       email={item?.contactDetails?.email}
       phone={item?.contactDetails?.phone}
       status={item?.typesAndPurpose?.purpose}
-      //  parkingSpace={property1?.number_of_garage}
-      bathrooms={item?.propertyDetails?.bathRooms}
+       parkingSpace={item?.amenities?.filter((item) => item.name == "parkingSpaces")[0]?.value}
+      bedrooms={item?.amenities?.filter((item) => item.name == "bedRooms")[0]?.value}
       // garage={property1?.number_of_garage}
       area={item?.propertyDetails?.areaSquare}
       category={item?.typesAndPurpose?.category}

@@ -50,7 +50,7 @@ const SignIn = ({ navigation }) => {
             }
           />
         </View>
-        <View
+        {/* <View
           className="mt-[10px]"
           style={{
             flexDirection: "row",
@@ -72,7 +72,7 @@ const SignIn = ({ navigation }) => {
             />
             <Text className="text-black">Continue with facebook</Text>
           </TouchableOpacity>
-        </View>
+        </View> */}
         <View
           className="mt-[20px] "
           style={{

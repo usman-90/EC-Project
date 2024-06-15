@@ -6,7 +6,6 @@ import MultiSlider from "@ptomasroos/react-native-multi-slider";
 import {
   TouchableWithoutFeedback,
   ScrollView,
-  FlatList,
   SafeAreaView,
   TouchableOpacity,
   Text,
@@ -17,15 +16,12 @@ import BottomSheet from "react-native-gesture-bottom-sheet";
 import { fetchProperties } from "../apiFunctions/properties";
 import FilterButton from "./FilterButton";
 import { fetchSubCategories } from "../apiFunctions/properties";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { useSelector } from "react-redux";
 
 const DragableMenu = ({ setData, query, refetchProperties }) => {
-  // Needed in order to use .show()
-  //const { filter } = useSelector((state) => state?.search?.data);
   const bottomSheet = useRef();
   const [filters, setFilters] = useContext(FilterContext);
-  //const [filters, setFilters] = useState(filter);
   const subCategoriesResult = useQuery({
     queryKey: ["SubCategories", filters?.category],
     queryFn: fetchSubCategories,
@@ -35,7 +31,6 @@ const DragableMenu = ({ setData, query, refetchProperties }) => {
     { value: "All", key: "" },
     ...(subCategoriesResult?.data?.data?.data ?? []),
   ];
-  // const [values, setValues] = useState([0, 50]);
   console.log("DragableMenu", filters);
 
   const handleFilterChange = (name, val) => {
@@ -95,6 +90,10 @@ const DragableMenu = ({ setData, query, refetchProperties }) => {
       keyword: 4,
     },
     {
+      name: 5,
+      keyword: 5
+    },
+    {
       name: "5 or above",
       keyword: "5andAbove",
     },
@@ -119,6 +118,10 @@ const DragableMenu = ({ setData, query, refetchProperties }) => {
     {
       name: 4,
       keyword: 4,
+    },
+    {
+      name: 5,
+      keyword: 5
     },
     {
       name: "5 or above",
@@ -172,61 +175,56 @@ const DragableMenu = ({ setData, query, refetchProperties }) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <BottomSheet hasDraggableIcon ref={bottomSheet} height={600}>
-        <ScrollView className="basis-full mb-">
+      <BottomSheet hasDraggableIcon ref={bottomSheet} height={600} >
+        <ScrollView className="basis-full">
           <TouchableWithoutFeedback>
             <View>
               <Text className="px-6 py-3 text-lg my-1 font-bold">Category</Text>
 
               <View className="px-6">
-                <FlatList
-                  className="grow-0"
-                  data={categories}
-                  renderItem={({ item }) => {
-                    return (
-                      <TouchableOpacity
-                        onPress={() => {
-                          handleFilterChange("category", item?.keyword);
-                        }}
-                      >
-                        <View style={styles.me_2} className="me-3 mr-5">
-                          <Text
-                            className={`h-9 py-2 rounded-md px-3 bg-primary ${
-                              item?.keyword === filters?.category
-                                ? "bg-white text-primary border border-primary"
-                                : "bg-primary text-white"
+                <View className="flex-row">
+                  {categories.map((item, i) => (
+                    <TouchableOpacity
+                      onPress={() => {
+                        handleFilterChange("category", item?.keyword);
+                      }}
+                      className="w-fit"
+                      key={i}
+                    >
+                      <View style={styles.me_2} className="me-3 mr-5">
+                        <Text
+                          className={`h-9 py-2 rounded-md px-3 bg-primary ${item?.keyword === filters?.category
+                            ? "bg-white text-primary border border-primary"
+                            : "bg-primary text-white"
                             }`}
-                          >
-                            {item?.name}
-                          </Text>
-                        </View>
-                      </TouchableOpacity>
-                    );
-                  }}
-                  horizontal={true}
-                  // keyExtractor={(item) => item.id}
-                />
+                        >
+                          {item?.name}
+                        </Text>
+                      </View>
+                    </TouchableOpacity>
+                  ))}
+                </View>
               </View>
               <Text className={`px-6 py-3 text-lg my-1 font-bold`}>
                 Sub Category
               </Text>
 
               <View className="px-6 flex-row flex-wrap">
-                {subCategories?.map((cat) => {
+                {subCategories?.map((cat, i) => {
                   return (
                     <TouchableOpacity
                       className="my-1"
                       onPress={() => {
                         handleFilterChange("subCategory", cat?.key);
                       }}
+                      key={i}
                     >
                       <View style={styles.me_2} className="me-3 mr-5 mb-3">
                         <Text
-                          className={`h-9 py-2 rounded-md px-3 bg-primary  ${
-                            cat?.key === filters?.subCategory
-                              ? "bg-white text-primary border border-primary"
-                              : "bg-primary text-white"
-                          }`}
+                          className={`h-9 py-2 rounded-md px-3 bg-primary  ${cat?.key === filters?.subCategory
+                            ? "bg-white text-primary border border-primary"
+                            : "bg-primary text-white"
+                            }`}
                         >
                           {cat?.value}
                         </Text>
@@ -300,10 +298,10 @@ const DragableMenu = ({ setData, query, refetchProperties }) => {
                   <MultiSlider
                     values={[filters?.priceMin, filters?.priceMax]}
                     sliderLength={300}
-                    onValuesChange={handleValuesChange}
+                    onValuesChangeFinish={handleValuesChange}
                     min={0}
                     max={5000}
-                    step={1}
+                    step={100}
                     allowOverlap={false}
                     containerStyle={{ height: 25 }}
                     selectedStyle={{ backgroundColor: "#FFC70F", height: 5 }}
@@ -324,7 +322,7 @@ const DragableMenu = ({ setData, query, refetchProperties }) => {
                     ${filters?.priceMin}
                   </Text>
                   <Text className="text-lg font-bold">
-                    ${filters?.priceMax}
+                    ${filters?.priceMax === "" ? 0 : filters?.priceMax}
                   </Text>
                 </View>
               </View>
@@ -335,7 +333,7 @@ const DragableMenu = ({ setData, query, refetchProperties }) => {
                   <MultiSlider
                     values={[filters?.areaMin, filters?.areaMax]}
                     sliderLength={300}
-                    onValuesChange={(newValues) => {
+                    onValuesChangeFinish={(newValues) => {
                       const [min, max] = newValues;
                       handleMultipleChanges({
                         areaMin: min,
@@ -344,7 +342,7 @@ const DragableMenu = ({ setData, query, refetchProperties }) => {
                     }}
                     min={0}
                     max={5000}
-                    step={1}
+                    step={100}
                     allowOverlap={false}
                     containerStyle={{ height: 25 }}
                     selectedStyle={{ backgroundColor: "#FFC70F", height: 5 }}
@@ -366,7 +364,7 @@ const DragableMenu = ({ setData, query, refetchProperties }) => {
                     <Text style={{ fontSize: 9 }}>SqFt</Text>
                   </Text>
                   <Text className="text-lg font-bold">
-                    {filters?.areaMax}
+                    {filters?.areaMax === "" ? 0 : filters?.areaMax}
                     <Text style={{ fontSize: 9 }}>SqFt</Text>
                   </Text>
                 </View>
@@ -382,7 +380,7 @@ const DragableMenu = ({ setData, query, refetchProperties }) => {
                       category: "all",
                       priceMax: 5000,
                       priceMin: 0,
-                      subCategory: "",
+                      subCategory: "all",
                     })
                   }
                   className="bg-red-500 text-white px-4 py-2 w-3/12 text-base rounded-lg"
@@ -397,6 +395,7 @@ const DragableMenu = ({ setData, query, refetchProperties }) => {
                     console.log(query ? "yes" : "no");
                     setData ? setData(null) : null;
                     query ? refetchProperties(query) : refetchProperties();
+                    bottomSheet.current.close();
                   }}
                 >
                   <View className="">
@@ -465,4 +464,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default DragableMenu;
+export default React.memo(DragableMenu);

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import 'expo-dev-client';
 import 'react-native-gesture-handler';
 import Toast from 'react-native-toast-message';
@@ -10,7 +10,8 @@ import store from './src/app/store'
 import { persistor } from './src/app/store'
 import { Provider } from 'react-redux'
 import { PersistGate } from 'redux-persist/integration/react';
-import FilterContext from './src/context/FilterContext'
+import FilterContext from './src/context/FilterContext';
+import * as ScreenOrientation from 'expo-screen-orientation';
 
 
 export default function App() {
@@ -20,10 +21,10 @@ export default function App() {
 		priceMin: 0,
 		priceMax: "",
 		areaMin: 0,
+		purpose: "",
 		areaMax: "",
 		bathrooms: "",
 		bedrooms: "",
-		purpose: "forSale"
 	});
 	const queryClient = new QueryClient({
 		defaultOptions: {
@@ -34,13 +35,21 @@ export default function App() {
 		},
 	});
 
+	useEffect(() => {
+		changeScreenOrientation();
+	}, [])
+
+	async function changeScreenOrientation() {
+		await ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT);
+	}
+
 	return (
 		<QueryClientProvider client={queryClient}>
 			<FilterContext.Provider value={filters} >
 				<Provider store={store}>
 					<PersistGate loading={null} persistor={persistor}>
 						<SafeAreaView style={styles.container}>
-							<StatusBar  barStyle={'dark-content'} backgroundColor={'#fff'} showHideTransition={true} />
+							<StatusBar barStyle={'dark-content'} backgroundColor={'#fff'} showHideTransition={true} />
 							<NavigationContainer>
 								<RootStack />
 							</NavigationContainer>
