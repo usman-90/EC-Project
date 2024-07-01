@@ -12,4 +12,6 @@
   <style name="Theme.App.SplashScreen" parent="AppTheme">
     <item name="android:windowBackground">@drawable/splashscreen</item>
   </style>
+  <style name="Theme.MyApp" parent="Theme.MaterialComponents.DayNight">
+  </style>
 </resources>

@@ -3,6 +3,7 @@ import Search from "../screens/Search";
 import SearchResult from "../screens/SearchResult";
 import PropertyDetail from "../screens/PropertyDetails";
 import Map from "../screens/Map/index";
+import Payment from "../screens/Payment/index";
 
 const SearchStack = () => {
   const SearchNavigator = createStackNavigator();
@@ -26,6 +27,11 @@ const SearchStack = () => {
       <SearchNavigator.Screen
         name="Map"
         component={Map}
+        options={{ headerShown: false }}
+      />
+      <SearchNavigator.Screen
+        name="Payment"
+        component={Payment}
         options={{ headerShown: false }}
       />
     </SearchNavigator.Navigator>

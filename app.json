@@ -26,6 +26,12 @@
         {
           "initialOrientation": "PORTRAIT"
         }
+      ],
+      [
+        "@stripe/stripe-react-native",
+        {
+          "enableGooglePay": false
+        }
       ]
     ]
   }
